@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annual Employee Review — Hudsonville Family Dentistry</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --light-gold: #f5edd8;
+    --gray: #5a5a5a;
+    --line: #c8c8c8;
+    --bg: #f9f8f6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 300;
+    background: var(--bg);
+    color: #222;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #e0ddd8;
+    box-shadow: 0 4px 24px rgba(26,39,68,0.10);
+    padding: 56px 64px 64px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+    gap: 24px;
+  }
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--navy);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+  .header-left p {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .header-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .header-right .hfd-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--navy);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .header-right .hfd-logo span {
+    display: block;
+    font-size: 11px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 400;
+    color: var(--gray);
+    letter-spacing: 0.06em;
+  }
+
+  /* Meta row */
+  .meta-row {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .meta-field {
+    flex: 1;
+    min-width: 180px;
+  }
+  .meta-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .meta-field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 4px 0 6px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    color: var(--navy);
+    background: transparent;
+    outline: none;
+  }
+  .meta-field input:focus {
+    border-bottom-color: var(--gold);
+  }
+
+  /* Section */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--light-gold);
+  }
+
+  /* Question blocks */
+  .q-block {
+    margin-bottom: 28px;
+  }
+  .q-block label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .q-block label .q-num {
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    margin-right: 6px;
+  }
+  textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #333;
+    resize: vertical;
+    min-height: 72px;
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+    line-height: 1.6;
+  }
+  textarea:focus {
+    border-color: var(--gold);
+    background: #fff;
+  }
+  textarea.tall { min-height: 96px; }
+
+  /* Rating section */
+  .rating-block {
+    margin-bottom: 28px;
+  }
+  .rating-block label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .rating-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rating-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .rating-row span {
+    font-size: 13px;
+    color: var(--gray);
+    width: 220px;
+    flex-shrink: 0;
+  }
+  .stars {
+    display: flex;
+    gap: 6px;
+  }
+  .stars input[type="radio"] { display: none; }
+  .stars label {
+    font-size: 22px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.1s;
+    line-height: 1;
+    margin-bottom: 0;
+  }
+  .stars input[type="radio"]:checked ~ label,
+  .stars label:hover,
+  .stars label:hover ~ label { color: var(--gold) !important; }
+  /* Reverse trick for CSS-only star rating */
+  .stars { flex-direction: row-reverse; justify-content: flex-end; }
+  .stars label:hover, .stars label:hover ~ label { color: var(--gold); }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid #e8e5e0;
+    margin: 36px 0;
+  }
+
+  /* Signature area */
+  .sig-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .sig-field {
+    flex: 1;
+    min-width: 160px;
+  }
+  .sig-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .sig-line {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 4px 0 24px;
+  }
+
+  /* Print button */
+  .btn-row {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .btn-print {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 12px 40px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--gold); }
+
+  /* Footer */
+  .form-footer {
+    margin-top: 36px;
+    text-align: center;
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page {
+      box-shadow: none;
+      border: none;
+      padding: 40px 48px;
+      max-width: 100%;
+    }
+    .btn-row, .btn-print { display: none !important; }
+    textarea {
+      background: #fff;
+      border-color: #bbb;
+      resize: none;
+    }
+    textarea:focus { border-color: #bbb; }
+    .meta-field input { border-bottom-color: #999; }
+    @page {
+      margin: 0.75in;
+      size: letter;
+    }
+    /* prevent orphan questions */
+    .q-block, .rating-block { page-break-inside: avoid; }
+    .divider { border-top-color: #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Annual Employee Review</h1>
+      <p>Self-Assessment Form</p>
+    </div>
+    <div class="header-right">
+      <div class="hfd-logo">
+        Hudsonville Family Dentistry
+        <span>Confidential — Staff Use Only</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta -->
+  <div class="meta-row">
+    <div class="meta-field">
+      <label>Employee Name</label>
+      <input type="text" placeholder="Full name">
+    </div>
+    <div class="meta-field">
+      <label>Position / Role</label>
+      <input type="text" placeholder="e.g. Dental Hygienist">
+    </div>
+    <div class="meta-field" style="max-width:140px">
+      <label>Review Date</label>
+      <input type="date">
+    </div>
+  </div>
+
+  <!-- Section 1: Performance Reflection -->
+  <div class="section-label">Performance Reflection</div>
+
+  <div class="q-block">
+    <label><span class="q-num">1.</span>What went well this past year?</label>
+    <textarea class="tall" placeholder="Share your wins, achievements, and proud moments…"></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">2.</span>What could have gone better?</label>
+    <textarea placeholder="Be honest — this is a safe space for reflection."></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">3.</span>What do you feel you do particularly well? <em style="font-weight:300;font-size:13px;">(2–4 things)</em></label>
+    <textarea class="tall" placeholder="List your key strengths in your role…"></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">4.</span>In what areas do you see opportunities for improvement? <em style="font-weight:300;font-size:13px;">(2–4 things)</em></label>
+    <textarea class="tall" placeholder="Be specific — growth areas you'd like to develop…"></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">5.</span>What can you do to help yourself improve in those areas?</label>
+    <textarea placeholder="Steps you plan to take, resources you'd like, etc."></textarea>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Section 2: Working at HFD -->
+  <div class="section-label">Working at HFD</div>
+
+  <div class="q-block">
+    <label><span class="q-num">6.</span>What do you like most about working for Hudsonville Family Dentistry?</label>
+    <textarea placeholder="What keeps you motivated and engaged here?"></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">7.</span>If you had a magic wand, what would you change?</label>
+    <textarea placeholder="No filter — share your honest wishlist."></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">8.</span>What motivates you in your position?</label>
+    <textarea placeholder="What drives you to do your best work each day?"></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">9.</span>Do you feel the team works well together? Any suggestions?</label>
+    <textarea placeholder="Teamwork observations and ideas for improvement…"></textarea>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Section 3: Looking Ahead -->
+  <div class="section-label">Looking Ahead</div>
+
+  <div class="q-block">
+    <label><span class="q-num">10.</span>What are your goals for the upcoming year?</label>
+    <textarea class="tall" placeholder="Professional goals, skills you want to build, etc."></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">11.</span>What would help you do your job better or support you in your role?</label>
+    <textarea placeholder="Tools, training, schedule adjustments, support from leadership…"></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">12.</span>Do you feel comfortable coming to us with your concerns?</label>
+    <textarea placeholder="Your honest answer helps us build a better culture."></textarea>
+  </div>
+
+  <div class="q-block">
+    <label><span class="q-num">13.</span>Is there anything else we can do to promote your success here?</label>
+    <textarea placeholder="Open floor — anything you'd like leadership to know."></textarea>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Rating section -->
+  <div class="section-label">Overall Self-Assessment</div>
+  <p style="font-size:13px;color:var(--gray);margin-bottom:20px;">Rate yourself on the following (1 = Needs Work, 5 = Excellent)</p>
+
+  <div class="rating-block">
+    <div class="rating-items">
+
+      <div class="rating-row">
+        <span>Attitude &amp; Professionalism</span>
+        <div class="stars" id="s1">
+          <input type="radio" name="s1" id="s1-5" value="5"><label for="s1-5">★</label>
+          <input type="radio" name="s1" id="s1-4" value="4"><label for="s1-4">★</label>
+          <input type="radio" name="s1" id="s1-3" value="3"><label for="s1-3">★</label>
+          <input type="radio" name="s1" id="s1-2" value="2"><label for="s1-2">★</label>
+          <input type="radio" name="s1" id="s1-1" value="1"><label for="s1-1">★</label>
+        </div>
+      </div>
+
+      <div class="rating-row">
+        <span>Contributions to the Practice</span>
+        <div class="stars" id="s2">
+          <input type="radio" name="s2" id="s2-5" value="5"><label for="s2-5">★</label>
+          <input type="radio" name="s2" id="s2-4" value="4"><label for="s2-4">★</label>
+          <input type="radio" name="s2" id="s2-3" value="3"><label for="s2-3">★</label>
+          <input type="radio" name="s2" id="s2-2" value="2"><label for="s2-2">★</label>
+          <input type="radio" name="s2" id="s2-1" value="1"><label for="s2-1">★</label>
+        </div>
+      </div>
+
+      <div class="rating-row">
+        <span>Teamwork &amp; Collaboration</span>
+        <div class="stars" id="s3">
+          <input type="radio" name="s3" id="s3-5" value="5"><label for="s3-5">★</label>
+          <input type="radio" name="s3" id="s3-4" value="4"><label for="s3-4">★</label>
+          <input type="radio" name="s3" id="s3-3" value="3"><label for="s3-3">★</label>
+          <input type="radio" name="s3" id="s3-2" value="2"><label for="s3-2">★</label>
+          <input type="radio" name="s3" id="s3-1" value="1"><label for="s3-1">★</label>
+        </div>
+      </div>
+
+      <div class="rating-row">
+        <span>Supporting the Health of the Practice</span>
+        <div class="stars" id="s4">
+          <input type="radio" name="s4" id="s4-5" value="5"><label for="s4-5">★</label>
+          <input type="radio" name="s4" id="s4-4" value="4"><label for="s4-4">★</label>
+          <input type="radio" name="s4" id="s4-3" value="3"><label for="s4-3">★</label>
+          <input type="radio" name="s4" id="s4-2" value="2"><label for="s4-2">★</label>
+          <input type="radio" name="s4" id="s4-1" value="1"><label for="s4-1">★</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Signature -->
+  <div class="section-label">Acknowledgment</div>
+  <p style="font-size:13px;color:var(--gray);margin-bottom:20px;">By signing below, I confirm that I have completed this review honestly and to the best of my ability.</p>
+
+  <div class="sig-row">
+    <div class="sig-field">
+      <label>Employee Signature</label>
+      <div class="sig-line"></div>
+    </div>
+    <div class="sig-field" style="max-width:180px">
+      <label>Date</label>
+      <div class="sig-line"></div>
+    </div>
+  </div>
+
+  <!-- Print button -->
+  <div class="btn-row">
+    <button class="btn-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+  </div>
+
+  <div class="form-footer">Hudsonville Family Dentistry &nbsp;·&nbsp; Annual Employee Review &nbsp;·&nbsp; Confidential</div>
+
+</div>
+
+</body>
+</html>
