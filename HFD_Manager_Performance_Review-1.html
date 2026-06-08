@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Review — Hudsonville Family Dentistry</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --light-gold: #f5edd8;
+    --gray: #5a5a5a;
+    --line: #c8c8c8;
+    --bg: #f9f8f6;
+    --red: #8b1a1a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 300;
+    background: var(--bg);
+    color: #222;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #e0ddd8;
+    box-shadow: 0 4px 24px rgba(26,39,68,0.10);
+    padding: 52px 64px 64px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .header p {
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── META ROW ── */
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    background: var(--bg);
+    border: 1px solid #e8e5e0;
+    border-radius: 4px;
+    padding: 16px 20px;
+  }
+  .meta-field { flex: 1; min-width: 150px; }
+  .meta-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 5px;
+  }
+  .meta-field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 3px 0 5px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    background: transparent;
+    outline: none;
+  }
+  .meta-field input:focus { border-bottom-color: var(--gold); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--light-gold);
+    margin-top: 32px;
+  }
+
+  /* ── RATING CATEGORY BLOCK ── */
+  .category-block {
+    margin-bottom: 24px;
+    border: 1px solid #e8e5e0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .category-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .category-header strong {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .category-header em {
+    font-size: 12px;
+    font-style: normal;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  .rating-options {
+    padding: 0;
+  }
+  .rating-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 16px;
+    border-bottom: 1px solid #f0ece6;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .rating-option:last-child { border-bottom: none; }
+  .rating-option:hover { background: #faf8f4; }
+  .rating-option input[type="radio"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: var(--gold);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+  .rating-option label {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .rating-option label strong {
+    color: var(--navy);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .rating-option input[type="radio"]:checked + label {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .comments-row {
+    padding: 10px 16px 14px;
+    background: var(--bg);
+    border-top: 1px solid #ede9e2;
+  }
+  .comments-row label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .comments-row textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: #333;
+    resize: vertical;
+    min-height: 56px;
+    background: #fff;
+    outline: none;
+    line-height: 1.5;
+  }
+  .comments-row textarea:focus { border-color: var(--gold); }
+
+  /* ── SUMMARY RATING TABLE ── */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .summary-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+  .summary-table th:not(:first-child) { text-align: center; }
+  .summary-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #ede9e2;
+    vertical-align: middle;
+  }
+  .summary-table td:not(:first-child) { text-align: center; }
+  .summary-table tr:nth-child(even) td { background: var(--bg); }
+  .summary-table td strong { font-weight: 600; color: var(--navy); }
+  .summary-table td em { font-style: normal; font-size: 11px; color: var(--gray); }
+  .summary-table input[type="radio"] {
+    accent-color: var(--gold);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  /* ── TEXT BLOCKS ── */
+  .text-block { margin-bottom: 20px; }
+  .text-block label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  textarea.tall { min-height: 80px; }
+  .text-block textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 9px 12px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: #333;
+    resize: vertical;
+    min-height: 64px;
+    background: var(--bg);
+    outline: none;
+    line-height: 1.6;
+  }
+  .text-block textarea:focus { border-color: var(--gold); background: #fff; }
+
+  /* Two-column list areas */
+  .two-col { display: flex; gap: 16px; }
+  .two-col textarea { flex: 1; min-height: 52px; }
+
+  /* Inline fields */
+  .inline-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .inline-row label { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .inline-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .inline-field span { font-size: 13px; color: var(--gray); }
+  .inline-field input[type="radio"] { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }
+
+  /* Salary row */
+  .salary-row {
+    display: flex;
+    gap: 24px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    background: var(--light-gold);
+    border: 1px solid #e0c97a;
+    border-radius: 4px;
+    padding: 14px 18px;
+    align-items: center;
+  }
+  .salary-field { display: flex; align-items: center; gap: 8px; }
+  .salary-field label { font-size: 12px; font-weight: 600; color: var(--navy); white-space: nowrap; }
+  .salary-field input {
+    border: none;
+    border-bottom: 1.5px solid #b8963a;
+    padding: 3px 4px;
+    width: 130px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    background: transparent;
+    outline: none;
+  }
+  .salary-field input:focus { border-bottom-color: var(--navy); }
+
+  /* Divider */
+  hr.divider {
+    border: none;
+    border-top: 1px solid #e8e5e0;
+    margin: 32px 0;
+  }
+
+  /* Signature */
+  .sig-section { margin-top: 8px; }
+  .sig-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .sig-field { flex: 2; min-width: 200px; }
+  .sig-field.narrow { flex: 1; min-width: 120px; }
+  .sig-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 5px;
+  }
+  .sig-line {
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding-bottom: 22px;
+    display: block;
+  }
+  .sig-field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 3px 0 5px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    background: transparent;
+    outline: none;
+  }
+  .sig-field input:focus { border-bottom-color: var(--gold); }
+
+  /* Acknowledgment text */
+  .ack-text {
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* Quote */
+  .quote-block {
+    text-align: center;
+    margin: 36px 0 8px;
+    padding: 24px 32px;
+    border-top: 1px solid #ede9e2;
+    border-bottom: 1px solid #ede9e2;
+  }
+  .quote-block .ponder {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 10px;
+  }
+  .quote-block .q-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .quote-block .q-sub {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .quote-block .q-ref {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+
+  /* Print button */
+  .btn-row { text-align: center; margin-top: 36px; }
+  .btn-print {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 12px 40px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--gold); }
+
+  .form-footer {
+    margin-top: 28px;
+    text-align: center;
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { box-shadow: none; border: none; padding: 36px 48px; max-width: 100%; }
+    .btn-row, .btn-print { display: none !important; }
+    textarea, input { background: #fff !important; }
+    textarea { border-color: #bbb !important; resize: none; }
+    .category-block { page-break-inside: avoid; }
+    .summary-table, .sig-section { page-break-inside: avoid; }
+    @page { margin: 0.7in; size: letter; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Hudsonville Family Dentistry</h1>
+    <h2>Performance Review</h2>
+    <p>Dr. Matthew Lubbers &amp; Dr. Heather Holton &nbsp;·&nbsp; Confidential — Manager Use Only</p>
+  </div>
+
+  <!-- Meta -->
+  <div class="meta-row">
+    <div class="meta-field">
+      <label>Employee Name</label>
+      <input type="text" placeholder="Full name">
+    </div>
+    <div class="meta-field">
+      <label>Position / Role</label>
+      <input type="text" placeholder="e.g. Dental Assistant">
+    </div>
+    <div class="meta-field" style="max-width:140px">
+      <label>Review Date</label>
+      <input type="date">
+    </div>
+    <div class="meta-field" style="max-width:140px">
+      <label>Date Hired</label>
+      <input type="date">
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION 1: DETAILED RATINGS
+  ══════════════════════════════════════ -->
+  <div class="section-label">Performance Ratings</div>
+  <p style="font-size:12px;color:var(--gray);margin-bottom:20px;line-height:1.6;">Select the description that best reflects this employee's performance in each category, then add any supporting comments.</p>
+
+  <!-- Quality of Work -->
+  <div class="category-block">
+    <div class="category-header">
+      <strong>Quality of Work</strong>
+      <em>Neatness, accuracy, and error rate</em>
+    </div>
+    <div class="rating-options">
+      <div class="rating-option">
+        <input type="radio" name="quality" id="q1" value="1">
+        <label for="q1"><strong>1 — Outstanding:</strong> Consistently produces a high degree of neatness and accuracy on all work. Requires minimum supervision.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quality" id="q2" value="2">
+        <label for="q2"><strong>2 — Above Average:</strong> Work is very neat and accurate. Requires little supervision.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quality" id="q3" value="3">
+        <label for="q3"><strong>3 — Satisfactory:</strong> Quality of work is good. Makes few mistakes.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quality" id="q4" value="4">
+        <label for="q4"><strong>4 — Needs Improvement:</strong> Produces work that is passable, although quality needs improvement.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quality" id="q5" value="5">
+        <label for="q5"><strong>5 — Unsatisfactory:</strong> Makes frequent errors; frequently produces work that is not acceptable.</label>
+      </div>
+    </div>
+    <div class="comments-row">
+      <label>Comments</label>
+      <textarea placeholder="Supporting notes…"></textarea>
+    </div>
+  </div>
+
+  <!-- Quantity of Work -->
+  <div class="category-block">
+    <div class="category-header">
+      <strong>Quantity of Work</strong>
+      <em>Productivity and meeting schedules</em>
+    </div>
+    <div class="rating-options">
+      <div class="rating-option">
+        <input type="radio" name="quantity" id="qq1" value="1">
+        <label for="qq1"><strong>1 — Outstanding:</strong> Superior work production record. Frequently completes jobs ahead of schedule.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quantity" id="qq2" value="2">
+        <label for="qq2"><strong>2 — Above Average:</strong> Very good producer. Meets schedules on all assignments. Does more than required.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quantity" id="qq3" value="3">
+        <label for="qq3"><strong>3 — Satisfactory:</strong> Volume of work is satisfactory. Most assignments are completed on time.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quantity" id="qq4" value="4">
+        <label for="qq4"><strong>4 — Needs Improvement:</strong> Requires close supervision in order to complete assignments on time.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="quantity" id="qq5" value="5">
+        <label for="qq5"><strong>5 — Unsatisfactory:</strong> Very slow. Seldom completes assignments in the required time.</label>
+      </div>
+    </div>
+    <div class="comments-row">
+      <label>Comments</label>
+      <textarea placeholder="Supporting notes…"></textarea>
+    </div>
+  </div>
+
+  <!-- Job Knowledge -->
+  <div class="category-block">
+    <div class="category-header">
+      <strong>Job Knowledge</strong>
+      <em>Competence and mastery of duties</em>
+    </div>
+    <div class="rating-options">
+      <div class="rating-option">
+        <input type="radio" name="knowledge" id="jk1" value="1">
+        <label for="jk1"><strong>1 — Outstanding:</strong> Understands all phases of work. Has complete mastery of duties and carries them out skillfully.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="knowledge" id="jk2" value="2">
+        <label for="jk2"><strong>2 — Above Average:</strong> Has very good knowledge of job functions and performs them well.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="knowledge" id="jk3" value="3">
+        <label for="jk3"><strong>3 — Satisfactory:</strong> Understanding of most job functions is good. Requires minimum supervision.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="knowledge" id="jk4" value="4">
+        <label for="jk4"><strong>4 — Needs Improvement:</strong> Shows understanding of job but requires help and instruction in some phases of work.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="knowledge" id="jk5" value="5">
+        <label for="jk5"><strong>5 — Unsatisfactory:</strong> Lacks sufficient understanding of job functions to perform duties effectively.</label>
+      </div>
+    </div>
+    <div class="comments-row">
+      <label>Comments</label>
+      <textarea placeholder="Supporting notes…"></textarea>
+    </div>
+  </div>
+
+  <!-- Staff Relations -->
+  <div class="category-block">
+    <div class="category-header">
+      <strong>Staff Relations</strong>
+      <em>Teamwork and cooperation with colleagues</em>
+    </div>
+    <div class="rating-options">
+      <div class="rating-option">
+        <input type="radio" name="staffrel" id="sr1" value="1">
+        <label for="sr1"><strong>1 — Outstanding:</strong> Goes out of way to be cooperative and provide assistance. Works exceptionally well with others.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="staffrel" id="sr2" value="2">
+        <label for="sr2"><strong>2 — Above Average:</strong> Is willing to provide assistance. Sensitive to needs of others. Quick to respond.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="staffrel" id="sr3" value="3">
+        <label for="sr3"><strong>3 — Satisfactory:</strong> Works well with others and takes direction. Cooperative.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="staffrel" id="sr4" value="4">
+        <label for="sr4"><strong>4 — Needs Improvement:</strong> Usually cooperative. May occasionally have problems getting along with others.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="staffrel" id="sr5" value="5">
+        <label for="sr5"><strong>5 — Unsatisfactory:</strong> Poor attitude. Unfriendly and uncooperative in dealing with staff members and others.</label>
+      </div>
+    </div>
+    <div class="comments-row">
+      <label>Comments</label>
+      <textarea placeholder="Supporting notes…"></textarea>
+    </div>
+  </div>
+
+  <!-- Patient Relations -->
+  <div class="category-block">
+    <div class="category-header">
+      <strong>Patient / Customer Relations</strong>
+      <em>Interactions with patients and the public</em>
+    </div>
+    <div class="rating-options">
+      <div class="rating-option">
+        <input type="radio" name="patrel" id="pr1" value="1">
+        <label for="pr1"><strong>1 — Outstanding:</strong> Extremely good in dealing with people. Goes out of the way to be helpful and courteous.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="patrel" id="pr2" value="2">
+        <label for="pr2"><strong>2 — Above Average:</strong> Consistently very good with patients. Leaves them with a positive feeling toward the practice.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="patrel" id="pr3" value="3">
+        <label for="pr3"><strong>3 — Satisfactory:</strong> Deals effectively with patients.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="patrel" id="pr4" value="4">
+        <label for="pr4"><strong>4 — Needs Improvement:</strong> Attitude and behavior not consistently effective.</label>
+      </div>
+      <div class="rating-option">
+        <input type="radio" name="patrel" id="pr5" value="5">
+        <label for="pr5"><strong>5 — Unsatisfactory:</strong> Frequently rude or blunt. Lacks tact; generally unpleasant with patients.</label>
+      </div>
+    </div>
+    <div class="comments-row">
+      <label>Comments</label>
+      <textarea placeholder="Supporting notes…"></textarea>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION 2: SUMMARY RATINGS TABLE
+  ══════════════════════════════════════ -->
+  <div class="section-label">Summary Ratings</div>
+  <p style="font-size:12px;color:var(--gray);margin-bottom:16px;">Check one box per category.</p>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th style="width:55%">Category</th>
+        <th>Needs<br>Improvement</th>
+        <th>Satisfactory</th>
+        <th>Above<br>Average</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Job Knowledge</strong> <em>— How well does employee demonstrate competence?</em></td>
+        <td><input type="radio" name="sum_jk" value="NI"></td>
+        <td><input type="radio" name="sum_jk" value="S"></td>
+        <td><input type="radio" name="sum_jk" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Quality of Work</strong> <em>— What is the employee's quality of work?</em></td>
+        <td><input type="radio" name="sum_qal" value="NI"></td>
+        <td><input type="radio" name="sum_qal" value="S"></td>
+        <td><input type="radio" name="sum_qal" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Quantity of Work</strong> <em>— Does quantity of work meet our standards?</em></td>
+        <td><input type="radio" name="sum_qnt" value="NI"></td>
+        <td><input type="radio" name="sum_qnt" value="S"></td>
+        <td><input type="radio" name="sum_qnt" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Safety</strong> <em>— Does employee work safely and follow safety rules?</em></td>
+        <td><input type="radio" name="sum_saf" value="NI"></td>
+        <td><input type="radio" name="sum_saf" value="S"></td>
+        <td><input type="radio" name="sum_saf" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Initiative</strong> <em>— Is employee a self-starter?</em></td>
+        <td><input type="radio" name="sum_ini" value="NI"></td>
+        <td><input type="radio" name="sum_ini" value="S"></td>
+        <td><input type="radio" name="sum_ini" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Dependability</strong> <em>— Does employee follow instructions and do what is expected?</em></td>
+        <td><input type="radio" name="sum_dep" value="NI"></td>
+        <td><input type="radio" name="sum_dep" value="S"></td>
+        <td><input type="radio" name="sum_dep" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Conduct</strong> <em>— Does employee follow policy and conduct themselves professionally?</em></td>
+        <td><input type="radio" name="sum_con" value="NI"></td>
+        <td><input type="radio" name="sum_con" value="S"></td>
+        <td><input type="radio" name="sum_con" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Attitude</strong> <em>— Is employee's behavior toward job and others acceptable?</em></td>
+        <td><input type="radio" name="sum_att" value="NI"></td>
+        <td><input type="radio" name="sum_att" value="S"></td>
+        <td><input type="radio" name="sum_att" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Cooperation</strong> <em>— Does employee work effectively as a team member?</em></td>
+        <td><input type="radio" name="sum_coo" value="NI"></td>
+        <td><input type="radio" name="sum_coo" value="S"></td>
+        <td><input type="radio" name="sum_coo" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Absence / Punctuality</strong> <em>— Review attendance record</em></td>
+        <td><input type="radio" name="sum_abs" value="NI"></td>
+        <td><input type="radio" name="sum_abs" value="S"></td>
+        <td><input type="radio" name="sum_abs" value="AA"></td>
+      </tr>
+      <tr>
+        <td><strong>Training</strong> <em>— Has employee been fully trained?</em></td>
+        <td><input type="radio" name="sum_tra" value="NI"></td>
+        <td><input type="radio" name="sum_tra" value="S"></td>
+        <td><input type="radio" name="sum_tra" value="AA"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <!-- ══════════════════════════════════════
+       SECTION 3: NARRATIVE
+  ══════════════════════════════════════ -->
+  <div class="section-label">Narrative Summary</div>
+
+  <!-- Disciplinary -->
+  <div class="inline-row" style="margin-bottom:20px;">
+    <label>Has the employee received any disciplinary warnings?</label>
+    <div class="inline-field">
+      <input type="radio" name="discip" id="disc_yes" value="yes">
+      <span><label for="disc_yes" style="font-size:13px;color:#333;cursor:pointer;">Yes</label></span>
+    </div>
+    <div class="inline-field">
+      <input type="radio" name="discip" id="disc_no" value="no">
+      <span><label for="disc_no" style="font-size:13px;color:#333;cursor:pointer;">No</label></span>
+    </div>
+  </div>
+
+  <div class="text-block">
+    <label>A. Essential items the employee is doing well:</label>
+    <div class="two-col">
+      <textarea placeholder="Item 1…"></textarea>
+      <textarea placeholder="Item 2…"></textarea>
+    </div>
+    <div class="two-col" style="margin-top:8px;">
+      <textarea placeholder="Item 3…"></textarea>
+      <textarea placeholder="Item 4…"></textarea>
+    </div>
+  </div>
+
+  <div class="text-block">
+    <label>B. Essential items in need of improvement:</label>
+    <div class="two-col">
+      <textarea placeholder="Item 1…"></textarea>
+      <textarea placeholder="Item 2…"></textarea>
+    </div>
+    <div class="two-col" style="margin-top:8px;">
+      <textarea placeholder="Item 3…"></textarea>
+      <textarea placeholder="Item 4…"></textarea>
+    </div>
+  </div>
+
+  <div class="text-block">
+    <label>Employee Action Plan — What the <u>employee</u> can do to help themselves:</label>
+    <textarea class="tall" placeholder="Specific steps, commitments, or goals for the employee to act on…"></textarea>
+  </div>
+
+  <div class="text-block">
+    <label>Employer Action Plan — What <u>we</u> can do to support the employee:</label>
+    <textarea class="tall" placeholder="Resources, training, schedule changes, mentoring, or other support from leadership…"></textarea>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════════════════════════════
+       SECTION 4: COMPENSATION
+  ══════════════════════════════════════ -->
+  <div class="section-label">Compensation</div>
+  <div class="salary-row">
+    <div class="salary-field">
+      <label>Current Salary / Rate</label>
+      <input type="text" placeholder="$0.00">
+    </div>
+    <div class="salary-field">
+      <label>New Salary / Rate</label>
+      <input type="text" placeholder="$0.00">
+    </div>
+    <div class="salary-field">
+      <label>Effective Date</label>
+      <input type="date">
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════════════════════════════
+       SECTION 5: SIGNATURES
+  ══════════════════════════════════════ -->
+  <div class="section-label">Acknowledgment &amp; Signatures</div>
+  <p class="ack-text">I acknowledge that the above items have been presented and discussed with me. My signature does not necessarily indicate agreement — only that I have received and reviewed this evaluation.</p>
+
+  <div class="sig-section">
+    <div class="sig-row">
+      <div class="sig-field">
+        <label>Employee Signature</label>
+        <span class="sig-line"></span>
+      </div>
+      <div class="sig-field narrow">
+        <label>Date</label>
+        <input type="date">
+      </div>
+    </div>
+    <div class="sig-row">
+      <div class="sig-field">
+        <label>Office Manager Signature</label>
+        <span class="sig-line"></span>
+      </div>
+      <div class="sig-field narrow">
+        <label>Date</label>
+        <input type="date">
+      </div>
+    </div>
+    <div class="sig-row">
+      <div class="sig-field">
+        <label>Dr. Lubbers' Signature</label>
+        <span class="sig-line"></span>
+      </div>
+      <div class="sig-field narrow">
+        <label>Date</label>
+        <input type="date">
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-block">
+    <div class="ponder">Something to Ponder</div>
+    <div class="q-main">Do You Stir the Pot or Spread the Honey?</div>
+    <div class="q-sub">"Pleasant words are a honeycomb, sweet to the soul and healing to the bones."</div>
+    <div class="q-ref">Proverbs 16:24</div>
+  </div>
+
+  <!-- Print button -->
+  <div class="btn-row">
+    <button class="btn-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+  </div>
+
+  <div class="form-footer">Hudsonville Family Dentistry &nbsp;·&nbsp; Performance Review &nbsp;·&nbsp; Confidential — Manager Use Only</div>
+
+</div>
+</body>
+</html>
