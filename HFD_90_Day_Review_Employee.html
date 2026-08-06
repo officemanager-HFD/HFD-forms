@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>90-Day Check-In — Hudsonville Family Dentistry</title>
+<style>
+  :root{
+    --navy:#16233f;
+    --navy-soft:#2c3d63;
+    --teal:#2e8b8b;
+    --gold:#b08d3f;
+    --ink:#1f2430;
+    --muted:#6b7383;
+    --rule:#c9cfda;
+    --page:#ffffff;
+    --shell:#eef1f5;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--shell);color:var(--ink);
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;
+  }
+  .helper{
+    background:var(--navy);color:#e8ecf4;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:13px;line-height:1.45;padding:12px 20px;text-align:center;
+  }
+  .helper strong{color:#fff;}
+  .page{
+    max-width:8.5in;margin:24px auto 60px;background:var(--page);
+    padding:0.7in 0.75in 0.6in;box-shadow:0 2px 18px rgba(20,30,55,.14);
+  }
+  .masthead{text-align:center;padding-bottom:18px;}
+  .practice{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);font-weight:600;
+  }
+  .doc-title{font-size:34px;font-weight:700;margin:6px 0 4px;color:var(--navy);}
+  .doc-sub{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12.5px;color:var(--muted);letter-spacing:.02em;
+  }
+  .rule{border:0;border-top:2px solid var(--navy);margin:14px 0 22px;}
+  .intro{
+    font-size:14.5px;color:#3b4353;font-style:italic;
+    border-left:3px solid var(--teal);padding:2px 0 2px 14px;margin:0 0 26px;
+  }
+  .eyebrow{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);
+    font-weight:700;border-bottom:1px solid var(--rule);padding-bottom:6px;margin:34px 0 16px;
+  }
+  .note{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12.5px;color:var(--muted);margin:0 0 16px;
+  }
+  .id-block{border:1px solid var(--rule);padding:16px 18px 6px;display:flex;flex-wrap:wrap;gap:0 26px;}
+  .id-item{flex:1 1 180px;margin-bottom:14px;}
+  .lbl{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);
+    font-weight:700;display:block;margin-bottom:5px;
+  }
+  .field{
+    display:block;width:100%;min-height:1.55em;padding:6px 8px;
+    border:1px solid var(--rule);border-radius:2px;background:#fdfdfe;
+    font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1.55;
+    color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere;outline:none;
+  }
+  .field.line{border:0;border-bottom:1px solid #8b93a3;border-radius:0;background:transparent;padding:3px 2px;}
+  .field.answer{min-height:5.4em;}
+  .field.answer-lg{min-height:7em;}
+  .field:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(46,139,139,.18);background:#fff;}
+  .field.line:focus{box-shadow:0 1px 0 0 var(--teal);}
+  .field:empty::before{content:attr(data-placeholder);color:#a2aab8;}
+
+  .qblock{margin-bottom:20px;break-inside:avoid;page-break-inside:avoid;}
+  .q{display:flex;gap:10px;align-items:baseline;margin-bottom:7px;}
+  .qnum{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12px;font-weight:700;color:#fff;background:var(--navy);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    border:1px solid var(--navy);border-radius:50%;
+    width:22px;height:22px;flex:0 0 22px;
+    display:inline-flex;align-items:center;justify-content:center;
+    align-self:flex-start;margin-top:1px;
+  }
+  .qtext{font-size:15.5px;font-weight:700;color:var(--navy);}
+  .qtext em{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12.5px;font-style:normal;font-weight:400;color:var(--muted);
+  }
+
+  /* confidence ratings */
+  .rate-row{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:12px 4px;border-bottom:1px solid #e6e9ef;flex-wrap:wrap;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .rate-row:last-of-type{border-bottom:0;}
+  .rate-name{font-size:15px;font-weight:700;color:var(--navy);}
+  .stars{display:flex;gap:6px;align-items:center;}
+  .star{cursor:pointer;line-height:1;}
+  .star input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;appearance:none;-webkit-appearance:none;}
+  .star span{font-size:26px;color:#b9c0cc;display:block;width:1em;text-align:center;}
+  .star.on span{color:var(--gold);}
+  .star input:focus-visible + span{outline:2px solid var(--teal);outline-offset:2px;}
+  .scale-hint{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11px;color:var(--muted);min-width:74px;text-align:right;
+  }
+
+  .ack{font-style:italic;font-size:14px;color:#3b4353;margin:0 0 22px;}
+  .sig-row{display:flex;gap:30px;align-items:flex-end;margin-bottom:16px;break-inside:avoid;page-break-inside:avoid;}
+  .sig-name{flex:2 1 auto;}
+  .sig-date{flex:0 0 180px;}
+  .sig-line{border-bottom:1px solid var(--navy);height:26px;}
+  input[type="date"]{
+    width:100%;font-family:Georgia,"Times New Roman",serif;font-size:15px;padding:4px 2px;
+    border:0;border-bottom:1px solid #8b93a3;background:transparent;color:var(--ink);outline:none;
+  }
+  input[type="date"]:focus{border-bottom:1px solid var(--teal);}
+
+  .actions{text-align:center;margin:34px 0 6px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  button{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:14px;font-weight:600;letter-spacing:.04em;padding:13px 26px;
+    border-radius:3px;cursor:pointer;border:1px solid var(--navy);
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-soft);}
+  .btn-quiet{background:#fff;color:var(--navy);}
+  .btn-quiet:hover{background:#f0f2f7;}
+  .footer-line{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11px;color:var(--muted);text-align:center;border-top:1px solid var(--rule);
+    padding-top:10px;margin-top:30px;display:flex;justify-content:space-between;
+  }
+  @media (max-width:640px){
+    .page{padding:26px 18px 30px;margin:0;box-shadow:none;}
+    .doc-title{font-size:26px;}
+    .rate-row{justify-content:flex-start;}
+    .scale-hint{text-align:left;}
+    .sig-row{flex-wrap:wrap;gap:14px;}
+    .sig-date{flex:1 1 100%;}
+  }
+  @page{size:letter;margin:0.5in 0.55in;}
+  @media print{
+    body{background:#fff;font-size:11.5pt;}
+    .helper,.actions,.no-print{display:none !important;}
+    .page{max-width:none;margin:0;padding:0;box-shadow:none;}
+    .field{border:1px solid #b9bfca;background:#fff !important;min-height:1.4em;break-inside:auto;page-break-inside:auto;}
+    .field.line{border:0;border-bottom:1px solid #555;}
+    .field.answer,.field.answer-lg{min-height:3.4em;}
+    .field:empty::before{content:"";}
+    .qnum{color:#fff;background:var(--navy);}
+    .star span{font-size:19px;}
+    .star.on span{color:#000;}
+    input[type="date"]{border-bottom:1px solid #555;}
+    input[type="date"]::-webkit-calendar-picker-indicator{display:none;}
+    .eyebrow{margin-top:22px;}
+    .id-block{break-inside:avoid;page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<div class="helper no-print">
+  <strong>Type as much as you want.</strong> Every answer box grows as you write and prints in full. Only the answer boxes accept typing — the questions are locked.
+</div>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="practice">Hudsonville Family Dentistry</div>
+    <h1 class="doc-title">90-Day Check-In</h1>
+    <div class="doc-sub">Employee Self-Assessment &nbsp;·&nbsp; Confidential — Staff Use Only</div>
+  </header>
+  <hr class="rule">
+
+  <p class="intro">You've been with us about three months. This is your chance to tell us how the job and the training have actually gone — what helped, what was missing, and what you need from us. Honest answers here help us fix things while they're still easy to fix.</p>
+
+  <div class="id-block">
+    <div class="id-item"><span class="lbl">Employee Name</span><div class="field line" contenteditable="true" data-placeholder="Full name"></div></div>
+    <div class="id-item"><span class="lbl">Position / Role</span><div class="field line" contenteditable="true" data-placeholder="e.g. Dental Assistant"></div></div>
+    <div class="id-item"><span class="lbl">Date Hired</span><input type="date"></div>
+    <div class="id-item"><span class="lbl">Today's Date</span><input type="date"></div>
+  </div>
+
+  <!-- ============ SETTLING IN ============ -->
+  <div class="eyebrow">Settling Into the Job</div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">1</span><span class="qtext">What parts of the job feel comfortable now, and what still feels unclear?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">2</span><span class="qtext">Was anything different from what you expected when you were hired?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">3</span><span class="qtext">What training helped you most? <em>What was missing, rushed, or would be worth repeating?</em></span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">4</span><span class="qtext">Who has been most helpful to you here?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <!-- ============ SUPPORT & NEXT STEPS ============ -->
+  <div class="eyebrow">Support &amp; Next Steps</div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">5</span><span class="qtext">What do you need from us to do your job well?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">6</span><span class="qtext">What would you like to be trained on or get better at over the next few months?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">7</span><span class="qtext">Do you know who to go to when you have a question or a concern?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <div class="qblock">
+    <div class="q"><span class="qnum">8</span><span class="qtext">Anything else about the job, the team, or the practice you'd want us to know?</span></div>
+    <div class="field answer-lg" contenteditable="true" data-placeholder="Your answer…"></div>
+  </div>
+
+  <!-- ============ CONFIDENCE ============ -->
+  <div class="eyebrow">How Confident Do You Feel?</div>
+  <p class="note">Rate where you are today (1 = still learning, 5 = fully confident). There are no wrong answers — this tells us where to put the training.</p>
+
+  <div class="rate-row">
+    <span class="rate-name">My day-to-day duties</span>
+    <span class="stars" data-name="duties"></span>
+    <span class="scale-hint">1 — 5</span>
+  </div>
+  <div class="rate-row">
+    <span class="rate-name">Our software and systems</span>
+    <span class="stars" data-name="systems"></span>
+    <span class="scale-hint">1 — 5</span>
+  </div>
+  <div class="rate-row">
+    <span class="rate-name">Working with patients</span>
+    <span class="stars" data-name="patients"></span>
+    <span class="scale-hint">1 — 5</span>
+  </div>
+  <div class="rate-row">
+    <span class="rate-name">Knowing where to get help</span>
+    <span class="stars" data-name="help"></span>
+    <span class="scale-hint">1 — 5</span>
+  </div>
+  <div class="rate-row">
+    <span class="rate-name">Feeling part of the team</span>
+    <span class="stars" data-name="team"></span>
+    <span class="scale-hint">1 — 5</span>
+  </div>
+
+  <div class="qblock" style="margin-top:20px;">
+    <div class="q"><span class="qtext">Anything you'd like to add about these ratings?</span></div>
+    <div class="field answer" contenteditable="true" data-placeholder="Optional…"></div>
+  </div>
+
+  <!-- ============ ACKNOWLEDGMENT ============ -->
+  <div class="eyebrow">Acknowledgment</div>
+  <p class="ack">By signing below, I confirm that I have completed this check-in honestly and to the best of my ability.</p>
+
+  <div class="sig-row">
+    <div class="sig-name"><span class="lbl">Employee Signature</span><div class="sig-line"></div></div>
+    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
+  </div>
+
+  <div class="actions no-print">
+    <button class="btn-primary" onclick="window.print()">Save as PDF / Print</button>
+    <button class="btn-quiet" onclick="clearForm()">Clear form</button>
+  </div>
+
+  <div class="footer-line">
+    <span>Hudsonville Family Dentistry — 90-Day Check-In</span>
+    <span>Confidential — Personnel File</span>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.stars').forEach(function (group) {
+    var name = group.dataset.name;
+    for (var i = 1; i <= 5; i++) {
+      var label = document.createElement('label');
+      label.className = 'star';
+      label.title = i + ' of 5';
+      label.innerHTML =
+        '<input type="radio" name="' + name + '" value="' + i + '">' +
+        '<span aria-hidden="true">\u2606</span>';
+      group.appendChild(label);
+    }
+  });
+
+  function paintStars(group) {
+    var stars = group.querySelectorAll('.star');
+    var picked = 0;
+    stars.forEach(function (s, idx) { if (s.querySelector('input').checked) picked = idx + 1; });
+    stars.forEach(function (s, idx) {
+      var on = idx < picked;
+      s.classList.toggle('on', on);
+      s.querySelector('span').textContent = on ? '\u2605' : '\u2606';
+    });
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target.type === 'radio') {
+      var group = e.target.closest('.stars');
+      if (group) paintStars(group);
+    }
+  });
+
+  document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+    el.setAttribute('spellcheck','true');
+    el.addEventListener('paste', function (e) {
+      e.preventDefault();
+      var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
+  });
+
+  function clearForm() {
+    if (!confirm('Clear everything on this form? This cannot be undone.')) return;
+    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.textContent = ''; });
+    document.querySelectorAll('input[type="radio"]').forEach(function (el) { el.checked = false; });
+    document.querySelectorAll('input[type="date"]').forEach(function (el) { el.value = ''; });
+    document.querySelectorAll('.stars').forEach(paintStars);
+    window.scrollTo(0, 0);
+  }
+
+  var touched = false;
+  document.addEventListener('input', function () { touched = true; });
+  document.addEventListener('change', function () { touched = true; });
+  window.addEventListener('beforeunload', function (e) {
+    if (!touched) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+</script>
+
+</body>
+</html>

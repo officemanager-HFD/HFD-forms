@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>90-Day Introductory Review — Hudsonville Family Dentistry</title>
+<style>
+  :root{
+    --navy:#16233f;
+    --navy-soft:#2c3d63;
+    --teal:#2e8b8b;
+    --gold:#b08d3f;
+    --gold-bg:#f6f0df;
+    --ink:#1f2430;
+    --muted:#6b7383;
+    --rule:#c9cfda;
+    --page:#ffffff;
+    --shell:#eef1f5;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--shell);
+    color:var(--ink);
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:15px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .helper{
+    background:var(--navy);color:#e8ecf4;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:13px;line-height:1.45;padding:12px 20px;text-align:center;
+  }
+  .helper strong{color:#fff;}
+  .page{
+    max-width:8.5in;margin:24px auto 60px;background:var(--page);
+    padding:0.7in 0.75in 0.6in;box-shadow:0 2px 18px rgba(20,30,55,.14);
+  }
+  .masthead{text-align:center;padding-bottom:18px;}
+  .practice{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);font-weight:600;
+  }
+  .doc-title{font-size:34px;font-weight:700;margin:6px 0 4px;color:var(--navy);}
+  .doc-sub{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12.5px;color:var(--muted);letter-spacing:.02em;
+  }
+  .rule{border:0;border-top:2px solid var(--navy);margin:14px 0 26px;}
+  .eyebrow{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);
+    font-weight:700;border-bottom:1px solid var(--rule);padding-bottom:6px;margin:34px 0 14px;
+  }
+  .note{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12.5px;color:var(--muted);margin:0 0 16px;
+  }
+  .id-block{border:1px solid var(--rule);padding:16px 18px 6px;display:flex;flex-wrap:wrap;gap:0 26px;}
+  .id-item{flex:1 1 190px;margin-bottom:14px;}
+  .id-item.wide{flex:1 1 100%;}
+  .lbl{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);
+    font-weight:700;display:block;margin-bottom:5px;
+  }
+  .field{
+    display:block;width:100%;min-height:1.55em;padding:6px 8px;
+    border:1px solid var(--rule);border-radius:2px;background:#fdfdfe;
+    font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1.55;
+    color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere;outline:none;
+  }
+  .field.line{border:0;border-bottom:1px solid #8b93a3;border-radius:0;background:transparent;padding:3px 2px;}
+  .field.box{min-height:4.6em;}
+  .field.box-lg{min-height:6.4em;}
+  .field:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(46,139,139,.18);background:#fff;}
+  .field.line:focus{box-shadow:0 1px 0 0 var(--teal);}
+  .field:empty::before{content:attr(data-placeholder);color:#a2aab8;}
+
+  /* radios */
+  input[type="radio"],input[type="checkbox"]{
+    position:absolute;opacity:0;width:0;height:0;margin:0;
+    appearance:none;-webkit-appearance:none;pointer-events:none;
+  }
+  .mark{
+    flex:0 0 auto;width:15px;height:15px;margin-top:3px;
+    border:1.5px solid #808a9c;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  input:checked + .mark{border-color:var(--navy);}
+  input:checked + .mark::after{content:"";width:0;height:0;border:4px solid var(--navy);border-radius:50%;}
+  input:focus-visible + .mark{outline:2px solid var(--teal);outline-offset:2px;}
+
+  .card{border:1px solid var(--rule);margin:0 0 20px;break-inside:avoid;page-break-inside:avoid;}
+  .card-head{
+    background:var(--navy);color:#fff;padding:9px 14px;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .card-head h3{display:inline;font-size:16px;margin:0;font-weight:700;}
+  .card-head span{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12px;color:#c3cddf;margin-left:10px;
+  }
+  .card-body{padding:6px 14px 14px;}
+  .opt{
+    display:flex;gap:10px;align-items:flex-start;padding:7px 6px 7px 4px;
+    border-bottom:1px solid #eaedf2;cursor:pointer;border-left:3px solid transparent;
+  }
+  .opt:last-of-type{border-bottom:0;}
+  .opt-text{font-size:14.5px;}
+  .opt-text b{color:var(--navy);}
+  .opt:has(input:checked){border-left-color:var(--navy);}
+  .opt:has(input:checked) .opt-text{font-weight:600;}
+  .opt:hover{background:#f5f7fa;}
+  .comment-label{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);
+    font-weight:700;margin:14px 0 5px;
+  }
+
+  table{width:100%;border-collapse:collapse;break-inside:avoid;page-break-inside:avoid;}
+  thead th{
+    background:var(--navy);color:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:12px;padding:9px 8px;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  thead th:first-child{text-align:left;}
+  tbody td{border-bottom:1px solid #e6e9ef;padding:7px 8px;vertical-align:middle;}
+  tbody td.cat{font-size:14px;}
+  tbody td.cat b{color:var(--navy);}
+  tbody td.cat i{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11.5px;font-style:normal;color:var(--muted);
+  }
+  tbody td.pick{text-align:center;width:15%;}
+  tbody td.pick label{display:inline-flex;cursor:pointer;padding:4px;}
+  tbody td.pick .mark{margin-top:0;}
+  .duty-field{border:0;border-bottom:1px dotted #9aa2b1;border-radius:0;background:transparent;padding:3px 2px;}
+
+  .q{font-size:15px;font-weight:700;color:var(--navy);margin:20px 0 8px;}
+  .q.first{margin-top:6px;}
+  .inline-choice{display:inline-flex;gap:18px;margin-left:10px;font-weight:400;vertical-align:middle;flex-wrap:wrap;}
+  .inline-choice label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .inline-choice .mark{margin-top:0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .num{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11px;color:var(--muted);display:block;margin-bottom:3px;
+  }
+
+  .rec{
+    border:1px solid var(--gold);background:var(--gold-bg);padding:14px 18px;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .rec .opt{border-bottom:1px solid #e2d9bd;}
+  .rec .opt:hover{background:transparent;}
+
+  .ack{font-style:italic;font-size:14px;color:#3b4353;margin:0 0 22px;}
+  .sig-row{display:flex;gap:30px;align-items:flex-end;margin-bottom:20px;break-inside:avoid;page-break-inside:avoid;}
+  .sig-name{flex:2 1 auto;}
+  .sig-date{flex:0 0 180px;}
+  .sig-line{border-bottom:1px solid var(--navy);height:26px;}
+  input[type="date"]{
+    width:100%;font-family:Georgia,"Times New Roman",serif;font-size:15px;padding:4px 2px;
+    border:0;border-bottom:1px solid #8b93a3;background:transparent;color:var(--ink);outline:none;
+  }
+  input[type="date"]:focus{border-bottom:1px solid var(--teal);}
+
+  .actions{text-align:center;margin:34px 0 6px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  button{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:14px;font-weight:600;letter-spacing:.04em;padding:13px 26px;
+    border-radius:3px;cursor:pointer;border:1px solid var(--navy);
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-soft);}
+  .btn-quiet{background:#fff;color:var(--navy);}
+  .btn-quiet:hover{background:#f0f2f7;}
+  .footer-line{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:11px;color:var(--muted);text-align:center;border-top:1px solid var(--rule);
+    padding-top:10px;margin-top:30px;display:flex;justify-content:space-between;
+  }
+  @media (max-width:640px){
+    .page{padding:26px 18px 30px;margin:0;box-shadow:none;}
+    .doc-title{font-size:25px;}
+    .grid2{grid-template-columns:1fr;}
+    .sig-row{flex-wrap:wrap;gap:14px;}
+    .sig-date{flex:1 1 100%;}
+  }
+  @page{size:letter;margin:0.5in 0.55in;}
+  @media print{
+    body{background:#fff;font-size:11.5pt;}
+    .helper,.actions,.no-print{display:none !important;}
+    .page{max-width:none;margin:0;padding:0;box-shadow:none;}
+    .field{border:1px solid #b9bfca;background:#fff !important;min-height:1.4em;break-inside:auto;page-break-inside:auto;}
+    .field.line,.duty-field{border:0;border-bottom:1px solid #555;}
+    .field.box,.field.box-lg{min-height:3.2em;}
+    .field:empty::before{content:"";}
+    .opt{padding:4px 4px 4px 3px;}
+    .opt:hover{background:transparent;}
+    .card{border-color:#9aa2b1;}
+    input[type="date"]{border-bottom:1px solid #555;}
+    input[type="date"]::-webkit-calendar-picker-indicator{display:none;}
+    .eyebrow{margin-top:20px;}
+    tbody td{padding:5px 6px;}
+    .id-block,.rec{break-inside:avoid;page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<div class="helper no-print">
+  <strong>Fill it in, then use Save as PDF.</strong> Every box grows as you type and prints in full. Only the answer fields accept typing — the questions are locked.
+</div>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="practice">Hudsonville Family Dentistry</div>
+    <h1 class="doc-title">90-Day Introductory Review</h1>
+    <div class="doc-sub">Manager Evaluation &nbsp;·&nbsp; Dr. Matthew Lubbers &amp; Dr. Heather Holton &nbsp;·&nbsp; Confidential — Manager Use Only</div>
+  </header>
+  <hr class="rule">
+
+  <div class="id-block">
+    <div class="id-item"><span class="lbl">Employee Name</span><div class="field line" contenteditable="true" data-placeholder="Full name"></div></div>
+    <div class="id-item"><span class="lbl">Position / Role</span><div class="field line" contenteditable="true" data-placeholder="e.g. Dental Assistant"></div></div>
+    <div class="id-item"><span class="lbl">Date Hired</span><input type="date"></div>
+    <div class="id-item"><span class="lbl">Review Date</span><input type="date"></div>
+    <div class="id-item"><span class="lbl">Reviewed By</span><div class="field line" contenteditable="true" data-placeholder="Manager name"></div></div>
+    <div class="id-item"><span class="lbl">Trainer / Mentor</span><div class="field line" contenteditable="true" data-placeholder="Who trained this employee"></div></div>
+  </div>
+
+  <!-- ============ PERFORMANCE RATINGS ============ -->
+  <div class="eyebrow">Performance Ratings</div>
+  <p class="note">Rate performance against what is expected of someone at 90 days — not against a fully seasoned team member. Add supporting comments for anything below Satisfactory.</p>
+
+  <div class="card">
+    <div class="card-head"><h3>Quality of Work</h3><span>Neatness, accuracy, and error rate</span></div>
+    <div class="card-body">
+      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Consistently produces a high degree of neatness and accuracy on all work. Requires minimum supervision.</span></label>
+      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Work is very neat and accurate. Requires little supervision.</span></label>
+      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Quality of work is good. Makes few mistakes.</span></label>
+      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Produces work that is passable, although quality needs improvement.</span></label>
+      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Makes frequent errors; frequently produces work that is not acceptable.</span></label>
+      <div class="comment-label">Comments</div>
+      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Quantity of Work</h3><span>Productivity and keeping pace with the schedule</span></div>
+    <div class="card-body">
+      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Superior work production record. Frequently completes jobs ahead of schedule.</span></label>
+      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Very good producer. Meets schedules on all assignments. Does more than required.</span></label>
+      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Volume of work is satisfactory. Most assignments are completed on time.</span></label>
+      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Requires close supervision in order to complete assignments on time.</span></label>
+      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Very slow. Seldom completes assignments in the required time.</span></label>
+      <div class="comment-label">Comments</div>
+      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Job Knowledge</h3><span>Grasp of duties learned so far</span></div>
+    <div class="card-body">
+      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Has picked up all phases of the job quickly and carries them out skillfully.</span></label>
+      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Has very good knowledge of job functions and performs them well for this stage of training.</span></label>
+      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Understanding of most job functions is good. Requires the expected amount of supervision.</span></label>
+      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Shows understanding of job but still requires help and repeated instruction in several areas.</span></label>
+      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Has not retained enough of the training to perform duties effectively.</span></label>
+      <div class="comment-label">Comments</div>
+      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Staff Relations</h3><span>Teamwork and cooperation with colleagues</span></div>
+    <div class="card-body">
+      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Goes out of way to be cooperative and provide assistance. Works exceptionally well with others.</span></label>
+      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Is willing to provide assistance. Sensitive to needs of others. Quick to respond.</span></label>
+      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Works well with others and takes direction. Cooperative.</span></label>
+      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Usually cooperative. May occasionally have problems getting along with others.</span></label>
+      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Poor attitude. Unfriendly and uncooperative in dealing with staff members and others.</span></label>
+      <div class="comment-label">Comments</div>
+      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Patient / Customer Relations</h3><span>Interactions with patients and the public</span></div>
+    <div class="card-body">
+      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Extremely good in dealing with people. Goes out of the way to be helpful and courteous.</span></label>
+      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Consistently very good with patients. Leaves them with a positive feeling toward the practice.</span></label>
+      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Deals effectively with patients.</span></label>
+      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Attitude and behavior not consistently effective.</span></label>
+      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Frequently rude or blunt. Lacks tact; generally unpleasant with patients.</span></label>
+      <div class="comment-label">Comments</div>
+      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    </div>
+  </div>
+
+  <!-- ============ TRAINING PROGRESS ============ -->
+  <div class="eyebrow">Training Progress</div>
+  <p class="note">List the duties this role was trained on and mark where each one stands today. Write in the duties that apply to this position.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Duty / Task</th>
+        <th>Not Started</th>
+        <th>In Progress</th>
+        <th>Signed Off</th>
+      </tr>
+    </thead>
+    <tbody id="duties"></tbody>
+  </table>
+
+  <div class="comment-label" style="margin-top:16px;">Training notes</div>
+  <div class="field box" contenteditable="true" data-placeholder="What is still outstanding, and who is responsible for finishing it…"></div>
+
+  <!-- ============ INTRODUCTORY PERIOD ASSESSMENT ============ -->
+  <div class="eyebrow">Introductory Period Assessment</div>
+
+  <div class="q first">Is the employee performing at the level expected at this point in training?
+    <span class="inline-choice">
+      <label><input type="radio" name="onpace"><span class="mark"></span> Yes</label>
+      <label><input type="radio" name="onpace"><span class="mark"></span> Not yet</label>
+      <label><input type="radio" name="onpace"><span class="mark"></span> Exceeding</label>
+    </span>
+  </div>
+  <div class="field box" contenteditable="true" data-placeholder="What supports this rating…"></div>
+
+  <div class="q">Attendance and punctuality during the introductory period:
+    <span class="inline-choice">
+      <label><input type="radio" name="attend"><span class="mark"></span> Excellent</label>
+      <label><input type="radio" name="attend"><span class="mark"></span> Acceptable</label>
+      <label><input type="radio" name="attend"><span class="mark"></span> Concern</label>
+    </span>
+  </div>
+  <div class="field box" contenteditable="true" data-placeholder="Dates of absences or tardies, and whether they were called in properly…"></div>
+
+  <div class="q">Fit with the practice's culture and patient standards:
+    <span class="inline-choice">
+      <label><input type="radio" name="fit"><span class="mark"></span> Strong</label>
+      <label><input type="radio" name="fit"><span class="mark"></span> Developing</label>
+      <label><input type="radio" name="fit"><span class="mark"></span> Concern</label>
+    </span>
+  </div>
+  <div class="field box" contenteditable="true" data-placeholder="How the employee reflects our standards with patients and teammates…"></div>
+
+  <div class="q">Has the employee received any coaching or disciplinary conversations?
+    <span class="inline-choice">
+      <label><input type="radio" name="coaching"><span class="mark"></span> Yes</label>
+      <label><input type="radio" name="coaching"><span class="mark"></span> No</label>
+    </span>
+  </div>
+  <div class="field box" contenteditable="true" data-placeholder="If yes, dates, topics, and how the employee responded…"></div>
+
+  <!-- ============ NARRATIVE ============ -->
+  <div class="eyebrow">Strengths &amp; Next Steps</div>
+
+  <div class="q first">A. What this employee is doing well:</div>
+  <div class="grid2">
+    <div><span class="num">Item 1</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+    <div><span class="num">Item 2</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+    <div><span class="num">Item 3</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+    <div><span class="num">Item 4</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+  </div>
+
+  <div class="q">B. What needs to improve before the next check-in:</div>
+  <div class="grid2">
+    <div><span class="num">Item 1</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+    <div><span class="num">Item 2</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+    <div><span class="num">Item 3</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+    <div><span class="num">Item 4</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
+  </div>
+
+  <div class="q">Employee Action Plan — What the <u>employee</u> will do over the next 90 days:</div>
+  <div class="field box-lg" contenteditable="true" data-placeholder="Specific, observable steps with dates where possible…"></div>
+
+  <div class="q">Employer Action Plan — What <u>we</u> will do to support them:</div>
+  <div class="field box-lg" contenteditable="true" data-placeholder="Training to finish, shadowing, resources, schedule adjustments, who owns each item…"></div>
+
+  <!-- ============ RECOMMENDATION ============ -->
+  <div class="eyebrow">Recommendation</div>
+  <div class="rec">
+    <label class="opt"><input type="radio" name="rec"><span class="mark"></span><span class="opt-text"><b>Continue employment</b> — Introductory period complete. Employee moves to the regular review cycle.</span></label>
+    <label class="opt"><input type="radio" name="rec"><span class="mark"></span><span class="opt-text"><b>Continue with follow-up</b> — Performance is acceptable, but specific items above will be re-reviewed on the date below.</span></label>
+    <label class="opt"><input type="radio" name="rec"><span class="mark"></span><span class="opt-text"><b>Extend training period</b> — Additional training and a formal follow-up review are required before this employee is considered fully onboarded.</span></label>
+    <label class="opt"><input type="radio" name="rec"><span class="mark"></span><span class="opt-text"><b>End employment</b> — Do not proceed past the introductory period. Discuss with the doctors before this is communicated.</span></label>
+
+    <div style="display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;">
+      <div style="flex:1 1 200px;"><span class="lbl">Follow-Up Review Date</span><input type="date"></div>
+      <div style="flex:2 1 260px;"><span class="lbl">Notes</span><div class="field line" contenteditable="true" data-placeholder="Anything the doctors should know…"></div></div>
+    </div>
+  </div>
+
+  <!-- ============ SIGNATURES ============ -->
+  <div class="eyebrow">Acknowledgment &amp; Signatures</div>
+  <p class="ack">I acknowledge that the above items have been presented and discussed with me. My signature does not necessarily indicate agreement — only that I have received and reviewed this evaluation.</p>
+
+  <div class="sig-row">
+    <div class="sig-name"><span class="lbl">Employee Signature</span><div class="sig-line"></div></div>
+    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
+  </div>
+  <div class="sig-row">
+    <div class="sig-name"><span class="lbl">Office Manager Signature</span><div class="sig-line"></div></div>
+    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
+  </div>
+  <div class="sig-row">
+    <div class="sig-name"><span class="lbl">Doctor's Signature</span><div class="sig-line"></div></div>
+    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
+  </div>
+
+  <div class="actions no-print">
+    <button class="btn-primary" onclick="window.print()">Save as PDF / Print</button>
+    <button class="btn-quiet" onclick="clearForm()">Clear form</button>
+  </div>
+
+  <div class="footer-line">
+    <span>Hudsonville Family Dentistry — 90-Day Introductory Review</span>
+    <span>Confidential — Personnel File</span>
+  </div>
+
+</div>
+
+<script>
+  // Ten blank duty rows the manager fills in for the role being reviewed.
+  (function buildDuties(){
+    var body = document.getElementById('duties');
+    for (var i = 1; i <= 10; i++) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="cat"><div class="field duty-field" contenteditable="true" data-placeholder="Duty or task…"></div></td>' +
+        '<td class="pick"><label><input type="radio" name="duty' + i + '"><span class="mark"></span></label></td>' +
+        '<td class="pick"><label><input type="radio" name="duty' + i + '"><span class="mark"></span></label></td>' +
+        '<td class="pick"><label><input type="radio" name="duty' + i + '"><span class="mark"></span></label></td>';
+      body.appendChild(tr);
+    }
+    wirePaste(body);
+  })();
+
+  function wirePaste(scope){
+    scope.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+      el.setAttribute('spellcheck','true');
+      el.addEventListener('paste', function (e) {
+        e.preventDefault();
+        var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+    });
+  }
+  wirePaste(document);
+
+  function clearForm() {
+    if (!confirm('Clear everything on this form? This cannot be undone.')) return;
+    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.textContent = ''; });
+    document.querySelectorAll('input[type="radio"]').forEach(function (el) { el.checked = false; });
+    document.querySelectorAll('input[type="date"]').forEach(function (el) { el.value = ''; });
+    window.scrollTo(0, 0);
+  }
+
+  var touched = false;
+  document.addEventListener('input', function () { touched = true; });
+  document.addEventListener('change', function () { touched = true; });
+  window.addEventListener('beforeunload', function (e) {
+    if (!touched) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+</script>
+
+</body>
+</html>
