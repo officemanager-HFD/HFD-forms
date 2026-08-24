@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HFD One-on-One Check-In &amp; Right People Scorecard</title>
+<style>
+  :root{
+    --navy:#1F3A5F;
+    --navy-deep:#152A46;
+    --teal:#2E8B8B;
+    --teal-soft:#E7F1F1;
+    --gold:#C9A227;
+    --gold-soft:#FBF4DF;
+    --ink:#22262B;
+    --muted:#5C6670;
+    --line:#D6DCE2;
+    --paper:#FFFFFF;
+    --bg:#F2F5F7;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+  }
+  .sheet{
+    max-width:960px;
+    margin:0 auto;
+    background:var(--paper);
+    box-shadow:0 1px 3px rgba(0,0,0,.12);
+  }
+
+  /* ---------- Masthead ---------- */
+  header.mast{
+    background:var(--navy);
+    color:#fff;
+    padding:28px 32px 24px;
+    border-bottom:5px solid var(--gold);
+  }
+  .mast .practice{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:.82rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin:0 0 6px;
+  }
+  .mast h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:1.9rem;
+    font-weight:700;
+    margin:0 0 6px;
+    line-height:1.2;
+  }
+  .mast p{margin:0;color:#CBD8E4;font-size:.95rem;max-width:62ch;}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    padding:12px 32px;background:var(--teal-soft);
+    border-bottom:1px solid var(--line);
+  }
+  .toolbar .hint{font-size:.85rem;color:var(--muted);margin-left:auto;}
+  button{
+    font:inherit;font-size:.92rem;font-weight:600;
+    padding:9px 18px;border-radius:4px;cursor:pointer;
+    border:1px solid var(--teal);background:var(--teal);color:#fff;
+  }
+  button:hover{background:#256F6F;border-color:#256F6F;}
+  button.ghost{background:#fff;color:var(--teal);}
+  button.ghost:hover{background:#fff;color:#256F6F;}
+  button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{
+    outline:3px solid var(--gold);outline-offset:2px;
+  }
+
+  main{padding:0 32px 48px;}
+
+  /* ---------- Section framing ---------- */
+  .part-label{
+    display:flex;align-items:baseline;gap:14px;
+    margin:40px 0 4px;padding-bottom:8px;
+    border-bottom:2px solid var(--navy);
+  }
+  .part-label .tag{
+    font-family:Georgia,serif;font-size:.75rem;letter-spacing:.18em;
+    text-transform:uppercase;color:#fff;background:var(--navy);
+    padding:4px 10px;border-radius:2px;white-space:nowrap;
+  }
+  .part-label h2{
+    font-family:Georgia,serif;font-size:1.45rem;margin:0;color:var(--navy);
+  }
+  .lede{color:var(--muted);margin:10px 0 22px;max-width:74ch;}
+
+  h3{
+    font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);
+    margin:30px 0 12px;
+  }
+
+  .callout{
+    background:var(--gold-soft);
+    border-left:4px solid var(--gold);
+    padding:14px 18px;margin:20px 0;
+    font-size:.95rem;
+  }
+  .callout strong{color:var(--navy-deep);}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .expect h4{
+    margin:0 0 8px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--teal);font-family:Georgia,serif;
+  }
+  .expect ol{margin:0;padding-left:20px;font-size:.94rem;}
+  .expect li{margin-bottom:6px;}
+
+  /* ---------- Fields ---------- */
+  .field{margin-bottom:16px;}
+  .field label,.qlabel{
+    display:block;font-size:.78rem;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--navy);margin-bottom:5px;
+  }
+  .qlabel em{font-style:normal;font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted);}
+  input[type=text],input[type=date],textarea,select{
+    width:100%;font:inherit;color:var(--ink);
+    border:1px solid var(--line);border-radius:3px;
+    padding:9px 11px;background:#fff;
+  }
+  textarea{resize:none;overflow:hidden;min-height:74px;line-height:1.55;}
+  input:hover,textarea:hover,select:hover{border-color:var(--teal);}
+
+  .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .meta.two{grid-template-columns:repeat(2,1fr);}
+
+  .quad{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .box{border:1px solid var(--line);border-top:3px solid var(--teal);padding:14px;}
+  .box.low{border-top-color:var(--gold);}
+  .box .qlabel{margin-bottom:8px;}
+
+  .numbered{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin-bottom:10px;}
+  .numbered .n,.rnum{
+    font-family:Georgia,serif;font-weight:700;color:#fff;background:var(--navy);
+    text-align:center;border-radius:3px;padding:8px 0;font-size:.9rem;
+  }
+
+  /* Review of last time — number, then two labeled fields */
+  .review-row{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;margin-bottom:18px;}
+  .review-row .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0;}
+  .review-row .pair > div{min-width:0;}
+
+  /* ---------- Values ---------- */
+  .value-row{
+    display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:start;
+    padding:16px 0;border-bottom:1px solid var(--line);
+  }
+  .value-row.first{border-top:1px solid var(--line);}
+  .value-row .vname{
+    font-family:Georgia,serif;font-weight:700;color:var(--navy);font-size:1.02rem;
+    margin-bottom:4px;
+  }
+  .value-row .vdesc{font-size:.9rem;color:var(--muted);margin:0 0 10px;}
+  .vexp textarea{min-height:52px;background:#FBFCFD;}
+  .vexp.needed .qlabel em{color:#9A6B00;font-weight:700;}
+  .vexp.needed textarea{border-color:var(--gold);background:#FFFDF5;}
+
+  .scorebar{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    background:var(--navy);color:#fff;padding:14px 18px;margin-top:0;
+  }
+  .scorebar .nums{display:flex;gap:26px;flex-wrap:wrap;}
+  .scorebar .k{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#9FB6CC;display:block;}
+  .scorebar .v{font-family:Georgia,serif;font-size:1.3rem;font-weight:700;}
+  .verdict{
+    font-family:Georgia,serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:8px 16px;border-radius:3px;background:#3A536F;color:#CBD8E4;font-size:.95rem;
+  }
+  .verdict.yes{background:var(--teal);color:#fff;}
+  .verdict.maybe{background:var(--gold);color:#3A2E00;}
+  .verdict.no{background:#B4453A;color:#fff;}
+
+  .rating-key{font-size:.88rem;color:var(--muted);margin:0 0 18px;}
+  .rating-key b{color:var(--navy);}
+
+  .sig{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:16px;}
+
+  footer.foot{
+    border-top:2px solid var(--teal);
+    margin:44px 32px 0;padding:14px 0 28px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-size:.78rem;color:var(--muted);
+  }
+
+  @media (max-width:760px){
+    header.mast,.toolbar{padding-left:18px;padding-right:18px;}
+    main{padding-left:18px;padding-right:18px;}
+    footer.foot{margin-left:18px;margin-right:18px;}
+    .two-col,.quad,.meta,.meta.two,.value-row,.sig,
+    .review-row .pair{grid-template-columns:1fr;}
+    .mast h1{font-size:1.5rem;}
+  }
+
+  @media print{
+    body{background:#fff;font-size:11.5pt;}
+    .sheet{box-shadow:none;max-width:none;}
+    .toolbar,.no-print{display:none !important;}
+    header.mast{background:#fff;color:var(--navy);border-bottom:3px solid var(--gold);padding:0 0 12px;}
+    .mast p{color:var(--muted);}
+    main{padding:0;}
+    footer.foot{margin:24px 0 0;}
+    .part-label{break-after:avoid;}
+    .value-row,.box,.review-row,.numbered{break-inside:avoid;}
+    .scorebar{background:#fff;color:var(--navy);border:2px solid var(--navy);}
+    .scorebar .k{color:var(--muted);}
+    .verdict{border:1px solid var(--navy);}
+    textarea,input,select{border:1px solid #999;}
+    .part-two{break-before:page;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="mast">
+    <p class="practice">Hudsonville Family Dentistry</p>
+    <h1>One-on-One Check-In &amp; Right People Scorecard</h1>
+    <p>Part 1 is filled out by the team member. Part 2 is completed by the leader and reviewed with you at the check-in.</p>
+  </header>
+
+  <div class="toolbar no-print">
+    <button type="button" onclick="window.print()">Print or save as PDF</button>
+    <button type="button" class="ghost" onclick="clearForm()">Clear form</button>
+    <span class="hint">Boxes grow as you type. Nothing is saved online — print or save a PDF when you're done.</span>
+  </div>
+
+  <main>
+
+    <!-- ============ INTRODUCTION ============ -->
+    <div class="part-label">
+      <span class="tag">Start here</span>
+      <h2>How our check-ins work</h2>
+    </div>
+
+    <p class="lede">
+      Check-ins are a two-way conversation. They exist to improve how we work together, give you
+      feedback you can act on, and make sure expectations are clear on both sides — no surprises.
+      They are not a compensation discussion. Pay increases are tied to core value alignment and results,
+      and are handled separately.
+    </p>
+
+    <div class="callout">
+      <strong>The rhythm:</strong> 15–30 minutes, every 4–6 weeks. The team member schedules the check-in
+      from the leadership schedule. If you'll be off on the day of your scheduled check-in, it's on you to
+      switch with another team member and let leadership know so the calendar gets updated.
+    </div>
+
+    <div class="two-col">
+      <div class="expect">
+        <h4>What we ask of the team member</h4>
+        <ol>
+          <li>Schedule your check-ins from the leadership schedule your leader provides.</li>
+          <li>Be on time.</li>
+          <li>Fill out this check-in agenda and get it to your leader one day before you meet.</li>
+          <li>Come ready to run the meeting from your agenda.</li>
+        </ol>
+      </div>
+      <div class="expect">
+        <h4>What we ask of the leader</h4>
+        <ol>
+          <li>Provide the check-in schedule and keep it updated.</li>
+          <li>Be on time.</li>
+          <li>Let the team member lead the conversation.</li>
+          <li>Offer support and give feedback when it's needed.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ============ PART 1 ============ -->
+    <div class="part-label">
+      <span class="tag">Part 1</span>
+      <h2>Check-In Agenda</h2>
+    </div>
+
+    <div class="meta">
+      <div class="field"><label for="p1-name">Name</label><input type="text" id="p1-name"></div>
+      <div class="field"><label for="p1-role">Role</label><input type="text" id="p1-role"></div>
+      <div class="field"><label for="p1-date">Date</label><input type="date" id="p1-date"></div>
+      <div class="field"><label for="p1-with">Meeting with</label><input type="text" id="p1-with"></div>
+    </div>
+
+    <div class="quad">
+      <div class="box"><span class="qlabel">1 &middot; Personal high</span><textarea></textarea></div>
+      <div class="box low"><span class="qlabel">2 &middot; Personal low</span><textarea></textarea></div>
+      <div class="box"><span class="qlabel">3 &middot; Professional high</span><textarea></textarea></div>
+      <div class="box low"><span class="qlabel">4 &middot; Professional low</span><textarea></textarea></div>
+    </div>
+
+    <h3>5 &middot; What is one thing the leadership team can help you with?</h3>
+    <textarea></textarea>
+
+    <h3>My top 3 priorities for this time frame</h3>
+    <p class="rating-key">What am I focusing on to move myself and the team forward?</p>
+    <div class="numbered"><span class="n">1</span><textarea></textarea></div>
+    <div class="numbered"><span class="n">2</span><textarea></textarea></div>
+    <div class="numbered"><span class="n">3</span><textarea></textarea></div>
+
+    <h3>Review of my top 3 from last time — how am I doing?</h3>
+    <div class="review-row">
+      <span class="rnum">1</span>
+      <div class="pair">
+        <div><span class="qlabel">What the priority was</span><textarea></textarea></div>
+        <div><span class="qlabel">Where it stands now</span><textarea></textarea></div>
+      </div>
+    </div>
+    <div class="review-row">
+      <span class="rnum">2</span>
+      <div class="pair">
+        <div><span class="qlabel">What the priority was</span><textarea></textarea></div>
+        <div><span class="qlabel">Where it stands now</span><textarea></textarea></div>
+      </div>
+    </div>
+    <div class="review-row">
+      <span class="rnum">3</span>
+      <div class="pair">
+        <div><span class="qlabel">What the priority was</span><textarea></textarea></div>
+        <div><span class="qlabel">Where it stands now</span><textarea></textarea></div>
+      </div>
+    </div>
+
+    <!-- ============ PART 2 ============ -->
+    <div class="part-label part-two">
+      <span class="tag">Part 2</span>
+      <h2>Right People Scorecard</h2>
+    </div>
+
+    <div class="callout">
+      <strong>Our core purpose:</strong> At Hudsonville Family Dentistry, we provide high-quality dental
+      care in a comfortable and caring environment while building trusted relationships and helping our
+      patients maintain healthy smiles that support their overall health for a lifetime.
+    </div>
+
+    <p class="lede">
+      Completed by your leader and reviewed with you at the check-in.
+      This is a coaching tool, not a criticism tool. It looks at two separate questions: does this person
+      live our core values (right person), and are they getting results in this role (right seat)? Score the
+      behavior against the value or the role — never the person. Schedule the next check-in before you review
+      this with them.
+    </p>
+
+    <div class="callout">
+      <strong>Any score of 2 or 0 needs an explanation or an example.</strong> A 1 doesn't. That's what
+      makes the conversation useful — the score alone doesn't tell us anything we can act on.
+    </div>
+
+
+
+    <p class="rating-key">
+      <b>2 — Above expectations:</b> exhibits this most if not all of the time. &nbsp;
+      <b>1 — Meets expectations:</b> exhibits this often, though sometimes not. &nbsp;
+      <b>0 — Below expectations:</b> rarely exhibits this.
+    </p>
+
+    <h3>Right person — our core values</h3>
+
+    <div class="value-row first">
+      <div>
+        <div class="vname">Be the Best and Excellence in Every Smile</div>
+        <p class="vdesc">We are committed to delivering the highest standard of dental care for every patient. Through continued education, clinical growth, and attention to detail, we strive to provide treatment that helps our patients maintain healthy smiles for a lifetime.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="cv-score" aria-label="Score for Be the Best and Excellence in Every Smile">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="value-row">
+      <div>
+        <div class="vname">Compassionate, Patient-Centered Care</div>
+        <p class="vdesc">We believe great dentistry begins with genuine relationships. By getting to know our patients and understanding their needs, we create a comfortable, welcoming environment where every patient feels heard, respected, and confident in their care.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="cv-score" aria-label="Score for Compassionate, Patient-Centered Care">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="value-row">
+      <div>
+        <div class="vname">We Win as a Team</div>
+        <p class="vdesc">We support one another and work together to create the best experience for our patients and our team. Each team member is dedicated to helping others, maintaining a strong work ethic, and always doing the right thing.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="cv-score" aria-label="Score for We Win as a Team">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="value-row">
+      <div>
+        <div class="vname">Bring a Positive Attitude</div>
+        <p class="vdesc">A positive environment benefits both our patients and our team. We are committed to maintaining a respectful, supportive workplace by focusing on solutions, communicating openly, and fostering a culture free from negativity and gossip.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="cv-score" aria-label="Score for Bring a Positive Attitude">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="value-row">
+      <div>
+        <div class="vname">Enjoy the Journey</div>
+        <p class="vdesc">We believe work should be meaningful and enjoyable. By celebrating achievements—both big and small—we recognize the important role we play in improving our patients' health while creating a workplace where people are excited to come to work each day.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="cv-score" aria-label="Score for Enjoy the Journey">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="scorebar">
+      <div class="nums">
+        <div><span class="k">Total score</span><span class="v" id="cv-total">—</span></div>
+        <div><span class="k">Minimum bar</span><span class="v">5 of 10</span></div>
+      </div>
+      <div class="verdict" id="cv-verdict">Right person?</div>
+    </div>
+
+    <h3>Right seat — gets results (GWC)</h3>
+    <p class="rating-key">
+      A person thrives in a role only when all three are true. Getting it and wanting it can't be
+      taught — capacity sometimes can, if we're willing to invest the time. Same rule here: a 2 or a 0
+      needs an explanation or an example.
+    </p>
+
+    <div class="value-row first">
+      <div>
+        <div class="vname">Gets it</div>
+        <p class="vdesc">They understand the role — the ins and outs, why it matters, and how it fits with everyone else. Not everyone gets every role, and that isn't a character problem.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="gwc-score" aria-label="Score for Gets it">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="value-row">
+      <div>
+        <div class="vname">Wants it</div>
+        <p class="vdesc">They genuinely want to do this job. You can't pay, motivate, or talk someone into wanting it — sometimes a person gets it and has the capacity but no longer wants the role.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="gwc-score" aria-label="Score for Wants it">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="value-row">
+      <div>
+        <div class="vname">Capacity to do it</div>
+        <p class="vdesc">They have the time, knowledge, skill, and emotional bandwidth the role demands. Capacity gaps can occasionally be closed with training and time, if we commit to it.</p>
+        <div class="vexp"><span class="qlabel">Explanation or example <em>(required for a 2 or a 0)</em></span><textarea></textarea></div>
+      </div>
+      <select class="gwc-score" aria-label="Score for Capacity to do it">
+        <option value="">Not scored</option><option value="2">2 — Above</option><option value="1">1 — Meets</option><option value="0">0 — Below</option>
+      </select>
+    </div>
+
+    <div class="scorebar">
+      <div class="nums">
+        <div><span class="k">Total score</span><span class="v" id="gwc-total">—</span></div>
+        <div><span class="k">Minimum bar</span><span class="v">3 of 6</span></div>
+      </div>
+      <div class="verdict" id="gwc-verdict">Right seat?</div>
+    </div>
+
+    <div class="sig" style="margin-top:34px;">
+      <div class="field"><label for="sig-tm">Team member signature</label><input type="text" id="sig-tm"></div>
+      <div class="field"><label for="sig-tm-date">Date</label><input type="date" id="sig-tm-date"></div>
+    </div>
+    <div class="sig">
+      <div class="field"><label for="sig-ld">Leader signature</label><input type="text" id="sig-ld"></div>
+      <div class="field"><label for="sig-ld-date">Date</label><input type="date" id="sig-ld-date"></div>
+    </div>
+
+  </main>
+
+  <footer class="foot">
+    <span>Hudsonville Family Dentistry &middot; One-on-One Check-In &amp; Right People Scorecard</span>
+    <span>Internal use only</span>
+  </footer>
+</div>
+
+<script>
+  // Grow text boxes with the content so nothing gets cut off.
+  function fit(el){
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight + 2) + 'px';
+  }
+  function fitAll(){ document.querySelectorAll('textarea').forEach(fit); }
+  document.addEventListener('input', function(e){
+    if (e.target.tagName === 'TEXTAREA') fit(e.target);
+  });
+  window.addEventListener('load', fitAll);
+  window.addEventListener('resize', fitAll);
+  window.addEventListener('beforeprint', fitAll);
+
+  // Flag the explanation box when a 2 or a 0 is chosen
+  function flagExplanation(sel){
+    var row = sel.closest('.value-row');
+    if (!row) return;
+    var exp = row.querySelector('.vexp');
+    if (!exp) return;
+    if (sel.value === '2' || sel.value === '0') exp.classList.add('needed');
+    else exp.classList.remove('needed');
+  }
+
+  // Scoring
+  function tally(cls, totalId, verdictId, bar, max){
+    var picks = Array.prototype.slice.call(document.querySelectorAll('.' + cls));
+    var scored = picks.filter(function(s){ return s.value !== ''; });
+    var totalEl = document.getElementById(totalId);
+    var vEl = document.getElementById(verdictId);
+    vEl.className = 'verdict';
+
+    if (scored.length < picks.length){
+      totalEl.textContent = scored.length ? scored.reduce(function(a,s){return a + (+s.value);},0) + '*' : '—';
+      vEl.textContent = 'Score all ' + picks.length + ' to total';
+      return;
+    }
+    var sum = scored.reduce(function(a,s){ return a + (+s.value); }, 0);
+    totalEl.textContent = sum;
+    if (cls === 'cv-score'){
+      if (sum >= bar){ vEl.textContent = 'Right person'; vEl.classList.add('yes'); }
+      else { vEl.textContent = 'Below the bar — coach'; vEl.classList.add('no'); }
+    } else {
+      if (sum === max){ vEl.textContent = 'Right seat'; vEl.classList.add('yes'); }
+      else if (sum >= bar){ vEl.textContent = 'Maybe — keep coaching'; vEl.classList.add('maybe'); }
+      else { vEl.textContent = 'Wrong seat'; vEl.classList.add('no'); }
+    }
+  }
+  function score(){
+    tally('cv-score','cv-total','cv-verdict',5,10);
+    tally('gwc-score','gwc-total','gwc-verdict',3,6);
+  }
+  document.addEventListener('change', function(e){
+    if (e.target.tagName === 'SELECT'){ flagExplanation(e.target); score(); }
+  });
+
+  function clearForm(){
+    if (!confirm('Clear everything on this form?')) return;
+    document.querySelectorAll('input, textarea').forEach(function(f){ f.value = ''; });
+    document.querySelectorAll('select').forEach(function(s){ s.value = ''; flagExplanation(s); });
+    score(); fitAll();
+  }
+  score();
+</script>
+</body>
+</html>
