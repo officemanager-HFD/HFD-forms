@@ -65,11 +65,16 @@
     font-weight:600;color:var(--teal);margin:0 0 5px;
   }
   input[type=text],input[type=date],textarea{
-    width:100%;font:16px inherit;color:var(--ink);background:var(--paper);
+    width:100%;font:16px/1.45 inherit;color:var(--ink);background:var(--paper);
     border:1px solid var(--line);border-bottom:2px solid var(--teal);
     border-radius:6px 6px 0 0;padding:11px 12px;
   }
   textarea{min-height:74px;resize:vertical;border-radius:6px;border-bottom-width:2px}
+  /* single-line fields that grow as you type */
+  textarea.grow{
+    min-height:0;overflow:hidden;resize:none;
+    border-radius:6px 6px 0 0;display:block;
+  }
   input:focus,textarea:focus{outline:3px solid var(--gold);outline-offset:1px}
 
   .choice{
@@ -131,13 +136,13 @@
   <fieldset class="card">
     <div class="grid two">
       <label class="field"><span class="field-label">Name</span>
-        <input type="text" name="Name" autocomplete="name"></label>
+        <textarea rows="1" class="grow" name="Name" autocomplete="name"></textarea></label>
       <label class="field"><span class="field-label">Job title</span>
-        <input type="text" name="Job title" autocomplete="organization-title"></label>
+        <textarea rows="1" class="grow" name="Job title" autocomplete="organization-title"></textarea></label>
       <label class="field"><span class="field-label">Work anniversary</span>
-        <input type="text" name="Work anniversary" placeholder="Month and day"></label>
+        <textarea rows="1" class="grow" name="Work anniversary" placeholder="Month and day"></textarea></label>
       <label class="field"><span class="field-label">Birthday</span>
-        <input type="text" name="Birthday" placeholder="Month and day"></label>
+        <textarea rows="1" class="grow" name="Birthday" placeholder="Month and day"></textarea></label>
     </div>
   </fieldset>
 
@@ -155,7 +160,7 @@
     <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="Showing up steady and doing the job well"><span>Showing up steady and doing the job well</span></label>
     <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="Backing up and helping teammates"><span>Backing up and helping teammates</span></label>
     <label class="field" style="margin-top:12px"><span class="field-label">Something else</span>
-      <input type="text" name="Work I'd like noticed - other"></label>
+      <textarea rows="1" class="grow" name="Work I'd like noticed - other"></textarea></label>
   </fieldset>
 
   <fieldset class="card">
@@ -172,7 +177,7 @@
     <label class="choice"><input type="checkbox" name="How I like recognition" value="One-on-one time with my supervisor"><span>One-on-one time with my supervisor</span></label>
     <label class="choice"><input type="checkbox" name="How I like recognition" value="A high five or fist bump in the moment"><span>A high five or fist bump in the moment</span></label>
     <label class="field" style="margin-top:12px"><span class="field-label">Something else</span>
-      <input type="text" name="How I like recognition - other"></label>
+      <textarea rows="1" class="grow" name="How I like recognition - other"></textarea></label>
   </fieldset>
 
   <fieldset class="card">
@@ -194,14 +199,14 @@
         <p class="hint">So we can get it right instead of guessing.</p>
       </div>
     </div>
-    <div class="fav-row"><span class="field-label">Drink</span><input type="text" name="Favorite drink"></div>
-    <div class="fav-row"><span class="field-label">Snack</span><input type="text" name="Favorite snack"></div>
-    <div class="fav-row"><span class="field-label">Dessert</span><input type="text" name="Favorite dessert"></div>
-    <div class="fav-row"><span class="field-label">Restaurant</span><input type="text" name="Favorite restaurant"></div>
-    <div class="fav-row"><span class="field-label">Store</span><input type="text" name="Favorite store"></div>
-    <div class="fav-row"><span class="field-label">Flower</span><input type="text" name="Favorite flower"></div>
+    <div class="fav-row"><span class="field-label">Drink</span><textarea rows="1" class="grow" name="Favorite drink"></textarea></div>
+    <div class="fav-row"><span class="field-label">Snack</span><textarea rows="1" class="grow" name="Favorite snack"></textarea></div>
+    <div class="fav-row"><span class="field-label">Dessert</span><textarea rows="1" class="grow" name="Favorite dessert"></textarea></div>
+    <div class="fav-row"><span class="field-label">Restaurant</span><textarea rows="1" class="grow" name="Favorite restaurant"></textarea></div>
+    <div class="fav-row"><span class="field-label">Store</span><textarea rows="1" class="grow" name="Favorite store"></textarea></div>
+    <div class="fav-row"><span class="field-label">Flower</span><textarea rows="1" class="grow" name="Favorite flower"></textarea></div>
     <label class="field" style="margin-top:12px"><span class="field-label">Anything else we should know</span>
-      <textarea name="Anything else"></textarea></label>
+      <textarea name="Anything else" rows="3"></textarea></label>
   </fieldset>
 
   <div class="actions noprint">
@@ -221,7 +226,34 @@
 </div>
 
 <script>
-document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+/* Fields grow to fit what's typed, so nothing gets cut off in the PDF */
+function fit(el){
+  el.style.height = 'auto';
+  el.style.height = (el.scrollHeight + 2) + 'px';
+}
+
+var boxes = document.querySelectorAll('textarea');
+for (var i = 0; i < boxes.length; i++){
+  var b = boxes[i];
+  if (b.classList.contains('grow')) fit(b);
+  b.addEventListener('input', function(){ fit(this); });
+  /* keep Enter from making stray line breaks in the short fields */
+  b.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && this.classList.contains('grow')) e.preventDefault();
+  });
+}
+
+function fitAll(){
+  var all = document.querySelectorAll('textarea');
+  for (var i = 0; i < all.length; i++) fit(all[i]);
+}
+window.addEventListener('resize', fitAll);
+
+document.getElementById('printBtn').addEventListener('click', function(){
+  fitAll();
+  window.print();
+});
+window.addEventListener('beforeprint', fitAll);
 </script>
 </body>
 </html>
