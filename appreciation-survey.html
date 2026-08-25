@@ -205,81 +205,23 @@
   </fieldset>
 
   <div class="actions noprint">
-    <h2>Send it in</h2>
-    <p>Pick whichever is easiest. Email opens a message already filled in &mdash; you just hit send.</p>
-    <button type="button" id="emailBtn">Email my answers</button>
-    <button type="button" class="secondary" id="printBtn">Save as PDF or print</button>
-    <button type="button" class="secondary" id="copyBtn">Copy my answers</button>
-    <p class="status" id="status" role="status"></p>
+    <h2>When you're done</h2>
+    <p>Save this page as a PDF, then email the PDF to <strong>officemanager@hudsonvillefamilydentistry.com</strong>.</p>
+    <button type="button" id="printBtn">Save as PDF</button>
+    <p class="hint" style="margin-top:4px">On a phone, choose Print, then pick <em>Save as PDF</em> as the printer. On a computer, the destination is <em>Save as PDF</em>.</p>
   </div>
 
 </form>
 
 <footer>
-  <span>Hudsonville Family Dentistry &mdash; Team Appreciation Survey</span>
+  <span>Hudsonville Family Dentistry &mdash; Team Appreciation Survey<br>Return to officemanager@hudsonvillefamilydentistry.com</span>
   <span>Rev. 08/2026</span>
 </footer>
 
 </div>
 
 <script>
-/* ===== Change this to whoever collects the surveys ===== */
-var SEND_TO = "officemanager@hudsonvillefamilydentistry.com";
-/* ====================================================== */
-
-function collect(){
-  var form = document.getElementById('survey');
-  var out = [], seen = {};
-  var fields = form.querySelectorAll('input, textarea');
-  for (var i = 0; i < fields.length; i++){
-    var f = fields[i];
-    if (!f.name || seen[f.name]) continue;
-    var val = '';
-    if (f.type === 'checkbox'){
-      var picked = [];
-      var boxes = form.querySelectorAll('input[name="' + f.name.replace(/"/g,'\\"') + '"]');
-      for (var j = 0; j < boxes.length; j++){ if (boxes[j].checked) picked.push(boxes[j].value); }
-      val = picked.join(', ');
-      seen[f.name] = true;
-    } else if (f.type === 'radio'){
-      var chosen = form.querySelector('input[name="' + f.name.replace(/"/g,'\\"') + '"]:checked');
-      val = chosen ? chosen.value : '';
-      seen[f.name] = true;
-    } else {
-      val = f.value.trim();
-    }
-    if (val) out.push(f.name + ': ' + val);
-  }
-  return out.join('\n');
-}
-
-function say(msg){ document.getElementById('status').textContent = msg; }
-
-document.getElementById('emailBtn').addEventListener('click', function(){
-  var body = collect();
-  if (!body){ say('Fill in at least one answer first.'); return; }
-  var name = document.querySelector('[name="Name"]').value.trim();
-  var subject = 'Team Appreciation Survey' + (name ? ' - ' + name : '');
-  say('Opening your email app...');
-  window.location.href = 'mailto:' + SEND_TO +
-    '?subject=' + encodeURIComponent(subject) +
-    '&body=' + encodeURIComponent(body);
-});
-
 document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
-
-document.getElementById('copyBtn').addEventListener('click', function(){
-  var body = collect();
-  if (!body){ say('Fill in at least one answer first.'); return; }
-  if (navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(body).then(
-      function(){ say('Copied. Paste it into an email or text.'); },
-      function(){ say('Copy did not work on this browser. Use email or print instead.'); }
-    );
-  } else {
-    say('Copy is not available on this browser. Use email or print instead.');
-  }
-});
 </script>
 </body>
 </html>
