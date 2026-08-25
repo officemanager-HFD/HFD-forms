@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Appreciation Survey — Hudsonville Family Dentistry</title>
+<style>
+  :root{
+    --navy:#14263F;
+    --teal:#2E8B8B;
+    --teal-soft:#E6F1F1;
+    --gold:#C8A24B;
+    --paper:#FAF8F4;
+    --ink:#22303F;
+    --line:#D9D3C7;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px 56px}
+
+  header{
+    border-top:6px solid var(--gold);
+    background:#fff;
+    margin:0 -18px 26px;
+    padding:26px 18px 22px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:0 0 10px;
+  }
+  h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:700;font-size:30px;line-height:1.15;color:var(--navy);margin:0 0 10px;
+  }
+  header p{margin:0;max-width:52ch;color:#4A5866;font-size:15px}
+
+  fieldset{border:0;margin:0 0 22px;padding:0}
+  legend{padding:0}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:18px 16px;margin:0 0 18px;
+  }
+  .q-head{display:flex;gap:12px;align-items:flex-start;margin:0 0 14px}
+  .num{
+    flex:0 0 auto;width:28px;height:28px;border-radius:6px;background:var(--navy);
+    color:var(--gold);font:700 15px/28px Georgia,serif;text-align:center;
+  }
+  .q-text{
+    font-family:Georgia,serif;font-size:17px;line-height:1.35;color:var(--navy);
+    font-weight:700;margin:2px 0 0;
+  }
+  .hint{font-size:13px;color:#6B7885;margin:6px 0 0;font-family:inherit;font-weight:400}
+
+  label.field{display:block;margin:0 0 14px}
+  .field-label{
+    display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    font-weight:600;color:var(--teal);margin:0 0 5px;
+  }
+  input[type=text],input[type=date],textarea{
+    width:100%;font:16px inherit;color:var(--ink);background:var(--paper);
+    border:1px solid var(--line);border-bottom:2px solid var(--teal);
+    border-radius:6px 6px 0 0;padding:11px 12px;
+  }
+  textarea{min-height:74px;resize:vertical;border-radius:6px;border-bottom-width:2px}
+  input:focus,textarea:focus{outline:3px solid var(--gold);outline-offset:1px}
+
+  .choice{
+    display:flex;gap:11px;align-items:flex-start;
+    padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+    margin:0 0 8px;background:var(--paper);cursor:pointer;
+  }
+  .choice:focus-within{border-color:var(--teal);background:var(--teal-soft)}
+  .choice input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--teal);flex:0 0 auto}
+  .choice span{font-size:15px}
+
+  .grid{display:grid;gap:10px}
+  @media(min-width:620px){ .grid.two{grid-template-columns:1fr 1fr} }
+
+  .fav-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;margin:0 0 10px}
+  .fav-row .field-label{margin:0}
+  @media(max-width:480px){ .fav-row{grid-template-columns:1fr;gap:4px} }
+
+  .actions{
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 16px;
+  }
+  .actions h2{font-family:Georgia,serif;font-size:18px;color:var(--navy);margin:0 0 6px}
+  .actions p{margin:0 0 14px;font-size:14px;color:#4A5866}
+  button{
+    -webkit-appearance:none;appearance:none;width:100%;margin:0 0 10px;
+    font:600 16px/1 inherit;padding:15px 16px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--navy);background:var(--navy);color:#fff;
+  }
+  button.secondary{background:#fff;color:var(--navy)}
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .status{font-size:14px;color:var(--teal);font-weight:600;min-height:20px;margin:2px 0 0}
+
+  footer{
+    margin-top:26px;padding-top:12px;border-top:2px solid var(--teal);
+    font-size:12px;color:#6B7885;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+
+  @media print{
+    body{background:#fff}
+    .actions,.noprint{display:none!important}
+    header{margin:0 0 18px;border-top-width:4px}
+    .card{break-inside:avoid;border-color:#999}
+    input,textarea{background:#fff;border-color:#999}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Hudsonville Family Dentistry</p>
+  <h1>Team Appreciation Survey</h1>
+  <p>Tell us how you like to be recognized so we get it right. Answer what you want &mdash; nothing here is required. Takes about three minutes.</p>
+</header>
+
+<form id="survey">
+
+  <fieldset class="card">
+    <div class="grid two">
+      <label class="field"><span class="field-label">Name</span>
+        <input type="text" name="Name" autocomplete="name"></label>
+      <label class="field"><span class="field-label">Job title</span>
+        <input type="text" name="Job title" autocomplete="organization-title"></label>
+      <label class="field"><span class="field-label">Work anniversary</span>
+        <input type="text" name="Work anniversary" placeholder="Month and day"></label>
+      <label class="field"><span class="field-label">Birthday</span>
+        <input type="text" name="Birthday" placeholder="Month and day"></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="card">
+    <div class="q-head">
+      <div class="num">1</div>
+      <div>
+        <p class="q-text">Which parts of your work would mean the most to have noticed?</p>
+        <p class="hint">Check all that fit.</p>
+      </div>
+    </div>
+    <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="Patient care and service"><span>Patient care and service</span></label>
+    <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="New ideas or better ways of doing things"><span>New ideas or better ways of doing things</span></label>
+    <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="Taking on extra work or projects"><span>Taking on extra work or projects</span></label>
+    <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="Showing up steady and doing the job well"><span>Showing up steady and doing the job well</span></label>
+    <label class="choice"><input type="checkbox" name="Work I'd like noticed" value="Backing up and helping teammates"><span>Backing up and helping teammates</span></label>
+    <label class="field" style="margin-top:12px"><span class="field-label">Something else</span>
+      <input type="text" name="Work I'd like noticed - other"></label>
+  </fieldset>
+
+  <fieldset class="card">
+    <div class="q-head">
+      <div class="num">2</div>
+      <div>
+        <p class="q-text">How would you like that recognition to come?</p>
+        <p class="hint">Check all that fit.</p>
+      </div>
+    </div>
+    <label class="choice"><input type="checkbox" name="How I like recognition" value="A thank-you said out loud"><span>A thank-you said out loud</span></label>
+    <label class="choice"><input type="checkbox" name="How I like recognition" value="A handwritten note or card"><span>A handwritten note or card</span></label>
+    <label class="choice"><input type="checkbox" name="How I like recognition" value="A gift card or bonus"><span>A gift card or bonus</span></label>
+    <label class="choice"><input type="checkbox" name="How I like recognition" value="One-on-one time with my supervisor"><span>One-on-one time with my supervisor</span></label>
+    <label class="choice"><input type="checkbox" name="How I like recognition" value="A high five or fist bump in the moment"><span>A high five or fist bump in the moment</span></label>
+    <label class="field" style="margin-top:12px"><span class="field-label">Something else</span>
+      <input type="text" name="How I like recognition - other"></label>
+  </fieldset>
+
+  <fieldset class="card">
+    <div class="q-head">
+      <div class="num">3</div>
+      <div><p class="q-text">Where are you most comfortable being recognized?</p></div>
+    </div>
+    <label class="choice"><input type="radio" name="Where I'm comfortable" value="Just me and the person saying it"><span>Just me and the person saying it</span></label>
+    <label class="choice"><input type="radio" name="Where I'm comfortable" value="A small group"><span>A small group</span></label>
+    <label class="choice"><input type="radio" name="Where I'm comfortable" value="In front of the whole team"><span>In front of the whole team</span></label>
+    <label class="choice"><input type="radio" name="Where I'm comfortable" value="No preference"><span>No preference</span></label>
+  </fieldset>
+
+  <fieldset class="card">
+    <div class="q-head">
+      <div class="num">4</div>
+      <div>
+        <p class="q-text">A few of your favorites</p>
+        <p class="hint">So we can get it right instead of guessing.</p>
+      </div>
+    </div>
+    <div class="fav-row"><span class="field-label">Drink</span><input type="text" name="Favorite drink"></div>
+    <div class="fav-row"><span class="field-label">Snack</span><input type="text" name="Favorite snack"></div>
+    <div class="fav-row"><span class="field-label">Dessert</span><input type="text" name="Favorite dessert"></div>
+    <div class="fav-row"><span class="field-label">Restaurant</span><input type="text" name="Favorite restaurant"></div>
+    <div class="fav-row"><span class="field-label">Store</span><input type="text" name="Favorite store"></div>
+    <div class="fav-row"><span class="field-label">Flower</span><input type="text" name="Favorite flower"></div>
+    <label class="field" style="margin-top:12px"><span class="field-label">Anything else we should know</span>
+      <textarea name="Anything else"></textarea></label>
+  </fieldset>
+
+  <div class="actions noprint">
+    <h2>Send it in</h2>
+    <p>Pick whichever is easiest. Email opens a message already filled in &mdash; you just hit send.</p>
+    <button type="button" id="emailBtn">Email my answers</button>
+    <button type="button" class="secondary" id="printBtn">Save as PDF or print</button>
+    <button type="button" class="secondary" id="copyBtn">Copy my answers</button>
+    <p class="status" id="status" role="status"></p>
+  </div>
+
+</form>
+
+<footer>
+  <span>Hudsonville Family Dentistry &mdash; Team Appreciation Survey</span>
+  <span>Rev. 08/2026</span>
+</footer>
+
+</div>
+
+<script>
+/* ===== Change this to whoever collects the surveys ===== */
+var SEND_TO = "officemanager@hudsonvillefamilydentistry.com";
+/* ====================================================== */
+
+function collect(){
+  var form = document.getElementById('survey');
+  var out = [], seen = {};
+  var fields = form.querySelectorAll('input, textarea');
+  for (var i = 0; i < fields.length; i++){
+    var f = fields[i];
+    if (!f.name || seen[f.name]) continue;
+    var val = '';
+    if (f.type === 'checkbox'){
+      var picked = [];
+      var boxes = form.querySelectorAll('input[name="' + f.name.replace(/"/g,'\\"') + '"]');
+      for (var j = 0; j < boxes.length; j++){ if (boxes[j].checked) picked.push(boxes[j].value); }
+      val = picked.join(', ');
+      seen[f.name] = true;
+    } else if (f.type === 'radio'){
+      var chosen = form.querySelector('input[name="' + f.name.replace(/"/g,'\\"') + '"]:checked');
+      val = chosen ? chosen.value : '';
+      seen[f.name] = true;
+    } else {
+      val = f.value.trim();
+    }
+    if (val) out.push(f.name + ': ' + val);
+  }
+  return out.join('\n');
+}
+
+function say(msg){ document.getElementById('status').textContent = msg; }
+
+document.getElementById('emailBtn').addEventListener('click', function(){
+  var body = collect();
+  if (!body){ say('Fill in at least one answer first.'); return; }
+  var name = document.querySelector('[name="Name"]').value.trim();
+  var subject = 'Team Appreciation Survey' + (name ? ' - ' + name : '');
+  say('Opening your email app...');
+  window.location.href = 'mailto:' + SEND_TO +
+    '?subject=' + encodeURIComponent(subject) +
+    '&body=' + encodeURIComponent(body);
+});
+
+document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+
+document.getElementById('copyBtn').addEventListener('click', function(){
+  var body = collect();
+  if (!body){ say('Fill in at least one answer first.'); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(body).then(
+      function(){ say('Copied. Paste it into an email or text.'); },
+      function(){ say('Copy did not work on this browser. Use email or print instead.'); }
+    );
+  } else {
+    say('Copy is not available on this browser. Use email or print instead.');
+  }
+});
+</script>
+</body>
+</html>
