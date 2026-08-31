@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Meeting Board — Hudsonville Family Dentistry</title>
+<style>
+  :root{
+    --navy:#13324B; --teal:#2E8B8B; --teal-dk:#236E6E; --teal-tint:#E7F1F1;
+    --gold:#C9A227; --gold-tint:#F7EFD8; --bg:#E9EEF1; --panel:#fff; --ink:#16323F;
+    --muted:#5F6F78; --line:#D7E0E5; --rail:255px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:700;margin:0}
+  button{font:inherit;cursor:pointer}
+  input,textarea,select{font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.45rem .6rem;width:100%}
+  textarea{resize:vertical;min-height:4.5rem;line-height:1.5}
+  input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid #8FCFCF;outline-offset:1px}
+  .hide{display:none !important}
+
+  header{background:var(--navy);color:#fff;padding:.7rem 1.1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+  header h1{font-size:1.1rem;white-space:nowrap}
+  header .who{font-size:.85rem;color:#9DB6C6;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+  header .who input{width:auto;min-width:7.2rem;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#fff;padding:.25rem .5rem}
+  header .who input::placeholder{color:#7E9AAC}
+  .clocks{margin-left:auto;display:flex;align-items:center;gap:1.1rem}
+  .clock{text-align:right;line-height:1.15}
+  .clock b{display:block;font-size:1.45rem;font-variant-numeric:tabular-nums;font-weight:600}
+  .clock span{font-size:.7rem;color:#9DB6C6}
+  .clock.over b{color:#F0B429}
+  .tbtn{background:var(--teal);color:#fff;border:0;border-radius:6px;padding:.42rem .78rem;font-size:.85rem;font-weight:600}
+  .tbtn:hover{background:#3AA0A0}
+  .tbtn.ghost{background:transparent;border:1px solid rgba(255,255,255,.3)}
+  .tbtn.ghost:hover{background:rgba(255,255,255,.12)}
+  .tbtn.on{background:var(--gold);color:#3B2E05}
+
+  .wrap{display:flex;align-items:flex-start;gap:1.1rem;padding:1.1rem;max-width:1500px;margin:0 auto}
+  nav.rail{width:var(--rail);flex:0 0 var(--rail);background:var(--panel);border-radius:10px;padding:.5rem;position:sticky;top:74px;box-shadow:0 1px 3px rgba(19,50,75,.1)}
+  .railhead{font-size:.78rem;color:var(--muted);padding:.35rem .5rem .5rem;display:flex;justify-content:space-between;align-items:center}
+  .seg{display:grid;grid-template-columns:1.5rem 1fr auto;align-items:center;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;border-radius:7px;padding:.4rem .5rem;color:var(--ink)}
+  .seg:hover{background:#F1F6F7}
+  .seg .n{width:1.5rem;height:1.5rem;border-radius:50%;background:var(--teal-tint);color:var(--teal-dk);display:grid;place-items:center;font-size:.76rem;font-weight:700}
+  .seg .nm{font-size:.9rem;line-height:1.25}
+  .seg .tm{font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .seg.done .nm{color:var(--muted)} .seg.done .n{background:#E4EAEC;color:var(--muted)}
+  .seg.active{background:var(--navy);color:#fff} .seg.active .n{background:var(--gold);color:#3B2E05} .seg.active .tm{color:#9DB6C6}
+  .seg .bar{grid-column:2/4;height:3px;border-radius:2px;background:#E4EAEC;overflow:hidden}
+  .seg .bar i{display:block;height:100%;background:var(--teal)}
+  .seg.over .bar i{background:var(--gold)}
+
+  main{flex:1;min-width:0}
+  .panel{background:var(--panel);border-radius:10px;padding:1.25rem 1.5rem 1.4rem;box-shadow:0 1px 3px rgba(19,50,75,.1)}
+  .phead{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:.7rem;margin-bottom:1.1rem}
+  .phead h2{font-size:1.55rem;color:var(--navy)}
+  .phead .sub{color:var(--muted);font-size:.9rem}
+  .phead .segtime{margin-left:auto;font-size:.85rem;color:var(--muted)}
+  .blk{margin-bottom:1.4rem}
+  .blk:last-child{margin-bottom:0}
+  .blkhead{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+  .blkhead h3{font-size:1rem;color:var(--teal-dk);font-family:inherit;font-weight:600}
+  .foot{display:flex;gap:.6rem;align-items:center;margin-top:1.3rem;padding-top:1rem;border-top:1px solid var(--line);flex-wrap:wrap}
+  .foot .spacer{margin-left:auto}
+  .row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+  .btn{background:#fff;border:1px solid var(--line);border-radius:6px;padding:.42rem .8rem;font-size:.88rem;color:var(--ink)}
+  .btn:hover{background:#F1F6F7}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+  .btn.primary:hover{background:#3AA0A0}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:#3B2E05;font-weight:600}
+  .btn.sm{padding:.22rem .5rem;font-size:.8rem}
+  .btn.icon{padding:.16rem .45rem;font-size:.85rem;color:var(--muted)}
+  label.fld{display:block;font-size:.82rem;color:var(--muted);margin:0 0 .25rem}
+  .note{color:var(--muted);font-size:.85rem}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+  .quote{background:var(--teal);color:#fff;border-radius:10px;padding:1.4rem 1.7rem;font-family:Georgia,serif;font-size:1.28rem;line-height:1.55;font-style:italic;text-align:center}
+  .vals{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.9rem}
+  .val{background:var(--teal-tint);border-radius:8px;padding:.55rem .85rem;font-size:.9rem;font-weight:600;color:var(--navy)}
+
+  table{width:100%;border-collapse:collapse}
+  th{background:var(--teal);color:#fff;text-align:left;font-size:.82rem;font-weight:600;padding:.5rem .6rem}
+  td{border-bottom:1px solid var(--line);padding:.32rem .6rem;vertical-align:middle;font-size:.92rem}
+  td input,td select{border:1px solid transparent;background:transparent;padding:.3rem .35rem}
+  td input:hover,td select:hover{border-color:var(--line);background:#fff}
+  tr.solved td{color:var(--muted)} tr.solved td .txt{text-decoration:line-through}
+  .rank{display:flex;flex-direction:column;gap:1px}
+  .rank button{background:none;border:0;color:var(--muted);line-height:.9;padding:0 .2rem;font-size:.75rem}
+  .rank button:hover{color:var(--teal)}
+
+  .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:.2rem 0 .8rem}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:20px;padding:.38rem .9rem;font-size:.88rem}
+  .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
+  .groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.8rem;margin-top:.9rem}
+  .group{border:1px solid var(--line);border-radius:9px;padding:.7rem .85rem}
+  .group h4{margin:0 0 .35rem;font:600 .85rem/1.2 inherit;color:var(--teal-dk)}
+  .group ul{margin:0;padding-left:1.1rem} .group li{font-size:.92rem}
+
+  .draw{background:var(--gold-tint);border:1px solid #E8D9A8;border-radius:10px;padding:1.2rem 1.4rem;text-align:center}
+  .draw .card{font-family:Georgia,serif;font-size:1.5rem;line-height:1.4;color:var(--navy);min-height:3.4rem;display:flex;align-items:center;justify-content:center}
+  .draw .card.empty{font-size:1rem;font-style:italic;color:var(--muted);font-family:inherit}
+  .draw .cd{font-size:2.6rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--navy);line-height:1.1}
+  .draw .cd.low{color:#B4541F}
+  .draw .meta{font-size:.85rem;color:var(--muted);margin-top:.25rem}
+  .drawn{margin-top:.9rem;font-size:.88rem;color:var(--muted);text-align:left}
+
+  .flyer{border:1px dashed var(--line);border-radius:10px;padding:.8rem;text-align:center;background:#FBFCFD}
+  .flyer img{max-width:100%;max-height:60vh;border-radius:6px}
+  .flyer .ph{color:var(--muted);font-size:.9rem;padding:2rem 1rem}
+  .vidwrap{position:relative;padding-top:52%;border-radius:10px;overflow:hidden;background:#000;margin-top:.6rem}
+  .vidwrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+
+  .shout{display:flex;gap:.7rem;align-items:flex-start;background:var(--gold-tint);border-radius:9px;padding:.65rem .9rem;margin-bottom:.55rem}
+  .shout .heart{color:var(--gold);font-size:1.15rem} .shout b{color:var(--navy)}
+  .scale{display:flex;gap:.7rem;flex-wrap:wrap;margin:.4rem 0 .2rem}
+  .scale button{width:3rem;height:3rem;border-radius:50%;border:2px solid var(--teal);background:#fff;color:var(--navy);font-size:1.05rem;font-weight:700}
+  .scale button:hover{background:var(--teal-tint)}
+  .scale button b{display:block;font-size:.6rem;font-weight:600;color:var(--muted)}
+  .list{list-style:none;margin:0;padding:0}
+  .list li{display:flex;gap:.6rem;align-items:center;padding:.3rem 0;border-bottom:1px solid var(--line)}
+  .list li input[type=text]{border-color:transparent;background:transparent}
+  .list li input[type=text]:hover{border-color:var(--line);background:#fff}
+  .addrow{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+  .addrow input{flex:1;min-width:8rem}
+  .empty{color:var(--muted);font-size:.9rem;padding:.5rem 0}
+
+  .plan .psec{border:1px solid var(--line);border-radius:9px;padding:.7rem .85rem;margin-bottom:.7rem;background:#FBFCFD}
+  .plan .psec.off{opacity:.55}
+  .ptop{display:grid;grid-template-columns:auto 1fr 5rem auto auto;gap:.5rem;align-items:center}
+  .ptop input[type=text]{font-weight:600}
+  .pblocks{margin-top:.55rem;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+  .pblk{display:inline-flex;align-items:center;gap:.3rem;background:var(--teal-tint);color:var(--navy);border-radius:16px;padding:.22rem .5rem .22rem .7rem;font-size:.82rem}
+  .pblk button{background:none;border:0;color:var(--teal-dk);font-size:.8rem;padding:0 .15rem}
+  .pblk button:hover{color:#B4541F}
+
+  dialog{border:0;border-radius:10px;padding:0;max-width:680px;width:93%;box-shadow:0 12px 40px rgba(19,50,75,.3)}
+  dialog::backdrop{background:rgba(19,50,75,.45)}
+  .dlg{padding:1.2rem 1.4rem}
+  .dlg h3{color:var(--navy);font-size:1.2rem;margin-bottom:.7rem;font-family:Georgia,serif}
+  .dlg pre{background:#F3F7F8;border:1px solid var(--line);border-radius:8px;padding:.9rem;max-height:42vh;overflow:auto;font-size:.82rem;white-space:pre-wrap}
+  .status{font-size:.82rem;color:var(--muted)}
+  .status.err{color:#B4541F} .status.ok{color:#2E7D5B}
+
+  @media (max-width:900px){
+    .wrap{flex-direction:column;padding:.7rem}
+    nav.rail{width:100%;flex:none;position:static;display:flex;gap:.4rem;overflow-x:auto}
+    nav.rail .railhead{display:none}
+    .seg{width:auto;flex:0 0 auto;grid-template-columns:1.4rem auto;padding:.4rem .6rem}
+    .seg .tm,.seg .bar{display:none}
+    .grid2{grid-template-columns:1fr}
+    .clocks{width:100%;margin-left:0;justify-content:space-between}
+    .panel{padding:1rem}
+    .ptop{grid-template-columns:auto 1fr;row-gap:.4rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+  @media print{header,nav.rail,.foot,.noprint{display:none}.panel{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Team Meeting</h1>
+  <div class="who">
+    <input id="mDate" type="date" aria-label="Meeting date">
+    <input id="mFac" type="text" placeholder="Facilitator" aria-label="Facilitator">
+  </div>
+  <div class="clocks">
+    <div class="clock" id="segClock"><b>0:00</b><span id="segLabel">segment</span></div>
+    <div class="clock" id="totClock"><b>0:00</b><span>meeting total</span></div>
+    <button class="tbtn" id="playBtn">Start</button>
+    <button class="tbtn ghost" id="planBtn">Plan</button>
+    <button class="tbtn ghost" id="recapBtn">Recap</button>
+    <button class="tbtn ghost" id="syncBtn">Sheet</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="rail" id="rail" aria-label="Run of show"><div class="railhead"><span>Run of show</span><span id="railTot"></span></div></nav>
+  <main><div class="panel" id="panel"></div></main>
+</div>
+
+<dialog id="recapDlg"><div class="dlg">
+  <h3>Meeting recap</h3>
+  <p class="note">Copy this into the Pulse workbook, email it to the team, or send it to the sheet.</p>
+  <pre id="recapText"></pre>
+  <div class="foot">
+    <button class="btn primary" id="copyRecap">Copy to clipboard</button>
+    <button class="btn" id="dlRecap">Download as text</button>
+    <button class="btn" id="pushRecap">Send to the sheet</button>
+    <button class="btn spacer" id="closeRecap">Close</button>
+  </div>
+</div></dialog>
+
+<dialog id="syncDlg"><div class="dlg">
+  <h3>Google Sheet</h3>
+  <p class="note">Paste the web app link from your Apps Script deployment. The meeting then loads and saves from that sheet, so any computer in the office opens the same thing.</p>
+  <label class="fld" for="sheetUrl">Web app link</label>
+  <input id="sheetUrl" type="text" placeholder="https://script.google.com/macros/s/…/exec">
+  <div class="row" style="margin-top:.8rem">
+    <button class="btn primary" id="pullSheet">Load from the sheet</button>
+    <button class="btn" id="pushSheet">Save to the sheet</button>
+    <label class="row" style="gap:.35rem;font-size:.88rem"><input id="autoSync" type="checkbox" style="width:auto"> Save automatically every minute</label>
+  </div>
+  <p class="status" id="syncStatus" style="margin-top:.7rem"></p>
+  <div class="foot">
+    <button class="btn" id="dlJson">Save a backup file</button>
+    <label class="btn" style="margin:0">Open a backup file<input id="upJson" type="file" accept=".json" style="display:none"></label>
+    <button class="btn spacer" id="closeSync">Close</button>
+  </div>
+</div></dialog>
+
+<dialog id="tplDlg"><div class="dlg">
+  <h3>Meeting layouts</h3>
+  <p class="note">Save the way this week's meeting is built, then reuse it any week you like.</p>
+  <div class="addrow"><input id="tplName" type="text" placeholder="Name this layout — e.g. Video plus breakout"><button class="btn primary" id="tplSave">Save the current layout</button></div>
+  <ul class="list" id="tplList" style="margin-top:.8rem"></ul>
+  <div class="foot"><button class="btn spacer" id="closeTpl">Close</button></div>
+</div></dialog>
+
+<script>
+/* =================== blocks you can drop into any section =================== */
+const BLOCK_KINDS = {
+  purpose:   {label:"Core purpose and values"},
+  text:      {label:"Notes"},
+  prompt:    {label:"Question with a bank to pick from"},
+  jar:       {label:"Draw from a jar, with a countdown"},
+  flyer:     {label:"Flyer or image on screen"},
+  video:     {label:"Video"},
+  groups:    {label:"Split the room into groups"},
+  kpi:       {label:"Numbers table"},
+  issues:    {label:"Issues list"},
+  actions:   {label:"Action items"},
+  list:      {label:"Simple list"},
+  shoutouts: {label:"Jar of love"},
+  rating:    {label:"Meeting rating"}
+};
+function newBlock(kind){
+  const b={kind, id:"b"+Math.random().toString(36).slice(2,8)};
+  if(kind==="text")   Object.assign(b,{label:"Notes", value:""});
+  if(kind==="prompt") Object.assign(b,{label:"Today's question", value:"", bank:[
+    "Best thing that happened since our last meeting",
+    "A patient moment that stuck with you",
+    "One word for how your week is going",
+    "Something you're looking forward to",
+    "Who on the team made your week easier?"]});
+  if(kind==="jar")    Object.assign(b,{label:"Draw a question", items:[], drawn:[], limit:600, left:600, running:false});
+  if(kind==="flyer")  Object.assign(b,{label:"On screen", src:"", caption:""});
+  if(kind==="video")  Object.assign(b,{label:"Video", url:""});
+  if(kind==="groups") Object.assign(b,{label:"Groups", format:"full", size:4, groups:[]});
+  if(kind==="list")   Object.assign(b,{label:"List", items:[]});
+  return b;
+}
+
+/* =================== the default meeting =================== */
+const DEFAULTS = () => ({
+  date:new Date().toISOString().slice(0,10),
+  facilitator:"",
+  purpose:"At Hudsonville Family Dentistry, we provide high-quality dental care in a comfortable and caring environment while building trusted relationships and helping our patients maintain healthy smiles that support their overall health for a lifetime.",
+  values:["Be the Best and Excellence in Every Smile","Compassionate, Patient-Centered Care","We Win as a Team","Bring a Positive Attitude","Enjoy the Journey"],
+  kpiLink:"",
+  kpis:[
+    {name:"Days worked",goal:"",actual:"",ok:""},
+    {name:"Gross production $",goal:"",actual:"",ok:""},
+    {name:"Write-off %",goal:"",actual:"",ok:""},
+    {name:"Net production $",goal:"",actual:"",ok:""},
+    {name:"Collections %",goal:"",actual:"",ok:""},
+    {name:"Collections $",goal:"",actual:"",ok:""},
+    {name:"Overhead %",goal:"",actual:"",ok:""}
+  ],
+  issues:[
+    {text:"Confirm DOB at seating to prevent wrong-room errors",added:"8/11",by:"KVW",solved:false,parked:false},
+    {text:"How do we enter rejected text messages?",added:"8/11",by:"KVW",solved:false,parked:false},
+    {text:"Can hygiene order and pick the prizes?",added:"8/19",by:"Hygiene",solved:false,parked:false},
+    {text:"Delta denying crowns without post-op PA — can we use pre-op BWX/FMX?",added:"8/20",by:"MDT",solved:false,parked:false},
+    {text:"Adult vs. child prophy under 14 — what is our stance?",added:"8/25",by:"MDT",solved:false,parked:false},
+    {text:"Post-op PA at every crown seat",added:"8/25",by:"MDT",solved:false,parked:false}
+  ],
+  actions:[
+    {text:"Get pricing on 2 metered air fresheners — pick a scent",owner:"",due:"",done:false},
+    {text:"Update the hygiene autonotes",owner:"Alicia",due:"",done:false},
+    {text:"Print off the SRP appointment recare table",owner:"",due:"",done:false}
+  ],
+  shoutouts:[],
+  evalVotes:[0,0,0,0,0],
+  evalNotes:"",
+  roster:[],
+  sections:[
+    {id:"s1",name:"Core purpose",min:2,sub:"Read aloud together to open the meeting.",on:true,blocks:[newBlock("purpose")]},
+    {id:"s2",name:"Stump the doctor",min:10,sub:"Ten minutes on the clock. Every question he answers, the team learns something.",on:true,
+      blocks:[
+        Object.assign(newBlock("flyer"),{label:"Flyer",caption:"Stump the doctor"}),
+        Object.assign(newBlock("jar"),{label:"Questions for the doctor",limit:600,left:600,items:[
+          "What made you want to be a dentist?",
+          "What was your very first job?",
+          "What's the hardest case you've ever treated?",
+          "What do you wish patients understood about their teeth?",
+          "Where did you grow up?",
+          "What's something about you nobody here knows?",
+          "What's your favorite procedure to do, and why?",
+          "If you weren't a dentist, what would you be?",
+          "What's the best advice you ever got?",
+          "What's your go-to order at a restaurant?"
+        ]})
+      ]},
+    {id:"s3",name:"Leadership info",min:8,sub:"Updates from the doctors and management. Information, not discussion.",on:true,
+      blocks:[Object.assign(newBlock("text"),{label:"Practice updates, team and schedule, policy and compliance"})]},
+    {id:"s4",name:"Our numbers",min:8,sub:"On track or off track. Anything off track goes to the issues list.",on:true,blocks:[newBlock("kpi")]},
+    {id:"s5",name:"Group activity",min:10,sub:"Pick the format that fits today — you can change it mid-segment.",on:true,
+      blocks:[
+        Object.assign(newBlock("text"),{label:"What we're doing today"}),
+        newBlock("video"),
+        newBlock("groups"),
+        Object.assign(newBlock("text"),{label:"What came out of it"})
+      ]},
+    {id:"s6",name:"Issues list",min:15,sub:"Prioritize, then identify, discuss, solve.",on:true,blocks:[newBlock("issues")]},
+    {id:"s7",name:"Reminders",min:3,sub:"Quick housekeeping. No discussion needed.",on:true,
+      blocks:[Object.assign(newBlock("list"),{label:"Reminders and parking lot"})]},
+    {id:"s8",name:"Action items",min:4,sub:"Due by the next meeting. Read them back before moving on.",on:true,blocks:[newBlock("actions")]},
+    {id:"s9",name:"Jar of love",min:3,sub:"Shout-outs — catch someone doing something right.",on:true,blocks:[newBlock("shoutouts")]},
+    {id:"s10",name:"Evaluate",min:2,sub:"Everyone rates the meeting before we leave.",on:true,blocks:[newBlock("rating")]}
+  ],
+  templates:[],
+  timers:{},
+  current:"s1",
+  sheetUrl:"",
+  autoSync:false
+});
+
+let S=load(), running=false, tick=null, planMode=false, jarTick=null, autoTick=null;
+
+function load(){
+  try{ const raw=localStorage.getItem("hfd-meeting-v2"); if(raw) return Object.assign(DEFAULTS(),JSON.parse(raw)); }catch(e){}
+  return DEFAULTS();
+}
+function save(){ try{ localStorage.setItem("hfd-meeting-v2",JSON.stringify(S)); }catch(e){} }
+function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+function esc(t){ return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function today(){ const d=new Date(); return (d.getMonth()+1)+"/"+d.getDate(); }
+function secs(){ return S.sections.filter(s=>s.on!==false); }
+function cur(){ return secs().find(s=>s.id===S.current)||secs()[0]; }
+function segSec(id){ return S.timers[id]||0; }
+function totalSec(){ return secs().reduce((a,s)=>a+segSec(s.id),0); }
+function flash(btn,msg){ const o=btn.textContent; btn.textContent=msg; setTimeout(()=>btn.textContent=o,1400); }
+
+/* =================== clocks =================== */
+function setRunning(on){
+  running=on;
+  const pb=document.getElementById("playBtn");
+  pb.textContent=on?"Pause":"Start"; pb.classList.toggle("on",on);
+  if(on&&!tick){
+    tick=setInterval(()=>{
+      S.timers[S.current]=segSec(S.current)+1;
+      paintClocks(); paintRail();
+      if(segSec(S.current)%10===0) save();
+    },1000);
+  }
+  if(!on&&tick){ clearInterval(tick); tick=null; save(); }
+}
+function paintClocks(){
+  const s=cur(); if(!s) return;
+  const c=document.getElementById("segClock");
+  c.querySelector("b").textContent=fmt(segSec(s.id));
+  document.getElementById("segLabel").textContent=s.name.toLowerCase()+" · "+s.min+" min target";
+  c.classList.toggle("over",segSec(s.id)>s.min*60);
+  document.getElementById("totClock").querySelector("b").textContent=fmt(totalSec());
+}
+
+/* =================== rail =================== */
+function paintRail(){
+  const rail=document.getElementById("rail");
+  rail.querySelectorAll(".seg").forEach(n=>n.remove());
+  const list=secs();
+  document.getElementById("railTot").textContent=list.reduce((a,s)=>a+(+s.min||0),0)+" min";
+  list.forEach((s,i)=>{
+    const used=segSec(s.id), target=(+s.min||0)*60;
+    const b=document.createElement("button");
+    b.className="seg"+(s.id===S.current?" active":"")+(used>0&&s.id!==S.current?" done":"")+(target&&used>target?" over":"");
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span class="nm">'+esc(s.name)+'</span>'+
+      '<span class="tm">'+(used?fmt(used):s.min+"m")+'</span>'+
+      '<span class="bar"><i style="width:'+(target?Math.min(100,used/target*100):0)+'%"></i></span>';
+    b.onclick=()=>go(s.id);
+    rail.appendChild(b);
+  });
+}
+function go(id){
+  S.current=id; save(); planMode=false;
+  document.getElementById("planBtn").classList.remove("on");
+  document.getElementById("panel").className="panel";
+  paintRail(); paintPanel(); paintClocks();
+}
+function step(d){ const l=secs(), i=l.findIndex(s=>s.id===S.current), n=l[i+d]; if(n) go(n.id); }
+
+/* =================== panel =================== */
+function paintPanel(){
+  if(planMode) return paintPlan();
+  const s=cur(), list=secs(), i=list.indexOf(s);
+  const p=document.getElementById("panel");
+  p.innerHTML='<div class="phead"><h2>'+esc(s.name)+'</h2><span class="sub">'+esc(s.sub||"")+'</span>'+
+    '<span class="segtime">Step '+(i+1)+' of '+list.length+'</span></div><div id="body"></div>'+
+    '<div class="foot noprint">'+
+      (i>0?'<button class="btn" id="prevBtn">Back</button>':'')+
+      (i<list.length-1?'<button class="btn primary" id="nextBtn">Next: '+esc(list[i+1].name)+'</button>'
+                      :'<button class="btn primary" id="endBtn">Finish and build the recap</button>')+
+      '<span class="spacer"></span><button class="btn" id="resetSeg">Reset this timer</button></div>';
+  const body=document.getElementById("body");
+  if(!(s.blocks||[]).length) body.innerHTML='<p class="empty">Nothing in this section yet. Open Plan to add something.</p>';
+  (s.blocks||[]).forEach(bl=>{
+    const w=document.createElement("div"); w.className="blk"; body.appendChild(w);
+    (RENDER[bl.kind]||RENDER.text)(w,bl,s);
+  });
+  const pb=document.getElementById("prevBtn"); if(pb) pb.onclick=()=>step(-1);
+  const nb=document.getElementById("nextBtn"); if(nb) nb.onclick=()=>step(1);
+  const eb=document.getElementById("endBtn"); if(eb) eb.onclick=openRecap;
+  document.getElementById("resetSeg").onclick=()=>{ S.timers[S.current]=0; save(); paintClocks(); paintRail(); };
+}
+function head(w,b,extra){ w.innerHTML='<div class="blkhead"><h3>'+esc(b.label||"")+'</h3>'+(extra||"")+'</div>'; }
+
+/* =================== block renderers =================== */
+const RENDER={};
+
+RENDER.purpose=(w)=>{
+  w.innerHTML='<div class="quote" id="q"></div><div class="vals" id="v"></div>';
+  const q=w.querySelector("#q"); q.textContent=S.purpose; q.contentEditable="true";
+  q.addEventListener("blur",()=>{ S.purpose=q.textContent.trim(); save(); });
+  w.querySelector("#v").innerHTML=S.values.map(v=>'<span class="val">'+esc(v)+'</span>').join("");
+};
+
+RENDER.text=(w,b)=>{
+  head(w,b);
+  const ta=document.createElement("textarea"); ta.rows=6; ta.value=b.value||"";
+  ta.placeholder="Type as you go — this lands in the recap.";
+  w.appendChild(ta);
+  ta.addEventListener("input",()=>{ b.value=ta.value; save(); });
+  const bar=document.createElement("div"); bar.className="row"; bar.style.marginTop=".45rem";
+  bar.innerHTML='<button class="btn sm" data-a="i">Send the last line to the issues list</button>'+
+                '<button class="btn sm" data-a="a">Make the last line an action item</button>';
+  w.appendChild(bar);
+  const lastLine=()=>{ const L=(b.value||"").trim().split("\n").filter(x=>x.trim()); return L.length?L[L.length-1].trim():""; };
+  bar.querySelector('[data-a="i"]').onclick=e=>{ const t=lastLine(); if(!t)return;
+    S.issues.push({text:t,added:today(),by:S.facilitator||"",solved:false,parked:false}); save(); flash(e.target,"Added to issues"); };
+  bar.querySelector('[data-a="a"]').onclick=e=>{ const t=lastLine(); if(!t)return;
+    S.actions.push({text:t,owner:"",due:"",done:false}); save(); flash(e.target,"Added to action items"); };
+};
+
+RENDER.prompt=(w,b)=>{
+  head(w,b);
+  w.insertAdjacentHTML("beforeend",
+    '<input type="text" class="pq" placeholder="Type a question, or pick one below" value="'+esc(b.value||"")+'">'+
+    '<div class="row" style="margin-top:.6rem"><button class="btn" data-a="spin">Pick one for me</button>'+
+    '<span class="note">Go around the room the same direction every week so nobody gets skipped.</span></div>'+
+    '<label class="fld" style="margin-top:.7rem">Question bank — one per line</label>'+
+    '<textarea rows="5" class="bank">'+esc((b.bank||[]).join("\n"))+'</textarea>');
+  const q=w.querySelector(".pq"); q.addEventListener("input",()=>{ b.value=q.value; save(); });
+  const bank=w.querySelector(".bank");
+  bank.addEventListener("input",()=>{ b.bank=bank.value.split("\n").filter(x=>x.trim()); save(); });
+  w.querySelector('[data-a="spin"]').onclick=()=>{ if(!(b.bank||[]).length)return;
+    q.value=b.bank[Math.floor(Math.random()*b.bank.length)]; b.value=q.value; save(); };
+};
+
+RENDER.jar=(w,b)=>{
+  head(w,b);
+  w.insertAdjacentHTML("beforeend",
+    '<div class="draw">'+
+      '<div class="cd" id="cd">'+fmt(b.left==null?b.limit:b.left)+'</div>'+
+      '<div class="meta"><span class="cnt"></span></div>'+
+      '<div class="card empty" id="card">Nothing drawn yet.</div>'+
+      '<div class="row" style="justify-content:center;margin-top:.7rem">'+
+        '<button class="btn gold" data-a="draw">Draw a question</button>'+
+        '<button class="btn" data-a="cd">Start the clock</button>'+
+        '<button class="btn" data-a="reset">Reset</button>'+
+        '<label class="row" style="gap:.3rem;font-size:.85rem">minutes <input class="cdmin" type="number" min="1" max="60" value="'+Math.round((b.limit||600)/60)+'" style="width:4.2rem"></label>'+
+      '</div>'+
+      '<ol class="drawn"></ol>'+
+    '</div>'+
+    '<label class="fld" style="margin-top:.8rem">What\'s in the jar — one per line</label>'+
+    '<textarea rows="6" class="jitems">'+esc((b.items||[]).join("\n"))+'</textarea>');
+  const cd=w.querySelector("#cd"), card=w.querySelector("#card"),
+        cnt=w.querySelector(".cnt"), drawn=w.querySelector(".drawn"), items=w.querySelector(".jitems");
+  items.addEventListener("input",()=>{ b.items=items.value.split("\n").filter(x=>x.trim()); save(); paintCnt(); });
+  function paintCnt(){
+    const left=(b.items||[]).filter(x=>!(b.drawn||[]).includes(x)).length;
+    cnt.textContent=left+" left in the jar · "+(b.drawn||[]).length+" answered";
+    drawn.innerHTML=(b.drawn||[]).map(x=>'<li>'+esc(x)+'</li>').join("");
+  }
+  function paintCd(){
+    const l=b.left==null?b.limit:b.left;
+    cd.textContent=fmt(l); cd.classList.toggle("low",l<=60);
+    w.querySelector('[data-a="cd"]').textContent=b.running?"Pause the clock":"Start the clock";
+  }
+  paintCnt(); paintCd();
+  w.querySelector('[data-a="draw"]').onclick=()=>{
+    const pool=(b.items||[]).filter(x=>!(b.drawn||[]).includes(x));
+    if(!pool.length){ card.className="card empty"; card.textContent="The jar is empty — he got through them all."; return; }
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    b.drawn=(b.drawn||[]).concat([pick]); save();
+    card.className="card"; card.textContent=pick; paintCnt();
+  };
+  w.querySelector(".cdmin").addEventListener("input",e=>{
+    b.limit=Math.max(60,(+e.target.value||10)*60); b.left=b.limit; save(); paintCd();
+  });
+  w.querySelector('[data-a="reset"]').onclick=()=>{
+    b.left=b.limit; b.running=false; b.drawn=[];
+    if(jarTick){ clearInterval(jarTick); jarTick=null; }
+    save(); paintCd(); paintCnt(); card.className="card empty"; card.textContent="Nothing drawn yet.";
+  };
+  w.querySelector('[data-a="cd"]').onclick=()=>{
+    b.running=!b.running; save(); paintCd();
+    if(jarTick){ clearInterval(jarTick); jarTick=null; }
+    if(b.running){
+      jarTick=setInterval(()=>{
+        b.left=Math.max(0,(b.left==null?b.limit:b.left)-1);
+        paintCd();
+        if(b.left<=0){
+          b.running=false; clearInterval(jarTick); jarTick=null; save(); paintCd();
+          card.className="card"; card.textContent="Time. That's the end of the ice breaker.";
+        }
+      },1000);
+    }
+  };
+};
+
+RENDER.flyer=(w,b)=>{
+  head(w,b);
+  w.insertAdjacentHTML("beforeend",
+    '<div class="flyer fw"></div>'+
+    '<div class="row" style="margin-top:.6rem">'+
+      '<label class="btn" style="margin:0">Choose an image<input type="file" accept="image/*" class="fup" style="display:none"></label>'+
+      '<input type="text" class="furl" placeholder="…or paste a link to the flyer" value="'+esc(b.src&&b.src.slice(0,5)!=="data:"?b.src:"")+'" style="flex:1;min-width:12rem">'+
+      '<button class="btn" data-a="clear">Take it down</button>'+
+    '</div>'+
+    '<input type="text" class="fcap" placeholder="Caption (optional)" value="'+esc(b.caption||"")+'" style="margin-top:.5rem">');
+  const fw=w.querySelector(".fw");
+  const draw=()=>{ fw.innerHTML=b.src
+    ? '<img src="'+esc(b.src)+'" alt="'+esc(b.caption||"Flyer")+'">'+(b.caption?'<div class="note" style="margin-top:.4rem">'+esc(b.caption)+'</div>':'')
+    : '<div class="ph">Choose an image or paste a link, and it fills the screen here.</div>'; };
+  draw();
+  w.querySelector(".fup").addEventListener("change",e=>{
+    const f=e.target.files[0]; if(!f)return;
+    if(f.size>2500000){ fw.innerHTML='<div class="ph">That image is over 2.5 MB. Use a smaller one, or paste a link instead.</div>'; return; }
+    const r=new FileReader(); r.onload=()=>{ b.src=r.result; save(); draw(); }; r.readAsDataURL(f);
+  });
+  w.querySelector(".furl").addEventListener("input",e=>{ b.src=e.target.value.trim(); save(); draw(); });
+  w.querySelector(".fcap").addEventListener("input",e=>{ b.caption=e.target.value; save(); draw(); });
+  w.querySelector('[data-a="clear"]').onclick=()=>{ b.src=""; save(); draw(); };
+};
+
+RENDER.video=(w,b)=>{
+  head(w,b);
+  w.insertAdjacentHTML("beforeend",
+    '<div class="row"><input type="text" class="vurl" placeholder="Paste a YouTube or file link" value="'+esc(b.url||"")+'" style="flex:1;min-width:12rem">'+
+    '<button class="btn" data-a="tab">Open in a new tab</button></div><div class="vw"></div>');
+  const vw=w.querySelector(".vw");
+  const draw=()=>{ const id=ytId(b.url||"");
+    vw.innerHTML=id?'<div class="vidwrap"><iframe src="https://www.youtube.com/embed/'+esc(id)+'" title="Video" allowfullscreen></iframe></div>':""; };
+  draw();
+  w.querySelector(".vurl").addEventListener("input",e=>{ b.url=e.target.value.trim(); save(); draw(); });
+  w.querySelector('[data-a="tab"]').onclick=()=>{ if(b.url) window.open(b.url,"_blank","noopener"); };
+};
+function ytId(u){
+  const m=String(u).match(/(?:youtube\.com\/(?:watch\?v=|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  return m?m[1]:"";
+}
+
+RENDER.groups=(w,b)=>{
+  head(w,b);
+  const chip=(v,l)=>'<button class="chip" data-v="'+v+'" aria-pressed="'+(b.format===v)+'">'+l+'</button>';
+  w.insertAdjacentHTML("beforeend",
+    '<div class="chips">'+chip("full","Whole group")+chip("pairs","Pairs")+chip("size","Groups of")+chip("role","By job role")+'</div>'+
+    '<div class="row"><input type="number" class="gsize" min="2" max="10" value="'+(b.size||4)+'" style="width:4.5rem">'+
+    '<button class="btn primary" data-a="mk">Make the groups</button><button class="btn" data-a="clr">Clear</button>'+
+    '<span class="note gnote"></span></div><div class="groups gw"></div>'+
+    '<label class="fld" style="margin-top:.9rem">Who\'s here today — one per line as name, role</label>'+
+    '<textarea rows="5" class="ros" placeholder="Alicia, Hygiene&#10;Jade, Assistant&#10;Kevin, Front desk">'+esc(S.roster.map(r=>r.name+(r.role?", "+r.role:"")).join("\n"))+'</textarea>');
+  const note=w.querySelector(".gnote"), size=w.querySelector(".gsize"), gw=w.querySelector(".gw"), ros=w.querySelector(".ros");
+  ros.addEventListener("input",()=>{
+    S.roster=ros.value.split("\n").filter(l=>l.trim()).map(l=>{ const p=l.split(","); return {name:(p[0]||"").trim(),role:p.slice(1).join(",").trim()}; });
+    save();
+  });
+  function refresh(){
+    w.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.v===b.format)));
+    size.classList.toggle("hide",b.format!=="size");
+    w.querySelector('[data-a="mk"]').classList.toggle("hide",b.format==="full");
+    note.textContent={full:"Everyone together — no group list needed.",
+      pairs:"Randomly paired. An odd number makes one group of three.",
+      size:"Randomly split into groups of this size.",
+      role:"Grouped by the role written next to each name."}[b.format];
+  }
+  w.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ b.format=c.dataset.v; save(); refresh(); });
+  size.addEventListener("input",()=>{ b.size=Math.max(2,+size.value||2); save(); });
+  refresh();
+  const drawG=()=>{ gw.innerHTML=(b.groups||[]).map(g=>'<div class="group"><h4>'+esc(g.label)+'</h4><ul>'+g.people.map(p=>'<li>'+esc(p)+'</li>').join("")+'</ul></div>').join(""); };
+  drawG();
+  w.querySelector('[data-a="mk"]').onclick=()=>{
+    const people=S.roster.filter(r=>r.name);
+    if(!people.length){ note.textContent="Add names below first, then make the groups."; return; }
+    b.groups=buildGroups(people,b.format,b.size); save(); drawG();
+  };
+  w.querySelector('[data-a="clr"]').onclick=()=>{ b.groups=[]; save(); drawG(); };
+};
+function buildGroups(people,format,size){
+  if(format==="role"){
+    const by={}; people.forEach(p=>{ const r=p.role||"Unassigned"; (by[r]=by[r]||[]).push(p.name); });
+    return Object.keys(by).sort().map(r=>({label:r,people:by[r]}));
+  }
+  const n=format==="pairs"?2:Math.max(2,size||4);
+  const pool=people.map(p=>p.name);
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=pool[i]; pool[i]=pool[j]; pool[j]=t; }
+  const out=[]; for(let i=0;i<pool.length;i+=n) out.push(pool.slice(i,i+n));
+  if(out.length>1&&out[out.length-1].length===1) out[out.length-2].push(out.pop()[0]);
+  return out.map((g,i)=>({label:"Group "+(i+1),people:g}));
+}
+
+RENDER.kpi=(w)=>{
+  w.innerHTML='<div class="row" style="margin-bottom:.8rem"><input class="kl" type="text" placeholder="Link to Dental Intelligence, the Pulse workbook, or a report" value="'+esc(S.kpiLink)+'" style="flex:1;min-width:14rem">'+
+    '<button class="btn" data-a="open">Open in a new tab</button></div>'+
+    '<table><thead><tr><th style="width:32%">Measure</th><th>Goal</th><th>Actual</th><th style="width:17%">On track?</th><th></th></tr></thead><tbody class="kb"></tbody></table>'+
+    '<div class="addrow"><input class="nk" type="text" placeholder="Add another measure"><button class="btn" data-a="add">Add</button></div>';
+  const link=w.querySelector(".kl"); link.addEventListener("input",()=>{ S.kpiLink=link.value; save(); });
+  w.querySelector('[data-a="open"]').onclick=()=>{ if(S.kpiLink) window.open(S.kpiLink,"_blank","noopener"); };
+  const tb=w.querySelector(".kb");
+  const draw=()=>{
+    tb.innerHTML="";
+    S.kpis.forEach((k,i)=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML='<td><input type="text" value="'+esc(k.name)+'" data-f="name"></td><td><input type="text" value="'+esc(k.goal)+'" data-f="goal"></td>'+
+        '<td><input type="text" value="'+esc(k.actual)+'" data-f="actual"></td>'+
+        '<td><select data-f="ok"><option value=""></option><option value="yes">On track</option><option value="no">Off track</option></select></td>'+
+        '<td style="white-space:nowrap"><button class="btn sm" data-a="issue">Send to issues</button> <button class="btn icon" data-a="del" aria-label="Remove">✕</button></td>';
+      tr.querySelectorAll("[data-f]").forEach(inp=>{
+        if(inp.dataset.f==="ok") inp.value=k.ok||"";
+        inp.addEventListener("input",()=>{ k[inp.dataset.f]=inp.value; save(); });
+      });
+      tr.querySelector('[data-a="issue"]').onclick=e=>{
+        S.issues.push({text:k.name+" is off track ("+(k.actual||"?")+" vs goal "+(k.goal||"?")+")",added:today(),by:S.facilitator||"",solved:false,parked:false});
+        save(); flash(e.target,"Added");
+      };
+      tr.querySelector('[data-a="del"]').onclick=()=>{ S.kpis.splice(i,1); save(); draw(); };
+      tb.appendChild(tr);
+    });
+  };
+  draw();
+  w.querySelector('[data-a="add"]').onclick=()=>{ const v=w.querySelector(".nk"); if(!v.value.trim())return;
+    S.kpis.push({name:v.value.trim(),goal:"",actual:"",ok:""}); v.value=""; save(); draw(); };
+};
+
+RENDER.issues=(w)=>{
+  w.innerHTML='<table><thead><tr><th style="width:2rem"></th><th>Issue</th><th style="width:5rem">Added</th><th style="width:7rem">Raised by</th><th style="width:12rem"></th></tr></thead><tbody class="ib"></tbody></table>'+
+    '<div class="addrow"><input class="ni" type="text" placeholder="Add an issue"><input class="nb" type="text" placeholder="Initials" style="max-width:7rem"><button class="btn primary" data-a="add">Add</button></div>'+
+    '<p class="note" style="margin-top:.7rem">Rank first with the arrows, then work the top three all the way to a decision.</p>';
+  const tb=w.querySelector(".ib");
+  const draw=()=>{
+    tb.innerHTML="";
+    if(!S.issues.length){ tb.innerHTML='<tr><td colspan="5" class="empty">Nothing on the list.</td></tr>'; return; }
+    S.issues.forEach((it,i)=>{
+      const tr=document.createElement("tr"); if(it.solved) tr.className="solved";
+      tr.innerHTML='<td><span class="rank"><button data-a="up" aria-label="Move up">▲</button><button data-a="dn" aria-label="Move down">▼</button></span></td>'+
+        '<td><input class="txt" type="text" value="'+esc(it.text)+'"'+(it.parked?' style="opacity:.6"':'')+'></td>'+
+        '<td>'+esc(it.added||"")+(it.parked?' <span class="note">parked</span>':'')+'</td>'+
+        '<td><input type="text" value="'+esc(it.by||"")+'" data-f="by"></td>'+
+        '<td style="white-space:nowrap"><button class="btn sm" data-a="solve">'+(it.solved?"Reopen":"Solved")+'</button> '+
+        '<button class="btn sm" data-a="park">'+(it.parked?"Unpark":"Park")+'</button> '+
+        '<button class="btn sm" data-a="act">→ Action</button> <button class="btn icon" data-a="del" aria-label="Delete">✕</button></td>';
+      tr.querySelector(".txt").addEventListener("input",e=>{ it.text=e.target.value; save(); });
+      tr.querySelector('[data-f="by"]').addEventListener("input",e=>{ it.by=e.target.value; save(); });
+      tr.querySelector('[data-a="up"]').onclick=()=>{ if(i>0){ const t=S.issues[i-1]; S.issues[i-1]=S.issues[i]; S.issues[i]=t; save(); draw(); } };
+      tr.querySelector('[data-a="dn"]').onclick=()=>{ if(i<S.issues.length-1){ const t=S.issues[i+1]; S.issues[i+1]=S.issues[i]; S.issues[i]=t; save(); draw(); } };
+      tr.querySelector('[data-a="solve"]').onclick=()=>{ it.solved=!it.solved; save(); draw(); };
+      tr.querySelector('[data-a="park"]').onclick=()=>{ it.parked=!it.parked; save(); draw(); };
+      tr.querySelector('[data-a="act"]').onclick=()=>{ S.actions.push({text:it.text,owner:"",due:"",done:false}); it.solved=true; save(); draw(); };
+      tr.querySelector('[data-a="del"]').onclick=()=>{ S.issues.splice(i,1); save(); draw(); };
+      tb.appendChild(tr);
+    });
+  };
+  draw();
+  const add=()=>{ const t=w.querySelector(".ni"), by=w.querySelector(".nb"); if(!t.value.trim())return;
+    S.issues.push({text:t.value.trim(),added:today(),by:by.value.trim(),solved:false,parked:false});
+    t.value=""; by.value=""; save(); draw(); t.focus(); };
+  w.querySelector('[data-a="add"]').onclick=add;
+  w.querySelector(".ni").addEventListener("keydown",e=>{ if(e.key==="Enter") add(); });
+};
+
+RENDER.actions=(w)=>{
+  w.innerHTML='<table><thead><tr><th style="width:2.5rem">Done</th><th>Action item</th><th style="width:9rem">Owner</th><th style="width:8rem">Due</th><th style="width:2.5rem"></th></tr></thead><tbody class="ab"></tbody></table>'+
+    '<div class="addrow"><input class="na" type="text" placeholder="What are we doing?"><input class="no" type="text" placeholder="Owner" style="max-width:9rem"><input class="nd" type="text" placeholder="Due" style="max-width:8rem"><button class="btn primary" data-a="add">Add</button></div>'+
+    '<p class="note" style="margin-top:.7rem">Every item needs one name on it. Read the list back out loud before you move on.</p>';
+  const tb=w.querySelector(".ab");
+  const draw=()=>{
+    tb.innerHTML="";
+    if(!S.actions.length){ tb.innerHTML='<tr><td colspan="5" class="empty">No commitments yet.</td></tr>'; return; }
+    S.actions.forEach((a,i)=>{
+      const tr=document.createElement("tr"); if(a.done) tr.className="solved";
+      tr.innerHTML='<td><input type="checkbox" '+(a.done?"checked":"")+' style="width:auto" aria-label="Done"></td>'+
+        '<td><input class="txt" type="text" value="'+esc(a.text)+'"></td>'+
+        '<td><input type="text" value="'+esc(a.owner||"")+'" placeholder="Who?" data-f="owner"></td>'+
+        '<td><input type="text" value="'+esc(a.due||"")+'" placeholder="When?" data-f="due"></td>'+
+        '<td><button class="btn icon" aria-label="Delete">✕</button></td>';
+      tr.querySelector('input[type=checkbox]').onchange=e=>{ a.done=e.target.checked; save(); draw(); };
+      tr.querySelector(".txt").addEventListener("input",e=>{ a.text=e.target.value; save(); });
+      tr.querySelectorAll("[data-f]").forEach(inp=>inp.addEventListener("input",e=>{ a[inp.dataset.f]=e.target.value; save(); }));
+      tr.querySelector("button").onclick=()=>{ S.actions.splice(i,1); save(); draw(); };
+      tb.appendChild(tr);
+    });
+  };
+  draw();
+  const add=()=>{ const t=w.querySelector(".na"),o=w.querySelector(".no"),d=w.querySelector(".nd");
+    if(!t.value.trim())return;
+    S.actions.push({text:t.value.trim(),owner:o.value.trim(),due:d.value,done:false});
+    t.value="";o.value="";d.value=""; save(); draw(); t.focus(); };
+  w.querySelector('[data-a="add"]').onclick=add;
+  w.querySelector(".na").addEventListener("keydown",e=>{ if(e.key==="Enter") add(); });
+};
+
+RENDER.list=(w,b)=>{
+  head(w,b);
+  w.insertAdjacentHTML("beforeend",'<ul class="list ll"></ul><div class="addrow"><input class="nl" type="text" placeholder="Add a line"><button class="btn primary" data-a="add">Add</button></div>');
+  const ul=w.querySelector(".ll");
+  const draw=()=>{
+    ul.innerHTML="";
+    if(!(b.items||[]).length){ ul.innerHTML='<li class="empty">Nothing here yet.</li>'; return; }
+    b.items.forEach((it,i)=>{
+      const li=document.createElement("li");
+      li.innerHTML='<input type="text" value="'+esc(it)+'"><button class="btn icon" aria-label="Delete">✕</button>';
+      li.querySelector("input").addEventListener("input",e=>{ b.items[i]=e.target.value; save(); });
+      li.querySelector("button").onclick=()=>{ b.items.splice(i,1); save(); draw(); };
+      ul.appendChild(li);
+    });
+  };
+  draw();
+  const add=()=>{ const t=w.querySelector(".nl"); if(!t.value.trim())return;
+    b.items=(b.items||[]).concat([t.value.trim()]); t.value=""; save(); draw(); t.focus(); };
+  w.querySelector('[data-a="add"]').onclick=add;
+  w.querySelector(".nl").addEventListener("keydown",e=>{ if(e.key==="Enter") add(); });
+};
+
+RENDER.shoutouts=(w)=>{
+  w.innerHTML='<div class="sl"></div><div class="addrow"><input class="sf" type="text" placeholder="From" style="max-width:9rem">'+
+    '<input class="st" type="text" placeholder="To" style="max-width:9rem"><input class="sw" type="text" placeholder="What they did and why it mattered">'+
+    '<button class="btn gold" data-a="add">Add</button></div>'+
+    '<p class="note" style="margin-top:.7rem">Anyone can give one, including to the doctors. Specifics beat "great job."</p>';
+  const wrap=w.querySelector(".sl");
+  const draw=()=>{
+    if(!S.shoutouts.length){ wrap.innerHTML='<p class="empty">The jar is empty. Who made this week easier?</p>'; return; }
+    wrap.innerHTML=S.shoutouts.map((s,i)=>'<div class="shout"><span class="heart">&#10084;</span><div><b>'+esc(s.to||"Team")+'</b>'+
+      (s.from?' <span class="note">from '+esc(s.from)+'</span>':'')+'<div>'+esc(s.what)+'</div></div>'+
+      '<button class="btn icon" data-i="'+i+'" style="margin-left:auto" aria-label="Remove">✕</button></div>').join("");
+    wrap.querySelectorAll("[data-i]").forEach(btn=>btn.onclick=()=>{ S.shoutouts.splice(+btn.dataset.i,1); save(); draw(); });
+  };
+  draw();
+  const add=()=>{ const f=w.querySelector(".sf"),t=w.querySelector(".st"),x=w.querySelector(".sw");
+    if(!x.value.trim())return;
+    S.shoutouts.push({from:f.value.trim(),to:t.value.trim(),what:x.value.trim()});
+    f.value="";t.value="";x.value=""; save(); draw(); t.focus(); };
+  w.querySelector('[data-a="add"]').onclick=add;
+  w.querySelector(".sw").addEventListener("keydown",e=>{ if(e.key==="Enter") add(); });
+};
+
+RENDER.rating=(w)=>{
+  w.innerHTML='<p>Tap a number for each person as they call it out.</p><div class="scale sc"></div><p class="note tl"></p>'+
+    '<label class="fld" style="margin-top:.9rem">What would make next week better?</label><textarea rows="4" class="en">'+esc(S.evalNotes)+'</textarea>'+
+    '<div class="row" style="margin-top:.6rem"><button class="btn" data-a="clr">Clear the ratings</button><button class="btn primary" data-a="recap">Build the recap</button></div>';
+  const sc=w.querySelector(".sc"), tl=w.querySelector(".tl"), labels=["we wasted time","","","","best hour of the week"];
+  const paint=()=>{ const t=S.evalVotes.reduce((a,c)=>a+c,0), sum=S.evalVotes.reduce((a,c,i)=>a+c*(i+1),0);
+    tl.textContent=t?t+" rating"+(t>1?"s":"")+" · average "+(sum/t).toFixed(1)+" · "+S.evalVotes.map((v,i)=>(i+1)+": "+v).join("  "):"No ratings yet."; };
+  [1,2,3,4,5].forEach(n=>{ const b=document.createElement("button");
+    b.innerHTML=n+(labels[n-1]?'<b>'+labels[n-1]+'</b>':'');
+    b.onclick=()=>{ S.evalVotes[n-1]++; save(); paint(); }; sc.appendChild(b); });
+  paint();
+  const ta=w.querySelector(".en"); ta.addEventListener("input",()=>{ S.evalNotes=ta.value; save(); });
+  w.querySelector('[data-a="clr"]').onclick=()=>{ S.evalVotes=[0,0,0,0,0]; save(); paint(); };
+  w.querySelector('[data-a="recap"]').onclick=openRecap;
+};
+
+/* =================== plan mode =================== */
+function paintPlan(){
+  const p=document.getElementById("panel");
+  p.className="panel plan";
+  p.innerHTML='<div class="phead"><h2>Plan this week\'s meeting</h2><span class="sub">Rename, reorder, retime, switch off, or swap out what happens in each section.</span></div><div id="pbody"></div>'+
+    '<div class="foot"><button class="btn primary" id="addSec">Add a section</button><button class="btn" id="tplBtn">Layouts</button>'+
+    '<span class="spacer"></span><button class="btn" id="donePlan">Back to the meeting</button></div>';
+  const body=p.querySelector("#pbody");
+  S.sections.forEach((s,i)=>{
+    const d=document.createElement("div");
+    d.className="psec"+(s.on===false?" off":"");
+    d.innerHTML='<div class="ptop">'+
+      '<span class="rank"><button data-a="up" aria-label="Move up">▲</button><button data-a="dn" aria-label="Move down">▼</button></span>'+
+      '<input type="text" class="snm" value="'+esc(s.name)+'">'+
+      '<input type="number" class="smin" min="0" max="120" value="'+(s.min||0)+'" aria-label="Target minutes">'+
+      '<button class="btn sm" data-a="on">'+(s.on===false?"Off":"On")+'</button>'+
+      '<button class="btn icon" data-a="del" aria-label="Delete section">✕</button></div>'+
+      '<input type="text" class="ssub" placeholder="One line of direction for the room" value="'+esc(s.sub||"")+'" style="margin-top:.4rem">'+
+      '<div class="pblocks"></div>';
+    const pb=d.querySelector(".pblocks");
+    (s.blocks||[]).forEach((bl,bi)=>{
+      const sp=document.createElement("span"); sp.className="pblk";
+      sp.innerHTML=esc(BLOCK_KINDS[bl.kind]?BLOCK_KINDS[bl.kind].label:bl.kind)+
+        '<button data-a="bu" aria-label="Move earlier">←</button><button data-a="bd" aria-label="Move later">→</button><button data-a="bx" aria-label="Remove">✕</button>';
+      sp.querySelector('[data-a="bu"]').onclick=()=>{ if(bi>0){ const t=s.blocks[bi-1]; s.blocks[bi-1]=s.blocks[bi]; s.blocks[bi]=t; save(); paintPlan(); } };
+      sp.querySelector('[data-a="bd"]').onclick=()=>{ if(bi<s.blocks.length-1){ const t=s.blocks[bi+1]; s.blocks[bi+1]=s.blocks[bi]; s.blocks[bi]=t; save(); paintPlan(); } };
+      sp.querySelector('[data-a="bx"]').onclick=()=>{ s.blocks.splice(bi,1); save(); paintPlan(); };
+      pb.appendChild(sp);
+    });
+    const sel=document.createElement("select");
+    sel.style.width="auto";
+    sel.innerHTML='<option value="">Add something…</option>'+Object.keys(BLOCK_KINDS).map(k=>'<option value="'+k+'">'+BLOCK_KINDS[k].label+'</option>').join("");
+    sel.onchange=()=>{ if(!sel.value)return; s.blocks=(s.blocks||[]).concat([newBlock(sel.value)]); save(); paintPlan(); };
+    pb.appendChild(sel);
+
+    d.querySelector(".snm").addEventListener("input",e=>{ s.name=e.target.value; save(); paintRail(); });
+    d.querySelector(".ssub").addEventListener("input",e=>{ s.sub=e.target.value; save(); });
+    d.querySelector(".smin").addEventListener("input",e=>{ s.min=+e.target.value||0; save(); paintRail(); });
+    d.querySelector('[data-a="up"]').onclick=()=>{ if(i>0){ const t=S.sections[i-1]; S.sections[i-1]=S.sections[i]; S.sections[i]=t; save(); paintPlan(); paintRail(); } };
+    d.querySelector('[data-a="dn"]').onclick=()=>{ if(i<S.sections.length-1){ const t=S.sections[i+1]; S.sections[i+1]=S.sections[i]; S.sections[i]=t; save(); paintPlan(); paintRail(); } };
+    d.querySelector('[data-a="on"]').onclick=()=>{ s.on=(s.on===false); save(); if(!secs().some(x=>x.id===S.current)&&secs().length) S.current=secs()[0].id; paintPlan(); paintRail(); paintClocks(); };
+    d.querySelector('[data-a="del"]').onclick=()=>{ if(S.sections.length>1){ S.sections.splice(i,1);
+      if(!secs().some(x=>x.id===S.current)&&secs().length) S.current=secs()[0].id; save(); paintPlan(); paintRail(); paintClocks(); } };
+    body.appendChild(d);
+  });
+  p.querySelector("#addSec").onclick=()=>{
+    S.sections.push({id:"s"+Math.random().toString(36).slice(2,7),name:"New section",min:5,sub:"",on:true,blocks:[newBlock("text")]});
+    save(); paintPlan(); paintRail();
+  };
+  p.querySelector("#tplBtn").onclick=openTpl;
+  p.querySelector("#donePlan").onclick=()=>togglePlan(false);
+}
+function togglePlan(on){
+  planMode = (on==null) ? !planMode : on;
+  document.getElementById("planBtn").classList.toggle("on",planMode);
+  const p=document.getElementById("panel");
+  if(planMode){ paintPlan(); } else { p.className="panel"; paintPanel(); }
+}
+
+/* =================== saved layouts =================== */
+function openTpl(){
+  const dlg=document.getElementById("tplDlg"), ul=document.getElementById("tplList");
+  const draw=()=>{
+    ul.innerHTML=(S.templates||[]).length?"":'<li class="empty">No saved layouts yet.</li>';
+    (S.templates||[]).forEach((t,i)=>{
+      const li=document.createElement("li");
+      li.innerHTML='<span style="flex:1">'+esc(t.name)+' <span class="note">'+t.sections.length+' sections</span></span>'+
+        '<button class="btn sm" data-a="use">Use this layout</button> <button class="btn icon" data-a="del" aria-label="Delete">✕</button>';
+      li.querySelector('[data-a="use"]').onclick=()=>{
+        S.sections=JSON.parse(JSON.stringify(t.sections));
+        S.timers={}; S.current=secs()[0].id; save();
+        closeDlg("tplDlg"); togglePlan(false); paintRail(); paintClocks();
+      };
+      li.querySelector('[data-a="del"]').onclick=()=>{ S.templates.splice(i,1); save(); draw(); };
+      ul.appendChild(li);
+    });
+  };
+  draw();
+  document.getElementById("tplSave").onclick=()=>{
+    const n=document.getElementById("tplName");
+    if(!n.value.trim())return;
+    S.templates=(S.templates||[]).concat([{name:n.value.trim(),sections:JSON.parse(JSON.stringify(S.sections))}]);
+    n.value=""; save(); draw();
+  };
+  if(dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+}
+
+/* =================== recap =================== */
+function buildRecap(){
+  const L=[];
+  L.push("HUDSONVILLE FAMILY DENTISTRY — TEAM MEETING");
+  L.push(S.date+(S.facilitator?"  ·  facilitator: "+S.facilitator:""));
+  L.push("Meeting length: "+fmt(totalSec()));
+  L.push("");
+  secs().forEach(s=>{
+    const notes=[];
+    (s.blocks||[]).forEach(b=>{
+      if(b.kind==="text"&&(b.value||"").trim()) notes.push((b.label?b.label+": ":"")+b.value.trim());
+      if(b.kind==="prompt"&&(b.value||"").trim()) notes.push("Question: "+b.value.trim());
+      if(b.kind==="jar"&&(b.drawn||[]).length) notes.push("Answered ("+b.drawn.length+"): "+b.drawn.join(" | "));
+      if(b.kind==="video"&&b.url) notes.push("Video: "+b.url);
+      if(b.kind==="groups"&&(b.groups||[]).length) notes.push("Groups: "+b.groups.map(g=>g.label+" — "+g.people.join(", ")).join(" / "));
+      if(b.kind==="list"&&(b.items||[]).length) notes.push((b.label||"List")+": "+b.items.join("; "));
+    });
+    if(notes.length){ L.push(s.name.toUpperCase()); notes.forEach(n=>L.push("  "+n.replace(/\n/g,"\n  "))); L.push(""); }
+  });
+  const kp=S.kpis.filter(k=>k.actual||k.ok);
+  if(kp.length){ L.push("NUMBERS"); kp.forEach(k=>L.push("  "+k.name+": "+(k.actual||"—")+" (goal "+(k.goal||"—")+")"+(k.ok==="no"?"  OFF TRACK":""))); L.push(""); }
+  const solved=S.issues.filter(i=>i.solved), open=S.issues.filter(i=>!i.solved&&!i.parked), parked=S.issues.filter(i=>i.parked);
+  L.push("ISSUES");
+  if(solved.length){ L.push("  Solved:"); solved.forEach(i=>L.push("    ✓ "+i.text)); }
+  if(open.length){ L.push("  Still open:"); open.forEach(i=>L.push("    • "+i.text+(i.by?"  ("+i.by+")":""))); }
+  if(parked.length){ L.push("  Parking lot:"); parked.forEach(i=>L.push("    • "+i.text)); }
+  L.push("");
+  L.push("ACTION ITEMS");
+  if(S.actions.length) S.actions.forEach(a=>L.push("  "+(a.done?"[x] ":"[ ] ")+a.text+"  — "+(a.owner||"unassigned")+(a.due?", due "+a.due:"")));
+  else L.push("  (none)");
+  L.push("");
+  if(S.shoutouts.length){ L.push("JAR OF LOVE"); S.shoutouts.forEach(s=>L.push("  ♥ "+(s.to||"Team")+" — "+s.what+(s.from?"  ("+s.from+")":""))); L.push(""); }
+  const t=S.evalVotes.reduce((a,c)=>a+c,0);
+  if(t){ const sum=S.evalVotes.reduce((a,c,i)=>a+c*(i+1),0); L.push("MEETING RATING: "+(sum/t).toFixed(1)+" from "+t+" people"); }
+  if(S.evalNotes) L.push("  "+S.evalNotes.replace(/\n/g,"\n  "));
+  L.push("");
+  L.push("Time per section: "+secs().map(s=>s.name+" "+fmt(segSec(s.id))).join(" · "));
+  return L.join("\n");
+}
+function openRecap(){
+  document.getElementById("recapText").textContent=buildRecap();
+  const d=document.getElementById("recapDlg");
+  if(d.showModal) d.showModal(); else d.setAttribute("open","");
+}
+function closeDlg(id){ const d=document.getElementById(id); if(d.close) d.close(); else d.removeAttribute("open"); }
+function download(name,text,type){
+  const blob=new Blob([text],{type:type||"text/plain"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* =================== google sheet =================== */
+function sheetStatus(msg,cls){
+  const el=document.getElementById("syncStatus");
+  el.textContent=msg; el.className="status"+(cls?" "+cls:"");
+}
+function pushSheet(silent){
+  if(!S.sheetUrl){ if(!silent) sheetStatus("Paste the web app link first.","err"); return Promise.resolve(false); }
+  if(!silent) sheetStatus("Saving…");
+  return fetch(S.sheetUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({action:"save",state:S})})
+    .then(r=>r.json())
+    .then(()=>{ if(!silent) sheetStatus("Saved to the sheet at "+new Date().toLocaleTimeString()+".","ok"); return true; })
+    .catch(()=>{ if(!silent) sheetStatus("Couldn't reach the sheet. Check the link, and that the deployment is set to anyone with the link.","err"); return false; });
+}
+function pullSheet(){
+  if(!S.sheetUrl){ sheetStatus("Paste the web app link first.","err"); return; }
+  sheetStatus("Loading…");
+  fetch(S.sheetUrl+"?action=load")
+    .then(r=>r.json())
+    .then(d=>{
+      if(!d||!d.state){ sheetStatus("The sheet has no meeting saved yet. Save to it first.","err"); return; }
+      const url=S.sheetUrl, auto=S.autoSync;
+      S=Object.assign(DEFAULTS(),d.state); S.sheetUrl=url; S.autoSync=auto;
+      save(); startUp(); sheetStatus("Loaded from the sheet.","ok");
+    })
+    .catch(()=>sheetStatus("Couldn't reach the sheet. Check the link, and that the deployment is set to anyone with the link.","err"));
+}
+function pushRecapToSheet(btn){
+  if(!S.sheetUrl){ flash(btn,"Add the sheet link first"); return; }
+  fetch(S.sheetUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({action:"recap",date:S.date,facilitator:S.facilitator,recap:buildRecap(),
+      issues:S.issues,actions:S.actions,shoutouts:S.shoutouts})})
+    .then(r=>r.json()).then(()=>flash(btn,"Sent")).catch(()=>flash(btn,"Couldn't reach the sheet"));
+}
+function setAuto(on){
+  S.autoSync=on; save();
+  if(autoTick){ clearInterval(autoTick); autoTick=null; }
+  if(on) autoTick=setInterval(()=>pushSheet(true),60000);
+}
+
+/* =================== wiring =================== */
+document.getElementById("playBtn").onclick=()=>setRunning(!running);
+document.getElementById("planBtn").onclick=()=>togglePlan();
+document.getElementById("recapBtn").onclick=openRecap;
+document.getElementById("syncBtn").onclick=()=>{
+  document.getElementById("sheetUrl").value=S.sheetUrl||"";
+  document.getElementById("autoSync").checked=!!S.autoSync;
+  const d=document.getElementById("syncDlg");
+  if(d.showModal) d.showModal(); else d.setAttribute("open","");
+};
+document.getElementById("closeRecap").onclick=()=>closeDlg("recapDlg");
+document.getElementById("closeSync").onclick=()=>closeDlg("syncDlg");
+document.getElementById("closeTpl").onclick=()=>closeDlg("tplDlg");
+document.getElementById("copyRecap").onclick=e=>{
+  const t=buildRecap();
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>flash(e.target,"Copied"),()=>flash(e.target,"Select the text and copy"));
+  else flash(e.target,"Select the text and copy");
+};
+document.getElementById("dlRecap").onclick=()=>download("team-meeting-"+S.date+".txt",buildRecap());
+document.getElementById("pushRecap").onclick=e=>pushRecapToSheet(e.target);
+document.getElementById("dlJson").onclick=()=>download("team-meeting-"+S.date+".json",JSON.stringify(S,null,2),"application/json");
+document.getElementById("upJson").onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ S=Object.assign(DEFAULTS(),JSON.parse(r.result)); save(); startUp(); closeDlg("syncDlg"); }
+    catch(err){ sheetStatus("That file didn't open. Pick a backup saved from this page.","err"); } };
+  r.readAsText(f);
+};
+document.getElementById("sheetUrl").addEventListener("input",e=>{ S.sheetUrl=e.target.value.trim(); save(); });
+document.getElementById("autoSync").addEventListener("change",e=>setAuto(e.target.checked));
+document.getElementById("pullSheet").onclick=pullSheet;
+document.getElementById("pushSheet").onclick=()=>pushSheet(false);
+
+const dEl=document.getElementById("mDate"), fEl=document.getElementById("mFac");
+dEl.addEventListener("input",()=>{ S.date=dEl.value; save(); });
+fEl.addEventListener("input",()=>{ S.facilitator=fEl.value; save(); });
+
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select,[contenteditable]"))return;
+  if(planMode)return;
+  if(e.key==="ArrowRight") step(1);
+  if(e.key==="ArrowLeft") step(-1);
+  if(e.key===" "){ e.preventDefault(); setRunning(!running); }
+});
+
+function startUp(){
+  if(!secs().length) S.sections=DEFAULTS().sections;
+  if(!secs().some(s=>s.id===S.current)) S.current=secs()[0].id;
+  dEl.value=S.date; fEl.value=S.facilitator;
+  planMode=false;
+  document.getElementById("planBtn").classList.remove("on");
+  document.getElementById("panel").className="panel";
+  paintRail(); paintPanel(); paintClocks();
+  if(S.autoSync) setAuto(true);
+}
+startUp();
+</script>
+</body>
+</html>
