@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Meeting Board — Hudsonville Family Dentistry</title>
+<style>
+  :root{
+    --navy:#13324B; --teal:#2E8B8B; --teal-dk:#236E6E; --teal-tint:#E7F1F1;
+    --gold:#C9A227; --gold-tint:#F7EFD8; --bg:#E9EEF1; --panel:#fff; --ink:#16323F;
+    --muted:#5F6F78; --line:#D7E0E5; --rail:250px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:700;margin:0}
+  button{font:inherit;cursor:pointer}
+  input,textarea,select{font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.45rem .6rem;width:100%}
+  textarea{resize:vertical;line-height:1.5}
+  input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid #8FCFCF;outline-offset:1px}
+  .hide{display:none !important}
+
+  header{background:var(--navy);color:#fff;padding:.6rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+  header h1{font-size:1.05rem;white-space:nowrap}
+  .clocks{margin-left:auto;display:flex;align-items:center;gap:1rem}
+  .clock{text-align:right;line-height:1.1}
+  .clock b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+  .clock span{font-size:.7rem;color:#9DB6C6}
+  .clock.over b{color:#F0B429}
+  .tbtn{background:var(--teal);color:#fff;border:0;border-radius:6px;padding:.45rem .85rem;font-size:.88rem;font-weight:600}
+  .tbtn:hover{background:#3AA0A0}
+  .tbtn.ghost{background:transparent;border:1px solid rgba(255,255,255,.32)}
+  .tbtn.ghost:hover{background:rgba(255,255,255,.12)}
+  .tbtn.on{background:var(--gold);color:#3B2E05}
+
+  .wrap{display:flex;align-items:flex-start;gap:1rem;padding:1rem;max-width:1600px;margin:0 auto}
+  nav.rail{width:var(--rail);flex:0 0 var(--rail);background:var(--panel);border-radius:10px;padding:.5rem;position:sticky;top:70px;box-shadow:0 1px 3px rgba(19,50,75,.1)}
+  .railhead{font-size:.76rem;color:var(--muted);padding:.3rem .5rem .45rem;display:flex;justify-content:space-between}
+  .seg{display:grid;grid-template-columns:1.5rem 1fr auto;align-items:center;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;border-radius:7px;padding:.38rem .5rem;color:var(--ink)}
+  .seg:hover{background:#F1F6F7}
+  .seg .n{width:1.5rem;height:1.5rem;border-radius:50%;background:var(--teal-tint);color:var(--teal-dk);display:grid;place-items:center;font-size:.75rem;font-weight:700}
+  .seg .nm{font-size:.9rem;line-height:1.25}
+  .seg .tm{font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .seg.done .nm{color:var(--muted)} .seg.done .n{background:#E4EAEC;color:var(--muted)}
+  .seg.active{background:var(--navy);color:#fff} .seg.active .n{background:var(--gold);color:#3B2E05} .seg.active .tm{color:#9DB6C6}
+  .seg .bar{grid-column:2/4;height:3px;border-radius:2px;background:#E4EAEC;overflow:hidden}
+  .seg .bar i{display:block;height:100%;background:var(--teal)}
+  .seg.over .bar i{background:var(--gold)}
+
+  main{flex:1;min-width:0}
+  .panel{background:var(--panel);border-radius:10px;padding:1.4rem 1.7rem 1.5rem;box-shadow:0 1px 3px rgba(19,50,75,.1);min-height:60vh;display:flex;flex-direction:column}
+  .phead{border-bottom:1px solid var(--line);padding-bottom:.8rem;margin-bottom:1.3rem}
+  .phead h2{font-size:2.1rem;color:var(--navy);line-height:1.15}
+  .phead .sub{color:var(--muted);font-size:1rem;margin-top:.25rem;display:block}
+  .stage{flex:1}
+  .blk{margin-bottom:1.6rem}
+  .blk:last-child{margin-bottom:0}
+  .blk h3{font-size:1.15rem;color:var(--teal-dk);font-family:inherit;font-weight:600;margin-bottom:.5rem}
+  .foot{display:flex;gap:.6rem;align-items:center;margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--line);flex-wrap:wrap}
+  .foot .spacer{margin-left:auto}
+  .row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+  .btn{background:#fff;border:1px solid var(--line);border-radius:6px;padding:.45rem .85rem;font-size:.92rem;color:var(--ink)}
+  .btn:hover{background:#F1F6F7}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+  .btn.primary:hover{background:#3AA0A0}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:#3B2E05;font-weight:600}
+  .btn.big{font-size:1.05rem;padding:.7rem 1.4rem}
+  .btn.sm{padding:.2rem .5rem;font-size:.8rem}
+  .btn.icon{padding:.14rem .45rem;font-size:.85rem;color:var(--muted)}
+  label.fld{display:block;font-size:.82rem;color:var(--muted);margin:.7rem 0 .25rem}
+  .note{color:var(--muted);font-size:.88rem}
+
+  .quote{background:var(--teal);color:#fff;border-radius:10px;padding:1.6rem 2rem;font-family:Georgia,serif;font-size:1.5rem;line-height:1.5;font-style:italic;text-align:center}
+  .vals{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;justify-content:center}
+  .val{background:var(--teal-tint);border-radius:8px;padding:.6rem .95rem;font-size:1rem;font-weight:600;color:var(--navy)}
+
+  .points{list-style:none;margin:0;padding:0}
+  .points li{display:flex;gap:.75rem;align-items:flex-start;font-size:1.25rem;padding:.4rem 0}
+  .points li::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:var(--gold);margin-top:.6rem;flex:0 0 auto}
+
+  .linkcard{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;background:var(--teal-tint);border-radius:10px;padding:1.1rem 1.3rem}
+  .linkcard .lt{font-size:1.15rem;font-weight:600;color:var(--navy)}
+  .linkcard .lu{font-size:.85rem;color:var(--muted);word-break:break-all}
+
+  .draw{background:var(--gold-tint);border:1px solid #E8D9A8;border-radius:12px;padding:1.4rem 1.6rem;text-align:center}
+  .draw .cd{font-size:4rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--navy);line-height:1}
+  .draw .cd.low{color:#B4541F}
+  .draw .meta{font-size:.9rem;color:var(--muted);margin-top:.3rem}
+  .draw .card{font-family:Georgia,serif;font-size:1.9rem;line-height:1.35;color:var(--navy);min-height:4.2rem;display:flex;align-items:center;justify-content:center;margin:1rem 0}
+  .draw .card.empty{font-size:1.05rem;font-style:italic;color:var(--muted);font-family:inherit}
+
+  .flyer{text-align:center}
+  .flyer img{max-width:100%;max-height:68vh;border-radius:8px}
+  .flyer .ph{color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:2.5rem 1rem;background:#FBFCFD}
+  .vidwrap{position:relative;padding-top:52%;border-radius:10px;overflow:hidden;background:#000;margin-top:.5rem}
+  .vidwrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+
+  .chips{display:flex;gap:.55rem;flex-wrap:wrap;margin:.2rem 0 .9rem}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:20px;padding:.45rem 1.05rem;font-size:.95rem}
+  .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
+  .groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;margin-top:1rem}
+  .group{border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;background:#FBFCFD}
+  .group h4{margin:0 0 .4rem;font:700 .95rem/1.2 inherit;color:var(--teal-dk)}
+  .group ul{margin:0;padding-left:1.15rem}
+  .group li{font-size:1.05rem;padding:.05rem 0}
+
+  .plan .psec{border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;margin-bottom:.8rem;background:#FBFCFD}
+  .plan .psec.off{opacity:.55}
+  .ptop{display:grid;grid-template-columns:auto 1fr 5rem auto auto;gap:.5rem;align-items:center}
+  .ptop input[type=text]{font-weight:600}
+  .rank{display:flex;flex-direction:column;gap:1px}
+  .rank button{background:none;border:0;color:var(--muted);line-height:.9;padding:0 .2rem;font-size:.75rem}
+  .rank button:hover{color:var(--teal)}
+  .peditor{border:1px solid var(--line);border-radius:8px;padding:.7rem .85rem;margin-top:.6rem;background:#fff}
+  .peditor .ph{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem}
+  .peditor .ph b{font-size:.88rem;color:var(--teal-dk)}
+  .peditor .ph .sp{margin-left:auto;display:flex;gap:.2rem}
+  .addblk{margin-top:.6rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+  .addblk select{width:auto}
+
+  dialog{border:0;border-radius:10px;padding:0;max-width:620px;width:93%;box-shadow:0 12px 40px rgba(19,50,75,.3)}
+  dialog::backdrop{background:rgba(19,50,75,.45)}
+  .dlg{padding:1.2rem 1.4rem}
+  .dlg h3{color:var(--navy);font-size:1.2rem;margin-bottom:.7rem;font-family:Georgia,serif}
+  .list{list-style:none;margin:0;padding:0}
+  .list li{display:flex;gap:.6rem;align-items:center;padding:.4rem 0;border-bottom:1px solid var(--line)}
+  .addrow{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+  .addrow input{flex:1;min-width:8rem}
+  .empty{color:var(--muted);font-size:.92rem;padding:.5rem 0}
+
+  /* free-layout canvas */
+  .cwrap{position:relative;width:100%;overflow:hidden}
+  .canvas{position:absolute;top:0;left:0;width:1000px;height:562px;transform-origin:0 0;background:#fff}
+  .canvas.edit{background:
+     linear-gradient(#EEF3F5 1px,transparent 1px) 0 0/50px 50px,
+     linear-gradient(90deg,#EEF3F5 1px,transparent 1px) 0 0/50px 50px,#fff;
+     outline:1px solid var(--line)}
+  .fblk{position:absolute;overflow:hidden}
+  .canvas.edit .fblk{outline:1px dashed #B9CBD3;border-radius:4px}
+  .canvas.edit .fblk:hover{outline:2px solid var(--teal)}
+  .canvas.edit .fblk{cursor:move;touch-action:none}
+  .fblk .rz{position:absolute;right:0;bottom:0;width:18px;height:18px;background:var(--teal);border-radius:3px 0 0 0;cursor:nwse-resize;touch-action:none;display:none}
+  .canvas.edit .fblk .rz{display:block}
+  .fblk .tag{position:absolute;top:0;left:0;background:var(--teal);color:#fff;font-size:10px;padding:1px 5px;border-radius:0 0 4px 0;display:none}
+  .canvas.edit .fblk:hover .tag{display:block}
+  .ctools{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem}
+
+  .panel.bg-tint{background:var(--teal-tint)}
+  .panel.bg-tint .canvas{background:var(--teal-tint)}
+  .panel.bg-warm{background:var(--gold-tint)}
+  .panel.bg-warm .canvas{background:var(--gold-tint)}
+  .panel.bg-dark{background:var(--navy);color:#fff}
+  .panel.bg-dark .canvas{background:var(--navy)}
+  .panel.bg-dark .phead{border-color:rgba(255,255,255,.25)}
+  .panel.bg-dark .phead h2{color:#fff}
+  .panel.bg-dark .phead .sub,.panel.bg-dark .note,.panel.bg-dark .empty{color:#A9C2D0}
+  .panel.bg-dark h3{color:#8FCFCF}
+  .panel.bg-dark .foot{border-color:rgba(255,255,255,.25)}
+  .panel.bg-dark .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+  .panel.bg-dark .btn:hover{background:rgba(255,255,255,.12)}
+  .panel.bg-dark .btn.primary{background:var(--teal);border-color:var(--teal)}
+  .panel.bg-dark .btn.gold{background:var(--gold);border-color:var(--gold);color:#3B2E05}
+  .panel.bg-dark .group{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2)}
+  .panel.bg-dark .group li,.panel.bg-dark .points li{color:#fff}
+  .panel.bg-dark .chip{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+  .panel.bg-dark .chip[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
+
+  #printArea{display:none}
+  .psheet{page-break-after:always}
+  .psheet:last-child{page-break-after:auto}
+  @media print{
+    header,nav.rail,main,.noprint{display:none !important}
+    #printArea{display:block}
+    .psheet{padding:0 0 1.5rem}
+    .psheet h2{font-size:1.9rem;color:#13324B;margin:0 0 .2rem}
+    .psheet .sub{color:#5F6F78;display:block;margin-bottom:1rem}
+    .psheet .blk{margin-bottom:1rem}
+    body{background:#fff}
+    .cwrap{break-inside:avoid}
+  }
+
+  body.fs nav.rail{display:none}
+  body.fs .wrap{padding:.5rem;max-width:none}
+  body.fs .panel{min-height:80vh}
+  body.fs .phead h2{font-size:2.6rem}
+
+  @media (max-width:900px){
+    .wrap{flex-direction:column;padding:.6rem}
+    nav.rail{width:100%;flex:none;position:static;display:flex;gap:.4rem;overflow-x:auto}
+    nav.rail .railhead{display:none}
+    .seg{width:auto;flex:0 0 auto;grid-template-columns:1.4rem auto;padding:.4rem .6rem}
+    .seg .tm,.seg .bar{display:none}
+    .clocks{width:100%;margin-left:0;justify-content:space-between;gap:.5rem}
+    .panel{padding:1rem}
+    .phead h2{font-size:1.6rem}
+    .draw .cd{font-size:3rem} .draw .card{font-size:1.4rem}
+    .ptop{grid-template-columns:auto 1fr;row-gap:.4rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Team Meeting</h1>
+  <div class="clocks">
+    <div class="clock" id="segClock"><b>0:00</b><span id="segLabel">section</span></div>
+    <div class="clock" id="totClock"><b>0:00</b><span>meeting total</span></div>
+    <button class="tbtn" id="playBtn">Start</button>
+    <button class="tbtn ghost" id="fsBtn">Full screen</button>
+    <button class="tbtn ghost" id="planBtn">Plan</button>
+    <button class="tbtn ghost" id="printBtn">Print</button>
+    <button class="tbtn ghost" id="lockBtn">Lock</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="rail" id="rail" aria-label="Run of show"><div class="railhead"><span>Run of show</span><span id="railTot"></span></div></nav>
+  <main><div class="panel" id="panel"></div></main>
+</div>
+
+<div id="printArea" aria-hidden="true"></div>
+
+<dialog id="tplDlg"><div class="dlg">
+  <h3>Settings</h3>
+  <p class="note">The board lives in this browser. A backup file is how you move it to another computer, or get it back if something goes sideways.</p>
+  <div class="row">
+    <button class="btn" id="dlJson">Save a backup file</button>
+    <label class="btn" style="margin:0">Open a backup file<input id="upJson" type="file" accept=".json" style="display:none"></label>
+  </div>
+  <label class="fld" style="margin-top:1rem">Colors</label>
+  <select id="themeSel" style="max-width:16rem"></select>
+  <label class="fld" style="margin-top:1rem">Code to unlock the Plan button (optional — leave blank for none)</label>
+  <input id="pinBox" type="text" inputmode="numeric" placeholder="e.g. 1234" style="max-width:9rem">
+  <div class="foot"><button class="btn spacer" id="closeTpl">Close</button></div>
+</div></dialog>
+
+<script>
+/* ============ what can go in a section ============ */
+const KINDS = {
+  text:   {label:"Text box"},
+  purpose:{label:"Core purpose and values"},
+  points: {label:"Talking points on screen"},
+  link:   {label:"Link to open (workbook, dashboard, form)"},
+  flyer:  {label:"Flyer or image"},
+  jar:    {label:"Draw from a jar, with a countdown"},
+  video:  {label:"Video"},
+  groups: {label:"Split the room into groups"}
+};
+function newBlock(kind){
+  const b={kind,id:"b"+Math.random().toString(36).slice(2,8)};
+  if(kind==="text")   Object.assign(b,{title:"",body:"",size:"m",align:"left"});
+  if(kind==="points") Object.assign(b,{label:"",items:[]});
+  if(kind==="link")   Object.assign(b,{label:"Open the workbook",url:""});
+  if(kind==="flyer")  Object.assign(b,{label:"",src:"",caption:""});
+  if(kind==="jar")    Object.assign(b,{label:"Draw a question",items:[],drawn:[],limit:600,left:600,running:false});
+  if(kind==="video")  Object.assign(b,{label:"",url:""});
+  if(kind==="groups") Object.assign(b,{label:"",format:"full",size:4,groups:[]});
+  return b;
+}
+
+const DEFAULTS = () => ({
+  purpose:"At Hudsonville Family Dentistry, we provide high-quality dental care in a comfortable and caring environment while building trusted relationships and helping our patients maintain healthy smiles that support their overall health for a lifetime.",
+  values:["Be the Best and Excellence in Every Smile","Compassionate, Patient-Centered Care","We Win as a Team","Bring a Positive Attitude","Enjoy the Journey"],
+  roster:[],
+  sections:[
+    {id:"s1",name:"Core purpose",min:2,sub:"Read it aloud together.",on:true,blocks:[newBlock("purpose")]},
+    {id:"s2",name:"Stump the doctor",min:10,sub:"Ten minutes on the clock. Draw a question, he answers, draw the next one.",on:true,
+      blocks:[
+        Object.assign(newBlock("flyer"),{caption:"Stump the doctor"}),
+        Object.assign(newBlock("jar"),{label:"Questions for the doctor",limit:600,left:600,items:[
+          "What made you want to be a dentist?",
+          "What was your very first job?",
+          "What's the hardest case you've ever treated?",
+          "What do you wish patients understood about their teeth?",
+          "Where did you grow up?",
+          "What's something about you nobody here knows?",
+          "What's your favorite procedure to do, and why?",
+          "If you weren't a dentist, what would you be?",
+          "What's the best advice you ever got?",
+          "What's your go-to order at a restaurant?"
+        ]})
+      ]},
+    {id:"s3",name:"Leadership info",min:8,sub:"Updates from the doctors and management.",on:true,
+      blocks:[Object.assign(newBlock("points"),{items:["Practice updates","Team and schedule","Policy and compliance"]})]},
+    {id:"s4",name:"Our numbers",min:8,sub:"On track or off track.",on:true,
+      blocks:[Object.assign(newBlock("link"),{label:"Open the numbers",url:""})]},
+    {id:"s5",name:"Group activity",min:10,sub:"",on:true,
+      blocks:[newBlock("video"),newBlock("groups")]},
+    {id:"s6",name:"Issues list",min:15,sub:"Prioritize, then identify, discuss, solve.",on:true,
+      blocks:[Object.assign(newBlock("link"),{label:"Open the issues list",url:""})]},
+    {id:"s7",name:"Reminders",min:3,sub:"Quick housekeeping.",on:true,blocks:[Object.assign(newBlock("points"),{items:[]})]},
+    {id:"s8",name:"Action items",min:4,sub:"Read them back out loud before we move on.",on:true,
+      blocks:[Object.assign(newBlock("link"),{label:"Open the action items",url:""})]},
+    {id:"s9",name:"Jar of love",min:3,sub:"Shout-outs. Catch someone doing something right.",on:true,
+      blocks:[Object.assign(newBlock("points"),{items:[]})]},
+    {id:"s10",name:"Evaluate the meeting",min:2,sub:"Everyone gives it a number, one to five, before we leave.",on:true,
+      blocks:[Object.assign(newBlock("points"),{items:["Did we start and end on time?","Did we solve real issues, or just talk about them?","What would make next week better?"]})]}
+  ],
+  theme:"classic",
+  locked:false,
+  pin:"",
+  timers:{},
+  current:"s1"
+});
+
+const THEMES={
+  classic:{name:"Navy and teal",   navy:"#13324B",teal:"#2E8B8B",teal_dk:"#236E6E",gold:"#C9A227",tint:"#E7F1F1",gtint:"#F7EFD8",bg:"#E9EEF1"},
+  bright: {name:"Blue and orange", navy:"#123A6B",teal:"#1F6FB2",teal_dk:"#17568A",gold:"#E8681E",tint:"#E4EEF8",gtint:"#FBE9DC",bg:"#EDF1F7"},
+  garden: {name:"Green and gold",  navy:"#1F4632",teal:"#3E8E5A",teal_dk:"#2F6E45",gold:"#D9A404",tint:"#E6F1E9",gtint:"#FAF0D4",bg:"#EBF1EC"},
+  plum:   {name:"Plum and rose",   navy:"#42225A",teal:"#8A4A86",teal_dk:"#6E3A6B",gold:"#D98E2B",tint:"#F1E8F4",gtint:"#FBEEDC",bg:"#F0EAF3"},
+  sunrise:{name:"Clay and coral",  navy:"#6B2E22",teal:"#C25E42",teal_dk:"#9E4A33",gold:"#E0A32E",tint:"#FAEAE3",gtint:"#FBF0D9",bg:"#F5EEE9"}
+};
+function applyTheme(key){
+  const t=THEMES[key]||THEMES.classic, r=document.documentElement.style;
+  r.setProperty("--navy",t.navy); r.setProperty("--teal",t.teal); r.setProperty("--teal-dk",t.teal_dk);
+  r.setProperty("--gold",t.gold); r.setProperty("--teal-tint",t.tint); r.setProperty("--gold-tint",t.gtint);
+  r.setProperty("--bg",t.bg);
+}
+
+let S=load(), running=false, tick=null, planMode=false, jarTick=null;
+
+function load(){
+  try{ const raw=localStorage.getItem("hfd-board-v3"); if(raw) return Object.assign(DEFAULTS(),JSON.parse(raw)); }catch(e){}
+  return DEFAULTS();
+}
+function save(){ try{ localStorage.setItem("hfd-board-v3",JSON.stringify(S)); }catch(e){} }
+function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+function esc(t){ return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function secs(){ return S.sections.filter(s=>s.on!==false); }
+function cur(){ return secs().find(s=>s.id===S.current)||secs()[0]; }
+function segSec(id){ return S.timers[id]||0; }
+function totalSec(){ return secs().reduce((a,s)=>a+segSec(s.id),0); }
+
+/* ============ clocks ============ */
+function setRunning(on){
+  running=on;
+  const b=document.getElementById("playBtn");
+  b.textContent=on?"Pause":"Start"; b.classList.toggle("on",on);
+  if(on&&!tick){
+    tick=setInterval(()=>{ S.timers[S.current]=segSec(S.current)+1; paintClocks(); paintRail();
+      if(segSec(S.current)%10===0) save(); },1000);
+  }
+  if(!on&&tick){ clearInterval(tick); tick=null; save(); }
+}
+function paintClocks(){
+  const s=cur(); if(!s)return;
+  const c=document.getElementById("segClock");
+  c.querySelector("b").textContent=fmt(segSec(s.id));
+  document.getElementById("segLabel").textContent=s.min+" min target";
+  c.classList.toggle("over",segSec(s.id)>s.min*60);
+  document.getElementById("totClock").querySelector("b").textContent=fmt(totalSec());
+}
+
+/* ============ rail ============ */
+function paintRail(){
+  const rail=document.getElementById("rail");
+  rail.querySelectorAll(".seg").forEach(n=>n.remove());
+  const list=secs();
+  document.getElementById("railTot").textContent=list.reduce((a,s)=>a+(+s.min||0),0)+" min";
+  list.forEach((s,i)=>{
+    const used=segSec(s.id), target=(+s.min||0)*60;
+    const b=document.createElement("button");
+    b.className="seg"+(s.id===S.current?" active":"")+(used>0&&s.id!==S.current?" done":"")+(target&&used>target?" over":"");
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span class="nm">'+esc(s.name)+'</span>'+
+      '<span class="tm">'+(used?fmt(used):s.min+"m")+'</span>'+
+      '<span class="bar"><i style="width:'+(target?Math.min(100,used/target*100):0)+'%"></i></span>';
+    b.onclick=()=>go(s.id);
+    rail.appendChild(b);
+  });
+}
+function go(id){
+  S.current=id; save();
+  if(planMode){ planMode=false; document.getElementById("planBtn").classList.remove("on"); }
+  document.getElementById("panel").className="panel";
+  paintRail(); paintPanel(); paintClocks();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function step(d){ const l=secs(), i=l.findIndex(s=>s.id===S.current), n=l[i+d]; if(n) go(n.id); }
+
+/* ============ live view ============ */
+function paintPanel(){
+  if(planMode) return paintPlan();
+  const s=cur(), list=secs(), i=list.indexOf(s);
+  const p=document.getElementById("panel");
+  p.className="panel"+(s.bg&&s.bg!=="plain"?" bg-"+s.bg:"");
+  p.innerHTML='<div class="phead"><h2>'+esc(s.name)+'</h2>'+(s.sub?'<span class="sub">'+esc(s.sub)+'</span>':'')+'</div>'+
+    '<div class="stage" id="stage"></div>'+
+    '<div class="foot">'+
+      (i>0?'<button class="btn" id="prevBtn">Back</button>':'')+
+      (i<list.length-1?'<button class="btn primary" id="nextBtn">Next: '+esc(list[i+1].name)+'</button>':'<button class="btn primary" id="nextBtn" disabled>Last section</button>')+
+      '<span class="spacer"></span><span class="note">Step '+(i+1)+' of '+list.length+'</span>'+
+      '<button class="btn sm" id="resetSeg">Reset timer</button></div>';
+  const stage=document.getElementById("stage");
+  fits=[];
+  if(!(s.blocks||[]).length){
+    stage.innerHTML='<p class="empty">Nothing on screen for this section — that\'s fine if you just want the title and the clock.</p>';
+  }else if(s.layout==="free"){
+    renderFree(stage,s,false);
+  }else{
+    (s.blocks||[]).forEach(b=>{
+      const w=document.createElement("div"); w.className="blk"; stage.appendChild(w);
+      (SHOW[b.kind]||SHOW.points)(w,b);
+    });
+  }
+  const pb=document.getElementById("prevBtn"); if(pb) pb.onclick=()=>step(-1);
+  const nb=document.getElementById("nextBtn"); if(nb&&!nb.disabled) nb.onclick=()=>step(1);
+  document.getElementById("resetSeg").onclick=()=>{ S.timers[S.current]=0; save(); paintClocks(); paintRail(); };
+}
+function label(w,b){ if(b.label) w.innerHTML='<h3>'+esc(b.label)+'</h3>'; }
+
+const SHOW={};
+
+SHOW.purpose=(w)=>{
+  w.innerHTML='<div class="quote">'+esc(S.purpose)+'</div><div class="vals">'+
+    S.values.map(v=>'<span class="val">'+esc(v)+'</span>').join("")+'</div>';
+};
+
+SHOW.text=(w,b)=>{
+  const sz={s:"1rem",m:"1.35rem",l:"1.9rem",xl:"2.6rem"}[b.size||"m"];
+  w.innerHTML=(b.title?'<h3 style="font-family:Georgia,serif;font-size:calc('+sz+' * 1.15);color:var(--navy);margin-bottom:.3rem">'+esc(b.title)+'</h3>':'')+
+    (b.body?'<div style="font-size:'+sz+';white-space:pre-wrap">'+esc(b.body)+'</div>':'')+
+    (!b.title&&!b.body?'<p class="empty">Empty text box.</p>':'');
+  w.style.textAlign=b.align||"left";
+};
+
+SHOW.points=(w,b)=>{
+  label(w,b);
+  const items=(b.items||[]).filter(x=>String(x).trim());
+  w.insertAdjacentHTML("beforeend", items.length
+    ? '<ul class="points">'+items.map(i=>'<li>'+esc(i)+'</li>').join("")+'</ul>'
+    : '<p class="empty">No points set for this section.</p>');
+};
+
+SHOW.link=(w,b)=>{
+  w.innerHTML='<div class="linkcard"><div><div class="lt">'+esc(b.label||"Open")+'</div>'+
+    (b.url?'<div class="lu">'+esc(b.url)+'</div>':'<div class="lu">No link set yet — add it in Plan.</div>')+'</div>'+
+    '<button class="btn primary big" style="margin-left:auto"'+(b.url?"":" disabled")+'>Open</button></div>';
+  const btn=w.querySelector("button");
+  if(b.url) btn.onclick=()=>window.open(b.url,"_blank","noopener");
+};
+
+SHOW.flyer=(w,b)=>{
+  label(w,b);
+  w.insertAdjacentHTML("beforeend",'<div class="flyer">'+(b.src
+    ? '<img src="'+esc(b.src)+'" alt="'+esc(b.caption||"Flyer")+'">'+(b.caption?'<div class="note" style="margin-top:.5rem">'+esc(b.caption)+'</div>':'')
+    : '<div class="ph">No image loaded — add one in Plan.</div>')+'</div>');
+};
+
+SHOW.video=(w,b)=>{
+  label(w,b);
+  const id=ytId(b.url||"");
+  w.insertAdjacentHTML("beforeend", id
+    ? '<div class="vidwrap"><iframe src="https://www.youtube.com/embed/'+esc(id)+'" title="Video" allowfullscreen></iframe></div>'
+    : (b.url ? '<div class="linkcard"><div class="lt">Play the video</div><button class="btn primary big" style="margin-left:auto">Open</button></div>'
+             : '<p class="empty">No video set for this section.</p>'));
+  const btn=w.querySelector("button");
+  if(btn) btn.onclick=()=>window.open(b.url,"_blank","noopener");
+};
+function ytId(u){
+  const m=String(u).match(/(?:youtube\.com\/(?:watch\?v=|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  return m?m[1]:"";
+}
+
+SHOW.jar=(w,b)=>{
+  label(w,b);
+  w.insertAdjacentHTML("beforeend",
+    '<div class="draw">'+
+      '<div class="cd">'+fmt(b.left==null?b.limit:b.left)+'</div>'+
+      '<div class="meta"><span class="cnt"></span></div>'+
+      '<div class="card empty">Nothing drawn yet.</div>'+
+      '<div class="row" style="justify-content:center">'+
+        '<button class="btn gold big" data-a="draw">Draw a question</button>'+
+        '<button class="btn" data-a="cd">Start the clock</button>'+
+        '<button class="btn" data-a="reset">Reset</button>'+
+      '</div>'+
+    '</div>');
+  const cd=w.querySelector(".cd"), card=w.querySelector(".card"), cnt=w.querySelector(".cnt");
+  const paintCnt=()=>{ const left=(b.items||[]).filter(x=>!(b.drawn||[]).includes(x)).length;
+    cnt.textContent=left+" left in the jar · "+(b.drawn||[]).length+" answered"; };
+  const paintCd=()=>{ const l=b.left==null?b.limit:b.left; cd.textContent=fmt(l); cd.classList.toggle("low",l<=60);
+    w.querySelector('[data-a="cd"]').textContent=b.running?"Pause the clock":"Start the clock"; };
+  paintCnt(); paintCd();
+  w.querySelector('[data-a="draw"]').onclick=()=>{
+    const pool=(b.items||[]).filter(x=>!(b.drawn||[]).includes(x));
+    if(!pool.length){ card.className="card empty"; card.textContent="The jar is empty — he got through them all."; return; }
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    b.drawn=(b.drawn||[]).concat([pick]); save();
+    card.className="card"; card.textContent=pick; paintCnt();
+  };
+  w.querySelector('[data-a="reset"]').onclick=()=>{
+    b.left=b.limit; b.running=false; b.drawn=[];
+    if(jarTick){ clearInterval(jarTick); jarTick=null; }
+    save(); paintCd(); paintCnt(); card.className="card empty"; card.textContent="Nothing drawn yet.";
+  };
+  w.querySelector('[data-a="cd"]').onclick=()=>{
+    b.running=!b.running; save(); paintCd();
+    if(jarTick){ clearInterval(jarTick); jarTick=null; }
+    if(b.running) jarTick=setInterval(()=>{
+      b.left=Math.max(0,(b.left==null?b.limit:b.left)-1); paintCd();
+      if(b.left<=0){ b.running=false; clearInterval(jarTick); jarTick=null; save(); paintCd();
+        card.className="card"; card.textContent="Time. That's the end of it."; }
+    },1000);
+  };
+};
+
+SHOW.groups=(w,b)=>{
+  label(w,b);
+  const chip=(v,l)=>'<button class="chip" data-v="'+v+'" aria-pressed="'+(b.format===v)+'">'+l+'</button>';
+  w.insertAdjacentHTML("beforeend",
+    '<div class="chips">'+chip("full","Whole group")+chip("pairs","Pairs")+chip("size","Groups of")+chip("role","By job role")+'</div>'+
+    '<div class="row"><input type="number" class="gsize" min="2" max="10" value="'+(b.size||4)+'" style="width:4.6rem">'+
+    '<button class="btn primary big" data-a="mk">Make the groups</button>'+
+    '<button class="btn" data-a="clr">Clear</button><span class="note gnote"></span></div>'+
+    '<div class="groups gw"></div>');
+  const note=w.querySelector(".gnote"), size=w.querySelector(".gsize"), gw=w.querySelector(".gw");
+  const refresh=()=>{
+    w.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.v===b.format)));
+    size.classList.toggle("hide",b.format!=="size");
+    w.querySelector('[data-a="mk"]').classList.toggle("hide",b.format==="full");
+    note.textContent={full:"Everyone together.",pairs:"Randomly paired — an odd number makes one group of three.",
+      size:"Randomly split into groups of this size.",role:"Grouped by the role next to each name."}[b.format];
+  };
+  w.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ b.format=c.dataset.v; save(); refresh(); });
+  size.addEventListener("input",()=>{ b.size=Math.max(2,+size.value||2); save(); });
+  refresh();
+  const drawG=()=>{ gw.innerHTML=(b.groups||[]).map(g=>'<div class="group"><h4>'+esc(g.label)+'</h4><ul>'+
+    g.people.map(p=>'<li>'+esc(p)+'</li>').join("")+'</ul></div>').join(""); };
+  drawG();
+  w.querySelector('[data-a="mk"]').onclick=()=>{
+    const people=S.roster.filter(r=>r.name);
+    if(!people.length){ note.textContent="Add the team list in Plan first."; return; }
+    b.groups=buildGroups(people,b.format,b.size); save(); drawG();
+  };
+  w.querySelector('[data-a="clr"]').onclick=()=>{ b.groups=[]; save(); drawG(); };
+};
+function buildGroups(people,format,size){
+  if(format==="role"){
+    const by={}; people.forEach(p=>{ const r=p.role||"Everyone"; (by[r]=by[r]||[]).push(p.name); });
+    return Object.keys(by).sort().map(r=>({label:r,people:by[r]}));
+  }
+  const n=format==="pairs"?2:Math.max(2,size||4);
+  const pool=people.map(p=>p.name);
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=pool[i]; pool[i]=pool[j]; pool[j]=t; }
+  const out=[]; for(let i=0;i<pool.length;i+=n) out.push(pool.slice(i,i+n));
+  if(out.length>1&&out[out.length-1].length===1) out[out.length-2].push(out.pop()[0]);
+  return out.map((g,i)=>({label:"Group "+(i+1),people:g}));
+}
+
+/* ============ free layout canvas ============ */
+const CW=1000, CH=562;
+let fits=[];
+function defaultPos(i){
+  return {x:60, y:50+ (i%4)*120, w:880, h:110};
+}
+function ensurePos(s){
+  (s.blocks||[]).forEach((b,i)=>{ if(!b.pos) b.pos=defaultPos(i); });
+}
+function fitCanvas(wrap){
+  const canvas=wrap.querySelector(".canvas");
+  const k=wrap.clientWidth/CW;
+  canvas.style.transform="scale("+k+")";
+  wrap.style.height=(CH*k)+"px";
+  wrap.dataset.k=k;
+}
+function fitAll(){ fits.forEach(w=>{ if(document.body.contains(w)) fitCanvas(w); }); }
+window.addEventListener("resize",fitAll);
+
+function renderFree(host, s, editable){
+  ensurePos(s);
+  const wrap=document.createElement("div"); wrap.className="cwrap";
+  const canvas=document.createElement("div"); canvas.className="canvas"+(editable?" edit":"");
+  wrap.appendChild(canvas); host.appendChild(wrap);
+  (s.blocks||[]).forEach((b,i)=>{
+    const el=document.createElement("div");
+    el.className="fblk";
+    el.style.left=b.pos.x+"px"; el.style.top=b.pos.y+"px";
+    el.style.width=b.pos.w+"px"; el.style.height=b.pos.h+"px";
+    el.style.zIndex=i+1;
+    const body=document.createElement("div");
+    body.style.width="100%"; body.style.height="100%"; body.style.overflow="hidden";
+    el.appendChild(body);
+    (SHOW[b.kind]||SHOW.points)(body,b);
+    if(editable){
+      const tag=document.createElement("span"); tag.className="tag";
+      tag.textContent=KINDS[b.kind]?KINDS[b.kind].label:b.kind;
+      const rz=document.createElement("span"); rz.className="rz";
+      el.appendChild(tag); el.appendChild(rz);
+      wireDrag(el,rz,b,wrap);
+      body.querySelectorAll("button,input,select,textarea,iframe").forEach(n=>{ n.style.pointerEvents="none"; });
+    }
+    canvas.appendChild(el);
+  });
+  fits.push(wrap);
+  fitCanvas(wrap);
+  return wrap;
+}
+function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+function wireDrag(el,rz,b,wrap){
+  let mode=null,sx=0,sy=0,ox=0,oy=0,ow=0,oh=0;
+  const k=()=>+wrap.dataset.k||1;
+  const start=(e,m)=>{
+    mode=m; sx=e.clientX; sy=e.clientY;
+    ox=b.pos.x; oy=b.pos.y; ow=b.pos.w; oh=b.pos.h;
+    el.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation();
+  };
+  el.addEventListener("pointerdown",e=>{ if(e.target===rz) return; start(e,"move"); });
+  rz.addEventListener("pointerdown",e=>start(e,"size"));
+  el.addEventListener("pointermove",e=>{
+    if(!mode) return;
+    const dx=(e.clientX-sx)/k(), dy=(e.clientY-sy)/k();
+    const snap=v=>Math.round(v/5)*5;
+    if(mode==="move"){
+      b.pos.x=clamp(snap(ox+dx),0,CW-b.pos.w);
+      b.pos.y=clamp(snap(oy+dy),0,CH-b.pos.h);
+      el.style.left=b.pos.x+"px"; el.style.top=b.pos.y+"px";
+    }else{
+      b.pos.w=clamp(snap(ow+dx),80,CW-b.pos.x);
+      b.pos.h=clamp(snap(oh+dy),40,CH-b.pos.y);
+      el.style.width=b.pos.w+"px"; el.style.height=b.pos.h+"px";
+    }
+  });
+  const end=()=>{ if(mode){ mode=null; save(); } };
+  el.addEventListener("pointerup",end);
+  el.addEventListener("pointercancel",end);
+}
+
+/* ============ plan view ============ */
+function paintPlan(){
+  const p=document.getElementById("panel");
+  p.className="panel plan";
+  p.innerHTML='<div class="phead"><h2>Plan the meeting</h2><span class="sub">Set this up before everyone walks in. Rename, reorder, retime, switch a section off, or change what shows on the screen.</span></div>'+
+    '<div id="pbody"></div>'+
+    '<div class="foot"><button class="btn primary" id="addSec">Add a section</button>'+
+    '<button class="btn" id="freshBtn">Clear for a new meeting</button>'+
+    '<button class="btn" id="tplBtn">Settings</button>'+
+    '<button class="btn" id="rosterBtn">The team list</button>'+
+    '<span class="spacer"></span><button class="btn" id="donePlan">Back to the meeting</button></div>';
+  const body=p.querySelector("#pbody");
+  fits=[];
+  S.sections.forEach((s,i)=>{
+    const d=document.createElement("div");
+    d.className="psec"+(s.on===false?" off":"");
+    d.innerHTML='<div class="ptop">'+
+      '<span class="rank"><button data-a="up" aria-label="Move up">▲</button><button data-a="dn" aria-label="Move down">▼</button></span>'+
+      '<input type="text" class="snm" value="'+esc(s.name)+'">'+
+      '<input type="number" class="smin" min="0" max="120" value="'+(s.min||0)+'" aria-label="Target minutes">'+
+      '<button class="btn sm" data-a="on">'+(s.on===false?"Off":"On")+'</button>'+
+      '<button class="btn icon" data-a="del" aria-label="Delete section">✕</button></div>'+
+      '<input type="text" class="ssub" placeholder="One line of direction for the room (optional)" value="'+esc(s.sub||"")+'" style="margin-top:.4rem">'+
+      '<div class="ctools" style="margin-top:.6rem">'+
+        '<label class="row" style="gap:.35rem;font-size:.85rem">Layout '+
+        '<select class="lay" style="width:auto"><option value="stack">Stacked down the page</option>'+
+        '<option value="free">Free — drag things anywhere</option></select></label>'+
+        '<label class="row" style="gap:.35rem;font-size:.85rem">Background '+
+        '<select class="bgsel" style="width:auto"><option value="plain">White</option>'+
+        '<option value="tint">Soft color</option><option value="warm">Warm</option><option value="dark">Dark</option></select></label>'+
+        '<span class="note layhint"></span></div>'+
+      '<div class="cbox"></div>'+
+      '<div class="beds"></div>'+
+      '<div class="addblk"><select class="addsel"><option value="">Put something on the screen…</option>'+
+      Object.keys(KINDS).map(k=>'<option value="'+k+'">'+KINDS[k].label+'</option>').join("")+'</select></div>';
+    const bgs=d.querySelector(".bgsel");
+    bgs.value=s.bg||"plain";
+    bgs.addEventListener("change",e=>{ s.bg=e.target.value; save(); paintPlan(); });
+    const lay=d.querySelector(".lay");
+    lay.value=s.layout==="free"?"free":"stack";
+    d.querySelector(".layhint").textContent = s.layout==="free"
+      ? "Drag to move, pull the corner to resize."
+      : "Blocks stack in order, top to bottom.";
+    lay.addEventListener("change",e=>{
+      s.layout=e.target.value;
+      if(s.layout==="free") ensurePos(s);
+      save(); paintPlan();
+    });
+    if(s.layout==="free"){
+      const box=d.querySelector(".cbox");
+      box.className="cbox panel "+(s.bg&&s.bg!=="plain"?"bg-"+s.bg:"");
+      box.style.padding="0"; box.style.boxShadow="none"; box.style.minHeight="0";
+      renderFree(box,s,true);
+    }
+    const beds=d.querySelector(".beds");
+    (s.blocks||[]).forEach((b,bi)=>{
+      const ed=document.createElement("div"); ed.className="peditor";
+      ed.innerHTML='<div class="ph"><b>'+esc(KINDS[b.kind]?KINDS[b.kind].label:b.kind)+'</b>'+
+        '<span class="sp"><button class="btn icon" data-a="bu" aria-label="Move up">▲</button>'+
+        '<button class="btn icon" data-a="bd" aria-label="Move down">▼</button>'+
+        '<button class="btn icon" data-a="bx" aria-label="Remove">✕</button></span></div><div class="ebody"></div>';
+      (EDIT[b.kind]||EDIT.points)(ed.querySelector(".ebody"),b);
+      ed.querySelector('[data-a="bu"]').onclick=()=>{ if(bi>0){ const t=s.blocks[bi-1]; s.blocks[bi-1]=s.blocks[bi]; s.blocks[bi]=t; save(); paintPlan(); } };
+      ed.querySelector('[data-a="bd"]').onclick=()=>{ if(bi<s.blocks.length-1){ const t=s.blocks[bi+1]; s.blocks[bi+1]=s.blocks[bi]; s.blocks[bi]=t; save(); paintPlan(); } };
+      ed.querySelector('[data-a="bx"]').onclick=()=>{ s.blocks.splice(bi,1); save(); paintPlan(); };
+      beds.appendChild(ed);
+    });
+    const sel=d.querySelector(".addsel");
+    sel.onchange=()=>{
+      if(!sel.value)return;
+      const nb=newBlock(sel.value);
+      if(s.layout==="free"){
+        const n=(s.blocks||[]).length;
+        nb.pos={x:60+(n%3)*30, y:50+(n%5)*90, w:600, h:120};
+      }
+      s.blocks=(s.blocks||[]).concat([nb]); save(); paintPlan();
+    };
+    d.querySelector(".snm").addEventListener("input",e=>{ s.name=e.target.value; save(); paintRail(); });
+    d.querySelector(".ssub").addEventListener("input",e=>{ s.sub=e.target.value; save(); });
+    d.querySelector(".smin").addEventListener("input",e=>{ s.min=+e.target.value||0; save(); paintRail(); paintClocks(); });
+    d.querySelector('[data-a="up"]').onclick=()=>{ if(i>0){ const t=S.sections[i-1]; S.sections[i-1]=S.sections[i]; S.sections[i]=t; save(); paintPlan(); paintRail(); } };
+    d.querySelector('[data-a="dn"]').onclick=()=>{ if(i<S.sections.length-1){ const t=S.sections[i+1]; S.sections[i+1]=S.sections[i]; S.sections[i]=t; save(); paintPlan(); paintRail(); } };
+    d.querySelector('[data-a="on"]').onclick=()=>{ s.on=(s.on===false); if(secs().length&&!secs().some(x=>x.id===S.current)) S.current=secs()[0].id;
+      save(); paintPlan(); paintRail(); paintClocks(); };
+    d.querySelector('[data-a="del"]').onclick=()=>{ if(S.sections.length>1){ S.sections.splice(i,1);
+      if(secs().length&&!secs().some(x=>x.id===S.current)) S.current=secs()[0].id; save(); paintPlan(); paintRail(); paintClocks(); } };
+    body.appendChild(d);
+  });
+  p.querySelector("#addSec").onclick=()=>{
+    S.sections.push({id:"s"+Math.random().toString(36).slice(2,7),name:"New section",min:5,sub:"",on:true,blocks:[newBlock("points")]});
+    save(); paintPlan(); paintRail();
+  };
+  p.querySelector("#tplBtn").onclick=openTpl;
+  p.querySelector("#freshBtn").onclick=()=>{
+    clearRun(S.sections); S.timers={}; S.current=secs()[0].id; save();
+    paintPlan(); paintRail(); paintClocks();
+  };
+  p.querySelector("#rosterBtn").onclick=openRoster;
+  p.querySelector("#donePlan").onclick=()=>togglePlan(false);
+}
+
+/* --- block editors (plan mode only) --- */
+const EDIT={};
+const lines=(v)=>v.split("\n").map(x=>x.trim()).filter(Boolean);
+
+EDIT.purpose=(w)=>{
+  w.innerHTML='<label class="fld">Core purpose</label><textarea rows="4" class="pp">'+esc(S.purpose)+'</textarea>'+
+    '<label class="fld">Core values — one per line</label><textarea rows="5" class="vv">'+esc(S.values.join("\n"))+'</textarea>';
+  w.querySelector(".pp").addEventListener("input",e=>{ S.purpose=e.target.value; save(); });
+  w.querySelector(".vv").addEventListener("input",e=>{ S.values=lines(e.target.value); save(); });
+};
+
+EDIT.points=(w,b)=>{
+  w.innerHTML='<label class="fld">Heading (optional)</label><input type="text" class="lb" value="'+esc(b.label||"")+'">'+
+    '<label class="fld">Points — one per line</label><textarea rows="5" class="it">'+esc((b.items||[]).join("\n"))+'</textarea>';
+  w.querySelector(".lb").addEventListener("input",e=>{ b.label=e.target.value; save(); });
+  w.querySelector(".it").addEventListener("input",e=>{ b.items=lines(e.target.value); save(); });
+};
+
+EDIT.text=(w,b)=>{
+  w.innerHTML='<label class="fld">Heading (optional)</label><input type="text" class="tt" value="'+esc(b.title||"")+'">'+
+    '<label class="fld">Text</label><textarea rows="4" class="tb">'+esc(b.body||"")+'</textarea>'+
+    '<div class="row" style="margin-top:.5rem">'+
+    '<label class="row" style="gap:.35rem;font-size:.85rem">Size <select class="ts" style="width:auto">'+
+    '<option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option><option value="xl">Extra large</option></select></label>'+
+    '<label class="row" style="gap:.35rem;font-size:.85rem">Align <select class="ta" style="width:auto">'+
+    '<option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label></div>';
+  w.querySelector(".ts").value=b.size||"m";
+  w.querySelector(".ta").value=b.align||"left";
+  w.querySelector(".tt").addEventListener("input",e=>{ b.title=e.target.value; save(); });
+  w.querySelector(".tb").addEventListener("input",e=>{ b.body=e.target.value; save(); });
+  w.querySelector(".ts").addEventListener("change",e=>{ b.size=e.target.value; save(); });
+  w.querySelector(".ta").addEventListener("change",e=>{ b.align=e.target.value; save(); });
+};
+
+EDIT.link=(w,b)=>{
+  w.innerHTML='<label class="fld">Button says</label><input type="text" class="lb" value="'+esc(b.label||"")+'">'+
+    '<label class="fld">Link — the workbook, Dental Intelligence, a form, anything</label><input type="text" class="lu" value="'+esc(b.url||"")+'" placeholder="https://…">';
+  w.querySelector(".lb").addEventListener("input",e=>{ b.label=e.target.value; save(); });
+  w.querySelector(".lu").addEventListener("input",e=>{ b.url=e.target.value.trim(); save(); });
+};
+
+EDIT.flyer=(w,b)=>{
+  w.innerHTML='<div class="row"><label class="btn" style="margin:0">Choose an image<input type="file" accept="image/*" class="fu" style="display:none"></label>'+
+    '<input type="text" class="fl" placeholder="…or paste an image link" value="'+esc(b.src&&b.src.slice(0,5)!=="data:"?b.src:"")+'" style="flex:1;min-width:11rem">'+
+    '<button class="btn" data-a="clr">Remove</button></div>'+
+    '<div class="note fs" style="margin-top:.4rem"></div>'+
+    '<label class="fld">Caption (optional)</label><input type="text" class="fc" value="'+esc(b.caption||"")+'">';
+  const st=w.querySelector(".fs");
+  const stat=()=>{ st.textContent = b.src ? "Image loaded." : "No image yet."; };
+  stat();
+  w.querySelector(".fu").addEventListener("change",e=>{
+    const f=e.target.files[0]; if(!f)return;
+    if(f.size>2500000){ st.textContent="That image is over 2.5 MB — use a smaller one or paste a link."; return; }
+    const r=new FileReader(); r.onload=()=>{ b.src=r.result; save(); stat(); }; r.readAsDataURL(f);
+  });
+  w.querySelector(".fl").addEventListener("input",e=>{ b.src=e.target.value.trim(); save(); stat(); });
+  w.querySelector(".fc").addEventListener("input",e=>{ b.caption=e.target.value; save(); });
+  w.querySelector('[data-a="clr"]').onclick=()=>{ b.src=""; save(); stat(); w.querySelector(".fl").value=""; };
+};
+
+EDIT.video=(w,b)=>{
+  w.innerHTML='<label class="fld">Heading (optional)</label><input type="text" class="lb" value="'+esc(b.label||"")+'">'+
+    '<label class="fld">Video link — YouTube plays right on the page; anything else opens in a tab</label>'+
+    '<input type="text" class="vu" value="'+esc(b.url||"")+'" placeholder="https://www.youtube.com/watch?v=…">';
+  w.querySelector(".lb").addEventListener("input",e=>{ b.label=e.target.value; save(); });
+  w.querySelector(".vu").addEventListener("input",e=>{ b.url=e.target.value.trim(); save(); });
+};
+
+EDIT.jar=(w,b)=>{
+  w.innerHTML='<label class="fld">Heading</label><input type="text" class="lb" value="'+esc(b.label||"")+'">'+
+    '<label class="fld">Minutes on the clock</label><input type="number" min="1" max="60" class="mn" value="'+Math.round((b.limit||600)/60)+'" style="width:5rem">'+
+    '<label class="fld">What\'s in the jar — one per line. Paste in everything the team submitted.</label>'+
+    '<textarea rows="8" class="it">'+esc((b.items||[]).join("\n"))+'</textarea>'+
+    '<div class="row" style="margin-top:.5rem"><button class="btn sm" data-a="rs">Put them all back and reset the clock</button>'+
+    '<button class="btn sm" data-a="retire">Take the answered ones out for good</button></div>'+
+    '<div class="note jm" style="margin-top:.5rem"></div>';
+  const jm=w.querySelector(".jm"), ta=w.querySelector(".it");
+  const stat=()=>{
+    const n=(b.drawn||[]).length;
+    jm.innerHTML = n
+      ? "Already answered ("+n+"): "+esc(b.drawn.join(" · "))
+      : "Nothing drawn yet — all "+(b.items||[]).length+" are in the jar.";
+  };
+  stat();
+  w.querySelector(".lb").addEventListener("input",e=>{ b.label=e.target.value; save(); });
+  w.querySelector(".mn").addEventListener("input",e=>{ b.limit=Math.max(60,(+e.target.value||10)*60); b.left=b.limit; save(); });
+  ta.addEventListener("input",e=>{ b.items=lines(e.target.value); save(); stat(); });
+  w.querySelector('[data-a="rs"]').onclick=()=>{ b.drawn=[]; b.left=b.limit; b.running=false; save(); stat(); };
+  w.querySelector('[data-a="retire"]').onclick=()=>{
+    if(!(b.drawn||[]).length) return;
+    b.items=(b.items||[]).filter(x=>!b.drawn.includes(x));
+    b.drawn=[]; b.left=b.limit; b.running=false;
+    ta.value=b.items.join("\n"); save(); stat();
+  };
+};
+
+EDIT.groups=(w,b)=>{
+  w.innerHTML='<label class="fld">Heading (optional)</label><input type="text" class="lb" value="'+esc(b.label||"")+'">'+
+    '<label class="fld">How it starts — you can still change it on the screen mid-meeting</label>'+
+    '<select class="gf"><option value="full">Whole group</option><option value="pairs">Pairs</option><option value="size">Groups of a set size</option><option value="role">By job role</option></select>'+
+    '<label class="fld">Group size, when you use it</label><input type="number" min="2" max="10" class="gs" value="'+(b.size||4)+'" style="width:5rem">'+
+    '<p class="note" style="margin-top:.5rem">Names come from the team list — the button at the bottom of this page.</p>';
+  const gf=w.querySelector(".gf"); gf.value=b.format||"full";
+  gf.addEventListener("change",e=>{ b.format=e.target.value; save(); });
+  w.querySelector(".lb").addEventListener("input",e=>{ b.label=e.target.value; save(); });
+  w.querySelector(".gs").addEventListener("input",e=>{ b.size=Math.max(2,+e.target.value||4); save(); });
+};
+
+/* ============ roster + layouts ============ */
+function openRoster(){
+  const p=document.getElementById("panel");
+  p.className="panel";
+  p.innerHTML='<div class="phead"><h2>The team list</h2><span class="sub">One person per line, as name, role. The randomizer uses this.</span></div>'+
+    '<textarea rows="14" id="ros" placeholder="Alicia, Hygiene&#10;Jade, Assistant&#10;Kevin, Front desk&#10;Dr. Lubbers, Doctor">'+
+    esc(S.roster.map(r=>r.name+(r.role?", "+r.role:"")).join("\n"))+'</textarea>'+
+    '<p class="note" style="margin-top:.6rem">Roles can be anything you like — hygiene, assistants, front desk, doctors. "By job role" groups on exactly what you type here.</p>'+
+    '<div class="foot"><button class="btn primary" id="rosDone">Done</button></div>';
+  const ta=p.querySelector("#ros");
+  ta.addEventListener("input",()=>{
+    S.roster=ta.value.split("\n").filter(l=>l.trim()).map(l=>{ const x=l.split(","); return {name:(x[0]||"").trim(),role:x.slice(1).join(",").trim()}; });
+    save();
+  });
+  p.querySelector("#rosDone").onclick=()=>{ planMode=true; paintPlan(); };
+}
+
+function clearRun(sections){
+  sections.forEach(s=>(s.blocks||[]).forEach(b=>{
+    if(b.kind==="jar"){ b.drawn=[]; b.left=b.limit; b.running=false; }
+    if(b.kind==="groups") b.groups=[];
+  }));
+  return sections;
+}
+function openTpl(){
+  const dlg=document.getElementById("tplDlg"), pin=document.getElementById("pinBox");
+  pin.value=S.pin||"";
+  pin.oninput=()=>{ S.pin=pin.value.trim(); save(); };
+  if(dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+}
+function buildPrint(){
+  const area=document.getElementById("printArea");
+  area.innerHTML="";
+  fits=[];
+  secs().forEach(s=>{
+    const sheet=document.createElement("div");
+    sheet.className="psheet panel"+(s.bg&&s.bg!=="plain"?" bg-"+s.bg:"");
+    sheet.innerHTML='<h2>'+esc(s.name)+'</h2>'+(s.sub?'<span class="sub">'+esc(s.sub)+'</span>':'');
+    const stage=document.createElement("div");
+    sheet.appendChild(stage);
+    if(s.layout==="free" && (s.blocks||[]).length){
+      renderFree(stage,s,false);
+    }else{
+      (s.blocks||[]).forEach(b=>{
+        const w=document.createElement("div"); w.className="blk"; stage.appendChild(w);
+        (SHOW[b.kind]||SHOW.points)(w,b);
+      });
+    }
+    area.appendChild(sheet);
+  });
+  fitAll();
+}
+function doPrint(){
+  buildPrint();
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{ document.getElementById("printArea").innerHTML=""; paintPanel(); },300);
+  },120);
+}
+function closeDlg(id){ const d=document.getElementById(id); if(d.close) d.close(); else d.removeAttribute("open"); }
+function download(name,text,type){
+  const blob=new Blob([text],{type:type||"text/plain"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* ============ wiring ============ */
+function togglePlan(on){
+  planMode=(on==null)?!planMode:on;
+  document.getElementById("planBtn").classList.toggle("on",planMode);
+  if(planMode) paintPlan();
+  else { document.getElementById("panel").className="panel"; paintPanel(); }
+}
+document.getElementById("playBtn").onclick=()=>setRunning(!running);
+document.getElementById("planBtn").onclick=()=>togglePlan();
+function paintLock(){
+  const locked=!!S.locked;
+  document.getElementById("planBtn").classList.toggle("hide",locked);
+  const lb=document.getElementById("lockBtn");
+  lb.textContent=locked?"Unlock":"Lock";
+  lb.classList.toggle("on",locked);
+}
+document.getElementById("lockBtn").onclick=()=>{
+  if(S.locked){
+    if(S.pin){
+      const tryIt=window.prompt("Code to unlock the Plan button:");
+      if(tryIt===null) return;
+      if(tryIt.trim()!==S.pin){ window.alert("That code doesn't match."); return; }
+    }
+    S.locked=false;
+  }else{
+    S.locked=true;
+    if(planMode) togglePlan(false);
+  }
+  save(); paintLock();
+};
+document.getElementById("fsBtn").onclick=()=>{
+  document.body.classList.toggle("fs");
+  const on=document.body.classList.contains("fs");
+  document.getElementById("fsBtn").classList.toggle("on",on);
+  try{ if(on && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+       else if(!on && document.exitFullscreen && document.fullscreenElement) document.exitFullscreen(); }catch(e){}
+};
+document.getElementById("printBtn").onclick=doPrint;
+const themeSel=document.getElementById("themeSel");
+themeSel.innerHTML=Object.keys(THEMES).map(k=>'<option value="'+k+'">'+THEMES[k].name+'</option>').join("");
+themeSel.addEventListener("change",e=>{ S.theme=e.target.value; applyTheme(S.theme); save(); });
+document.getElementById("closeTpl").onclick=()=>closeDlg("tplDlg");
+document.getElementById("dlJson").onclick=()=>download("meeting-board-setup.json",JSON.stringify(S,null,2),"application/json");
+document.getElementById("upJson").onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ S=Object.assign(DEFAULTS(),JSON.parse(r.result)); save(); closeDlg("tplDlg"); startUp(); }catch(err){} };
+  r.readAsText(f);
+};
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select"))return;
+  if(planMode)return;
+  if(e.key==="ArrowRight") step(1);
+  if(e.key==="ArrowLeft") step(-1);
+  if(e.key===" "){ e.preventDefault(); setRunning(!running); }
+});
+
+function startUp(){
+  applyTheme(S.theme||"classic");
+  const ts=document.getElementById("themeSel"); if(ts) ts.value=S.theme||"classic";
+  if(!secs().length) S.sections=DEFAULTS().sections;
+  if(!secs().some(s=>s.id===S.current)) S.current=secs()[0].id;
+  planMode=false;
+  document.getElementById("planBtn").classList.remove("on");
+  document.getElementById("panel").className="panel";
+  const q=location.search+location.hash;
+  if(/(^|[?&#])(locked|present)/.test(q)) S.locked=true;
+  const m=q.match(/[?&#]go=([^&#]+)/);
+  if(m){
+    const want=decodeURIComponent(m[1]).toLowerCase(), list=secs();
+    const byNum=parseInt(want,10);
+    const hit=(byNum && list[byNum-1]) || list.find(x=>x.name.toLowerCase().indexOf(want)>-1);
+    if(hit) S.current=hit.id;
+  }
+  paintLock();
+  paintRail(); paintPanel(); paintClocks();
+}
+startUp();
+</script>
+</body>
+</html>
