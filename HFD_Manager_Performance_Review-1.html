@@ -1,783 +1,493 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Performance Review — Hudsonville Family Dentistry</title>
 <style>
   :root{
-    --navy:#16233f;
-    --navy-soft:#2c3d63;
-    --teal:#2e8b8b;
-    --gold:#b08d3f;
-    --gold-bg:#f6f0df;
-    --ink:#1f2430;
-    --muted:#6b7383;
-    --rule:#c9cfda;
-    --page:#ffffff;
-    --shell:#eef1f5;
+    --navy:#1B2A4A;
+    --navy-dark:#0F1B33;
+    --teal:#2E8B8B;
+    --teal-dark:#1F6666;
+    --gold:#C9A24B;
+    --bg:#F4F6F8;
+    --card:#FFFFFF;
+    --border:#D7DCE3;
+    --text:#1B2A33;
+    --muted:#6B7684;
   }
-
   *{box-sizing:border-box;}
-
-  html,body{margin:0;padding:0;}
-
   body{
-    background:var(--shell);
-    color:var(--ink);
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:15px;
+    margin:0; padding:0;
+    font-family:Georgia,'Times New Roman',serif;
+    background:var(--bg);
+    color:var(--text);
     line-height:1.5;
-    -webkit-text-size-adjust:100%;
   }
-
-  /* ---------- screen-only helper bar ---------- */
-  .helper{
+  .banner{
+    background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);
+    color:#fff;
+    padding:10px 20px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    text-align:center;
+  }
+  header{
     background:var(--navy);
-    color:#e8ecf4;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:#fff;
+    padding:28px 24px 22px;
+    text-align:center;
+  }
+  header .practice{
+    font-family:Arial,Helvetica,sans-serif;
+    letter-spacing:2px;
     font-size:13px;
-    line-height:1.45;
-    padding:12px 20px;
-    text-align:center;
-  }
-  .helper strong{color:#fff;}
-
-  .page{
-    max-width:8.5in;
-    margin:24px auto 60px;
-    background:var(--page);
-    padding:0.7in 0.75in 0.6in;
-    box-shadow:0 2px 18px rgba(20,30,55,.14);
-  }
-
-  /* ---------- masthead ---------- */
-  .masthead{text-align:center;padding-bottom:18px;}
-  .practice{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:12px;
-    letter-spacing:.22em;
-    text-transform:uppercase;
-    color:var(--navy);
-    font-weight:600;
-  }
-  .doc-title{
-    font-size:34px;
-    font-weight:700;
-    letter-spacing:.01em;
-    margin:6px 0 4px;
-    color:var(--navy);
-  }
-  .doc-sub{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:12.5px;
-    color:var(--muted);
-    letter-spacing:.02em;
-  }
-  .rule{
-    border:0;
-    border-top:2px solid var(--navy);
-    margin:14px 0 26px;
-  }
-
-  /* ---------- section headings ---------- */
-  .eyebrow{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:11px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--teal);
-    font-weight:700;
-    border-bottom:1px solid var(--rule);
-    padding-bottom:6px;
-    margin:34px 0 14px;
-  }
-  .note{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:12.5px;
-    color:var(--muted);
-    margin:0 0 16px;
-  }
-
-  /* ---------- identity block ---------- */
-  .id-block{
-    border:1px solid var(--rule);
-    padding:16px 18px 6px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:0 26px;
-  }
-  .id-item{flex:1 1 190px;margin-bottom:14px;}
-  .id-item.wide{flex:1 1 100%;}
-  .lbl{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:10.5px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--navy);
-    font-weight:700;
-    display:block;
-    margin-bottom:5px;
-  }
-
-  /* ---------- editable fields ---------- */
-  .field{
-    display:block;
-    width:100%;
-    min-height:1.55em;
-    padding:5px 7px;
-    border:1px solid var(--rule);
-    border-radius:2px;
-    background:#fdfdfe;
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:15px;
-    line-height:1.5;
-    color:var(--ink);
-    white-space:pre-wrap;
-    overflow-wrap:anywhere;
-    outline:none;
-  }
-  .field.line{
-    border:0;
-    border-bottom:1px solid #8b93a3;
-    border-radius:0;
-    background:transparent;
-    padding:3px 2px;
-  }
-  .field.box{min-height:4.6em;}
-  .field.box-lg{min-height:6.2em;}
-  .field:focus{
-    border-color:var(--teal);
-    box-shadow:0 0 0 2px rgba(46,139,139,.18);
-    background:#fff;
-  }
-  .field.line:focus{box-shadow:0 1px 0 0 var(--teal);}
-  .field:empty::before{
-    content:attr(data-placeholder);
-    color:#a2aab8;
-  }
-
-  /* ---------- rating cards ---------- */
-  .card{
-    border:1px solid var(--rule);
-    margin:0 0 20px;
-    break-inside:avoid;
-    page-break-inside:avoid;
-  }
-  .card-head{
-    background:var(--navy);
-    color:#fff;
-    padding:9px 14px;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact;
-  }
-  .card-head h3{
-    display:inline;
-    font-size:16px;
-    margin:0;
-    font-weight:700;
-  }
-  .card-head span{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:12px;
-    color:#c3cddf;
-    margin-left:10px;
-  }
-  .card-body{padding:6px 14px 14px;}
-
-  .opt{
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-    padding:7px 6px 7px 4px;
-    border-bottom:1px solid #eaedf2;
-    cursor:pointer;
-    border-left:3px solid transparent;
-  }
-  .opt:last-of-type{border-bottom:0;}
-  input[type="radio"]{
-    position:absolute;
-    opacity:0;
-    width:0;height:0;
-    margin:0;
-    appearance:none;
-    -webkit-appearance:none;
-    pointer-events:none;
-  }
-  .mark{
-    flex:0 0 auto;
-    width:15px;height:15px;
-    margin-top:3px;
-    border:1.5px solid #808a9c;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  input[type="radio"]:checked + .mark{border-color:var(--navy);}
-  input[type="radio"]:checked + .mark::after{
-    content:"";
-    width:0;height:0;
-    border:4px solid var(--navy);
-    border-radius:50%;
-  }
-  input[type="radio"]:focus-visible + .mark{
-    outline:2px solid var(--teal);
-    outline-offset:2px;
-  }
-  .opt-text{font-size:14.5px;}
-  .opt-text b{color:var(--navy);}
-  .opt:has(input:checked){border-left-color:var(--navy);}
-  .opt:has(input:checked) .opt-text{font-weight:600;}
-  .opt:hover{background:#f5f7fa;}
-
-  .comment-label{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:10.5px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--navy);
-    font-weight:700;
-    margin:14px 0 5px;
-  }
-
-  /* ---------- summary table ---------- */
-  table{
-    width:100%;
-    border-collapse:collapse;
-    break-inside:avoid;
-    page-break-inside:avoid;
-  }
-  thead th{
-    background:var(--navy);
-    color:#fff;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:12px;
-    padding:9px 8px;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact;
-  }
-  thead th:first-child{text-align:left;}
-  tbody td{
-    border-bottom:1px solid #e6e9ef;
-    padding:8px;
-    vertical-align:middle;
-  }
-  tbody td.cat{font-size:14px;}
-  tbody td.cat b{color:var(--navy);}
-  tbody td.cat i{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:11.5px;
-    font-style:normal;
-    color:var(--muted);
-  }
-  tbody td.pick{text-align:center;width:16%;}
-  tbody td.pick label{display:inline-flex;cursor:pointer;padding:4px;}
-
-  /* ---------- narrative ---------- */
-  .q{
-    font-size:15px;
-    font-weight:700;
-    color:var(--navy);
-    margin:20px 0 8px;
-  }
-  .q.first{margin-top:6px;}
-  .inline-choice{
-    display:inline-flex;
-    gap:18px;
-    margin-left:10px;
-    font-weight:400;
-    vertical-align:middle;
-  }
-  .inline-choice label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
-  .inline-choice .mark{margin-top:0;}
-  .grid2{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-  }
-  .numbered{position:relative;}
-  .num{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:11px;
-    color:var(--muted);
-    display:block;
-    margin-bottom:3px;
-  }
-
-  /* ---------- compensation ---------- */
-  .comp{
-    border:1px solid var(--gold);
-    background:var(--gold-bg);
-    padding:16px 18px 6px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:0 26px;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact;
-  }
-  .comp .id-item{flex:1 1 170px;}
-
-  /* ---------- signatures ---------- */
-  .ack{
-    font-style:italic;
-    font-size:14px;
-    color:#3b4353;
-    margin:0 0 22px;
-  }
-  .sig-row{
-    display:flex;
-    gap:30px;
-    align-items:flex-end;
-    margin-bottom:22px;
-    break-inside:avoid;
-    page-break-inside:avoid;
-  }
-  .sig-name{flex:2 1 auto;}
-  .sig-date{flex:0 0 180px;}
-  .sig-line{
-    border-bottom:1px solid var(--navy);
-    height:26px;
-  }
-  input[type="date"]{
-    width:100%;
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:15px;
-    padding:4px 2px;
-    border:0;
-    border-bottom:1px solid #8b93a3;
-    background:transparent;
-    color:var(--ink);
-    outline:none;
-  }
-  input[type="date"]:focus{border-bottom:1px solid var(--teal);}
-
-  /* ---------- ponder ---------- */
-  .ponder{
-    text-align:center;
-    margin:40px 0 10px;
-    padding-top:22px;
-    border-top:1px solid var(--rule);
-    break-inside:avoid;
-    page-break-inside:avoid;
-  }
-  .ponder .eyebrow{
-    border:0;
-    display:block;
-    margin:0 0 6px;
-    color:var(--muted);
-  }
-  .ponder h4{
-    font-size:20px;
-    font-style:italic;
-    color:var(--navy);
-    margin:0 0 6px;
-    font-weight:700;
-  }
-  .ponder p{
-    font-style:italic;
-    color:#4a5266;
-    margin:0 0 4px;
-    font-size:14px;
-  }
-  .ponder cite{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:11px;
-    letter-spacing:.14em;
     text-transform:uppercase;
     color:var(--gold);
-    font-style:normal;
+    margin-bottom:6px;
   }
-
-  /* ---------- actions ---------- */
-  .actions{
-    text-align:center;
-    margin:34px 0 6px;
-    display:flex;
-    gap:12px;
-    justify-content:center;
-    flex-wrap:wrap;
+  header h1{
+    margin:4px 0 8px;
+    font-size:32px;
+    font-weight:700;
   }
-  button{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:14px;
-    font-weight:600;
-    letter-spacing:.04em;
-    padding:13px 26px;
-    border-radius:3px;
-    cursor:pointer;
-    border:1px solid var(--navy);
+  header .sub{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:13px;
+    color:#C9D2DE;
   }
-  .btn-primary{background:var(--navy);color:#fff;}
-  .btn-primary:hover{background:var(--navy-soft);}
-  .btn-quiet{background:#fff;color:var(--navy);}
-  .btn-quiet:hover{background:#f0f2f7;}
-
-  .footer-line{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    font-size:11px;
+  main{
+    max-width:900px;
+    margin:0 auto;
+    padding:24px 20px 60px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:22px;
+    margin-bottom:22px;
+  }
+  .field-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:600px){ .field-grid{grid-template-columns:1fr;} }
+  label{
+    display:block;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
     color:var(--muted);
-    text-align:center;
-    border-top:1px solid var(--rule);
-    padding-top:10px;
-    margin-top:30px;
+    margin-bottom:4px;
+  }
+  input[type=text], input[type=date], textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:5px;
+    padding:8px 10px;
+    font-family:Georgia,serif;
+    font-size:15px;
+    color:var(--text);
+    background:#fff;
+  }
+  textarea{ resize:vertical; min-height:44px; }
+  .field{ margin-bottom:14px; }
+  h2.section-title{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:20px;
+    color:var(--navy);
+    border-bottom:2px solid var(--gold);
+    padding-bottom:8px;
+    margin:0 0 6px;
+  }
+  .section-intro{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    color:var(--muted);
+    margin-bottom:18px;
+  }
+  .rating-block{
+    border:1px solid var(--border);
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .rating-block .cat-header{
+    background:var(--navy-dark);
+    color:#fff;
+    padding:12px 16px;
+    font-family:Arial,Helvetica,sans-serif;
+  }
+  .rating-block .cat-header .cat-name{
+    font-size:16px;
+    font-weight:700;
+  }
+  .rating-block .cat-header .cat-desc{
+    font-size:12.5px;
+    color:#B9C4D4;
+    margin-top:2px;
+  }
+  .rating-options{
+    padding:14px 16px 4px;
+  }
+  .rating-options label.opt{
     display:flex;
-    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    padding:7px 4px;
+    font-family:Georgia,serif;
+    font-size:14.5px;
+    cursor:pointer;
+    text-transform:none;
+    letter-spacing:normal;
+    color:var(--text);
   }
-
-  @media (max-width:640px){
-    .page{padding:26px 18px 30px;margin:0;box-shadow:none;}
-    .doc-title{font-size:26px;}
-    .grid2{grid-template-columns:1fr;}
-    .sig-row{flex-wrap:wrap;gap:14px;}
-    .sig-date{flex:1 1 100%;}
+  .rating-options label.opt input{ margin-top:4px; flex-shrink:0; }
+  .rating-options label.opt b{ color:var(--navy); }
+  .comments-wrap{
+    padding:0 16px 16px;
   }
-
-  /* =========================================================
-     PRINT — everything typed prints in full, nothing clipped
-     ========================================================= */
-  @page{
-    size:letter;
-    margin:0.5in 0.55in;
+  .comments-wrap label{ margin-top:6px; }
+  .quicklist{
+    border:1px solid var(--border);
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .quicklist table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:Arial,Helvetica,sans-serif;
+  }
+  .quicklist thead th{
+    background:var(--navy);
+    color:#fff;
+    font-size:13px;
+    padding:10px 12px;
+    text-align:left;
+  }
+  .quicklist thead th.opt-col{ text-align:center; width:110px; }
+  .quicklist tbody td{
+    border-top:1px solid var(--border);
+    padding:10px 12px;
+    font-size:14px;
+    vertical-align:top;
+  }
+  .quicklist tbody td.opt-col{ text-align:center; }
+  .quicklist tbody tr:nth-child(even){ background:#F8FAFB; }
+  .quicklist .cat-label{ font-weight:700; color:var(--navy); font-family:Georgia,serif; }
+  .quicklist .cat-q{ display:block; color:var(--muted); font-size:12.5px; font-weight:400; margin-top:2px; }
+  .radio-yn{ display:flex; gap:20px; font-family:Arial,Helvetica,sans-serif; font-size:14px; align-items:center; }
+  .radio-yn label{ display:flex; align-items:center; gap:6px; text-transform:none; letter-spacing:normal; color:var(--text); font-size:14px; }
+  .item-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:10px;
+  }
+  @media (max-width:600px){ .item-grid{grid-template-columns:1fr;} }
+  .item-grid .field label{ text-transform:none; letter-spacing:normal; font-size:12.5px; }
+  .comp-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:14px;
+  }
+  @media (max-width:600px){ .comp-grid{grid-template-columns:1fr;} }
+  .signature-row{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:14px;
+    margin-bottom:16px;
+    align-items:end;
+  }
+  .ack-text{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:13.5px;
+    color:var(--muted);
+    margin-bottom:18px;
+  }
+  .ponder{
+    text-align:center;
+    padding:28px 20px;
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+  }
+  .ponder h3{ color:var(--gold); font-size:18px; margin:0 0 10px; }
+  .ponder blockquote{ font-style:italic; font-size:15px; margin:0 0 6px; }
+  .ponder cite{ font-size:13px; color:#B9C4D4; }
+  .controls{
+    text-align:center;
+    margin:26px 0;
+  }
+  .btn{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    padding:10px 22px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    margin:0 6px;
+  }
+  .btn-primary{ background:var(--teal); color:#fff; }
+  .btn-secondary{ background:#fff; color:var(--navy); border:1px solid var(--border); }
+  footer.pagefoot{
+    text-align:center;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:12px;
+    color:var(--muted);
+    padding:20px;
+    border-top:1px solid var(--border);
   }
   @media print{
-    body{background:#fff;font-size:11.5pt;}
-    .helper,.actions,.no-print{display:none !important;}
-    .page{
-      max-width:none;
-      margin:0;
-      padding:0;
-      box-shadow:none;
-    }
-    .field{
-      border:1px solid #b9bfca;
-      background:#fff !important;
-      min-height:1.4em;
-      page-break-inside:auto;
-      break-inside:auto;
-    }
-    .field.line{border:0;border-bottom:1px solid #555;}
-    .field.box,.field.box-lg{min-height:3.2em;}
-    .field:empty::before{content:"";}
-    .opt{padding:4px 4px 4px 3px;}
-    .opt:hover{background:transparent;}
-    .card{border-color:#9aa2b1;}
-    .card-head span{color:#d6dde9;}
-    input[type="date"]{border-bottom:1px solid #555;}
-    input[type="date"]::-webkit-calendar-picker-indicator{display:none;}
-    input[type="date"]:invalid,input[type="date"]:not(:valid){color:#fff;}
-    .eyebrow{margin-top:20px;}
-    .ponder{margin-top:26px;}
-    tbody td{padding:5px 6px;}
-    .avoid-break,.id-block,.comp{break-inside:avoid;page-break-inside:avoid;}
+    .banner, .controls{ display:none; }
+    body{ background:#fff; }
+    .card{ border:1px solid #999; break-inside:avoid; }
   }
 </style>
 </head>
 <body>
 
-<div class="helper no-print">
-  <strong>Fill it in, then use Save as PDF.</strong> Every box grows as you type and prints in full — nothing gets cut off. Only the answer fields accept typing; the questions are locked.
-</div>
+<div class="banner">Fill it in, then use <strong>Save as PDF</strong>. Every box grows as you type and prints in full — nothing gets cut off. Only the answer fields accept typing; the questions are locked.</div>
 
-<div class="page">
+<header>
+  <div class="practice">Hudsonville Family Dentistry</div>
+  <h1>Performance Review</h1>
+  <div class="sub">Dr. Matthew Lubbers &amp; Dr. Heather Holton · Confidential — Manager Use Only</div>
+</header>
 
-  <header class="masthead">
-    <div class="practice">Hudsonville Family Dentistry</div>
-    <h1 class="doc-title">Performance Review</h1>
-    <div class="doc-sub">Dr. Matthew Lubbers &amp; Dr. Heather Holton &nbsp;·&nbsp; Confidential — Manager Use Only</div>
-  </header>
-  <hr class="rule">
+<main>
 
-  <!-- ============ EMPLOYEE INFORMATION ============ -->
-  <div class="id-block">
-    <div class="id-item">
-      <span class="lbl">Employee Name</span>
-      <div class="field line" contenteditable="true" data-placeholder="Full name"></div>
+  <section class="card">
+    <div class="field-grid">
+      <div class="field"><label>Employee Name</label><input type="text"></div>
+      <div class="field"><label>Position / Role</label><input type="text"></div>
+      <div class="field"><label>Review Date</label><input type="date"></div>
+      <div class="field"><label>Date Hired</label><input type="date"></div>
+      <div class="field"><label>Reviewed By</label><input type="text"></div>
     </div>
-    <div class="id-item">
-      <span class="lbl">Position / Role</span>
-      <div class="field line" contenteditable="true" data-placeholder="e.g. Dental Assistant"></div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Performance Ratings</h2>
+    <p class="section-intro">Select the description that best reflects this employee's performance in each category, then add any supporting comments.</p>
+
+    <!-- Quality of Work -->
+    <div class="rating-block">
+      <div class="cat-header"><div class="cat-name">Quality of Work</div><div class="cat-desc">Neatness, accuracy, and error rate</div></div>
+      <div class="rating-options">
+        <label class="opt"><input type="radio" name="quality"><span><b>1 — Outstanding:</b> Consistently produces a high degree of neatness and accuracy on all work. Requires minimum supervision.</span></label>
+        <label class="opt"><input type="radio" name="quality"><span><b>2 — Above Average:</b> Work is very neat and accurate. Requires little supervision.</span></label>
+        <label class="opt"><input type="radio" name="quality"><span><b>3 — Satisfactory:</b> Quality of work is good. Makes few mistakes.</span></label>
+        <label class="opt"><input type="radio" name="quality"><span><b>4 — Needs Improvement:</b> Produces work that is passable, although quality needs improvement.</span></label>
+        <label class="opt"><input type="radio" name="quality"><span><b>5 — Unsatisfactory:</b> Makes frequent errors; frequently produces work that is not acceptable.</span></label>
+      </div>
+      <div class="comments-wrap"><label>Comments</label><textarea placeholder="Supporting notes..."></textarea></div>
     </div>
-    <div class="id-item">
-      <span class="lbl">Review Date</span>
-      <input type="date">
+
+    <!-- Quantity of Work -->
+    <div class="rating-block">
+      <div class="cat-header"><div class="cat-name">Quantity of Work</div><div class="cat-desc">Productivity and meeting schedules</div></div>
+      <div class="rating-options">
+        <label class="opt"><input type="radio" name="quantity"><span><b>1 — Outstanding:</b> Superior work production record. Frequently completes jobs ahead of schedule.</span></label>
+        <label class="opt"><input type="radio" name="quantity"><span><b>2 — Above Average:</b> Very good producer. Meets schedules on all assignments. Does more than required.</span></label>
+        <label class="opt"><input type="radio" name="quantity"><span><b>3 — Satisfactory:</b> Volume of work is satisfactory. Most assignments are completed on time.</span></label>
+        <label class="opt"><input type="radio" name="quantity"><span><b>4 — Needs Improvement:</b> Requires close supervision in order to complete assignments on time.</span></label>
+        <label class="opt"><input type="radio" name="quantity"><span><b>5 — Unsatisfactory:</b> Very slow. Seldom completes assignments in the required time.</span></label>
+      </div>
+      <div class="comments-wrap"><label>Comments</label><textarea placeholder="Supporting notes..."></textarea></div>
     </div>
-    <div class="id-item">
-      <span class="lbl">Date Hired</span>
-      <input type="date">
+
+    <!-- Job Knowledge -->
+    <div class="rating-block">
+      <div class="cat-header"><div class="cat-name">Job Knowledge</div><div class="cat-desc">Competence and mastery of duties</div></div>
+      <div class="rating-options">
+        <label class="opt"><input type="radio" name="knowledge"><span><b>1 — Outstanding:</b> Understands all phases of work. Has complete mastery of duties and carries them out skillfully.</span></label>
+        <label class="opt"><input type="radio" name="knowledge"><span><b>2 — Above Average:</b> Has very good knowledge of job functions and performs them well.</span></label>
+        <label class="opt"><input type="radio" name="knowledge"><span><b>3 — Satisfactory:</b> Understanding of most job functions is good. Requires minimum supervision.</span></label>
+        <label class="opt"><input type="radio" name="knowledge"><span><b>4 — Needs Improvement:</b> Shows understanding of job but requires help and instruction in some phases of work.</span></label>
+        <label class="opt"><input type="radio" name="knowledge"><span><b>5 — Unsatisfactory:</b> Lacks sufficient understanding of job functions to perform duties effectively.</span></label>
+      </div>
+      <div class="comments-wrap"><label>Comments</label><textarea placeholder="Supporting notes..."></textarea></div>
     </div>
-    <div class="id-item">
-      <span class="lbl">Reviewed By</span>
-      <div class="field line" contenteditable="true" data-placeholder="Manager name"></div>
+
+    <!-- Staff Relations (now covers cooperation/teamwork) -->
+    <div class="rating-block">
+      <div class="cat-header"><div class="cat-name">Staff Relations</div><div class="cat-desc">Teamwork, cooperation, and effectiveness as a team member</div></div>
+      <div class="rating-options">
+        <label class="opt"><input type="radio" name="staff"><span><b>1 — Outstanding:</b> Goes out of way to be cooperative and provide assistance. Works exceptionally well with others.</span></label>
+        <label class="opt"><input type="radio" name="staff"><span><b>2 — Above Average:</b> Is willing to provide assistance. Sensitive to needs of others. Quick to respond.</span></label>
+        <label class="opt"><input type="radio" name="staff"><span><b>3 — Satisfactory:</b> Works well with others and takes direction. Cooperative.</span></label>
+        <label class="opt"><input type="radio" name="staff"><span><b>4 — Needs Improvement:</b> Usually cooperative. May occasionally have problems getting along with others.</span></label>
+        <label class="opt"><input type="radio" name="staff"><span><b>5 — Unsatisfactory:</b> Poor attitude. Unfriendly and uncooperative in dealing with staff members and others.</span></label>
+      </div>
+      <div class="comments-wrap"><label>Comments</label><textarea placeholder="Supporting notes..."></textarea></div>
     </div>
-  </div>
 
-  <!-- ============ PERFORMANCE RATINGS ============ -->
-  <div class="eyebrow">Performance Ratings</div>
-  <p class="note">Select the description that best reflects this employee's performance in each category, then add any supporting comments.</p>
-
-  <!-- Quality of Work -->
-  <div class="card">
-    <div class="card-head"><h3>Quality of Work</h3><span>Neatness, accuracy, and error rate</span></div>
-    <div class="card-body">
-      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Consistently produces a high degree of neatness and accuracy on all work. Requires minimum supervision.</span></label>
-      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Work is very neat and accurate. Requires little supervision.</span></label>
-      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Quality of work is good. Makes few mistakes.</span></label>
-      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Produces work that is passable, although quality needs improvement.</span></label>
-      <label class="opt"><input type="radio" name="quality"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Makes frequent errors; frequently produces work that is not acceptable.</span></label>
-      <div class="comment-label">Comments</div>
-      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    <!-- Patient / Customer Relations -->
+    <div class="rating-block">
+      <div class="cat-header"><div class="cat-name">Patient / Customer Relations</div><div class="cat-desc">Interactions with patients and the public</div></div>
+      <div class="rating-options">
+        <label class="opt"><input type="radio" name="patient"><span><b>1 — Outstanding:</b> Extremely good in dealing with people. Goes out of the way to be helpful and courteous.</span></label>
+        <label class="opt"><input type="radio" name="patient"><span><b>2 — Above Average:</b> Consistently very good with patients. Leaves them with a positive feeling toward the practice.</span></label>
+        <label class="opt"><input type="radio" name="patient"><span><b>3 — Satisfactory:</b> Deals effectively with patients.</span></label>
+        <label class="opt"><input type="radio" name="patient"><span><b>4 — Needs Improvement:</b> Attitude and behavior not consistently effective.</span></label>
+        <label class="opt"><input type="radio" name="patient"><span><b>5 — Unsatisfactory:</b> Frequently rude or blunt. Lacks tact; generally unpleasant with patients.</span></label>
+      </div>
+      <div class="comments-wrap"><label>Comments</label><textarea placeholder="Supporting notes..."></textarea></div>
     </div>
-  </div>
 
-  <!-- Quantity of Work -->
-  <div class="card">
-    <div class="card-head"><h3>Quantity of Work</h3><span>Productivity and meeting schedules</span></div>
-    <div class="card-body">
-      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Superior work production record. Frequently completes jobs ahead of schedule.</span></label>
-      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Very good producer. Meets schedules on all assignments. Does more than required.</span></label>
-      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Volume of work is satisfactory. Most assignments are completed on time.</span></label>
-      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Requires close supervision in order to complete assignments on time.</span></label>
-      <label class="opt"><input type="radio" name="quantity"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Very slow. Seldom completes assignments in the required time.</span></label>
-      <div class="comment-label">Comments</div>
-      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    <!-- Conduct & Attitude (merged) -->
+    <div class="rating-block">
+      <div class="cat-header"><div class="cat-name">Conduct &amp; Attitude</div><div class="cat-desc">Follows policy and procedure; behavior toward job and others</div></div>
+      <div class="rating-options">
+        <label class="opt"><input type="radio" name="conduct"><span><b>1 — Outstanding:</b> Consistently follows policy and procedure. Extremely positive, professional attitude toward job and others.</span></label>
+        <label class="opt"><input type="radio" name="conduct"><span><b>2 — Above Average:</b> Reliably follows policy. Positive attitude and behavior toward job and others.</span></label>
+        <label class="opt"><input type="radio" name="conduct"><span><b>3 — Satisfactory:</b> Generally follows policy and conducts self professionally. Acceptable attitude.</span></label>
+        <label class="opt"><input type="radio" name="conduct"><span><b>4 — Needs Improvement:</b> Inconsistent in following policy or in attitude toward job and others.</span></label>
+        <label class="opt"><input type="radio" name="conduct"><span><b>5 — Unsatisfactory:</b> Frequently disregards policy or conduct expectations. Poor attitude.</span></label>
+      </div>
+      <div class="comments-wrap"><label>Comments</label><textarea placeholder="Supporting notes..."></textarea></div>
     </div>
-  </div>
 
-  <!-- Job Knowledge -->
-  <div class="card">
-    <div class="card-head"><h3>Job Knowledge</h3><span>Competence and mastery of duties</span></div>
-    <div class="card-body">
-      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Understands all phases of work. Has complete mastery of duties and carries them out skillfully.</span></label>
-      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Has very good knowledge of job functions and performs them well.</span></label>
-      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Understanding of most job functions is good. Requires minimum supervision.</span></label>
-      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Shows understanding of job but requires help and instruction in some phases of work.</span></label>
-      <label class="opt"><input type="radio" name="knowledge"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Lacks sufficient understanding of job functions to perform duties effectively.</span></label>
-      <div class="comment-label">Comments</div>
-      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    <!-- Remaining categories: quick single-rating checklist, no overlap with sections above -->
+    <div class="quicklist">
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="opt-col">Needs<br>Improvement</th>
+            <th class="opt-col">Satisfactory</th>
+            <th class="opt-col">Above<br>Average</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label">Safety</span><span class="cat-q">Does employee work safely and follow safety rules?</span></td>
+            <td class="opt-col"><input type="radio" name="safety"></td>
+            <td class="opt-col"><input type="radio" name="safety"></td>
+            <td class="opt-col"><input type="radio" name="safety"></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">Initiative</span><span class="cat-q">Is employee a self-starter?</span></td>
+            <td class="opt-col"><input type="radio" name="initiative"></td>
+            <td class="opt-col"><input type="radio" name="initiative"></td>
+            <td class="opt-col"><input type="radio" name="initiative"></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">Dependability</span><span class="cat-q">Does employee follow instructions and do what is expected?</span></td>
+            <td class="opt-col"><input type="radio" name="dependability"></td>
+            <td class="opt-col"><input type="radio" name="dependability"></td>
+            <td class="opt-col"><input type="radio" name="dependability"></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">Absence / Punctuality</span><span class="cat-q">Review attendance record</span></td>
+            <td class="opt-col"><input type="radio" name="absence"></td>
+            <td class="opt-col"><input type="radio" name="absence"></td>
+            <td class="opt-col"><input type="radio" name="absence"></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">Training</span><span class="cat-q">Has employee been fully trained?</span></td>
+            <td class="opt-col"><input type="radio" name="training"></td>
+            <td class="opt-col"><input type="radio" name="training"></td>
+            <td class="opt-col"><input type="radio" name="training"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
+  </section>
 
-  <!-- Staff Relations -->
-  <div class="card">
-    <div class="card-head"><h3>Staff Relations</h3><span>Teamwork and cooperation with colleagues</span></div>
-    <div class="card-body">
-      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Goes out of way to be cooperative and provide assistance. Works exceptionally well with others.</span></label>
-      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Is willing to provide assistance. Sensitive to needs of others. Quick to respond.</span></label>
-      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Works well with others and takes direction. Cooperative.</span></label>
-      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Usually cooperative. May occasionally have problems getting along with others.</span></label>
-      <label class="opt"><input type="radio" name="staff"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Poor attitude. Unfriendly and uncooperative in dealing with staff members and others.</span></label>
-      <div class="comment-label">Comments</div>
-      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+  <section class="card">
+    <h2 class="section-title">Narrative Summary</h2>
+
+    <div class="field" style="margin-top:14px;">
+      <label>Has the employee received any disciplinary warnings?</label>
+      <div class="radio-yn">
+        <label><input type="radio" name="discipline"> Yes</label>
+        <label><input type="radio" name="discipline"> No</label>
+      </div>
     </div>
-  </div>
+    <div class="field"><textarea placeholder="If yes, briefly describe dates and outcomes..."></textarea></div>
 
-  <!-- Patient / Customer Relations -->
-  <div class="card">
-    <div class="card-head"><h3>Patient / Customer Relations</h3><span>Interactions with patients and the public</span></div>
-    <div class="card-body">
-      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>1 — Outstanding:</b> Extremely good in dealing with people. Goes out of the way to be helpful and courteous.</span></label>
-      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>2 — Above Average:</b> Consistently very good with patients. Leaves them with a positive feeling toward the practice.</span></label>
-      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>3 — Satisfactory:</b> Deals effectively with patients.</span></label>
-      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>4 — Needs Improvement:</b> Attitude and behavior not consistently effective.</span></label>
-      <label class="opt"><input type="radio" name="patient"><span class="mark"></span><span class="opt-text"><b>5 — Unsatisfactory:</b> Frequently rude or blunt. Lacks tact; generally unpleasant with patients.</span></label>
-      <div class="comment-label">Comments</div>
-      <div class="field box" contenteditable="true" data-placeholder="Supporting notes…"></div>
+    <div class="field" style="margin-top:18px;">
+      <label style="text-transform:none; font-size:15px; font-weight:700; color:var(--navy);">A. Essential items the employee is doing well:</label>
+      <div class="item-grid">
+        <div class="field"><label>Item 1</label><textarea></textarea></div>
+        <div class="field"><label>Item 2</label><textarea></textarea></div>
+        <div class="field"><label>Item 3</label><textarea></textarea></div>
+        <div class="field"><label>Item 4</label><textarea></textarea></div>
+      </div>
     </div>
-  </div>
 
-  <!-- ============ SUMMARY RATINGS ============ -->
-  <div class="eyebrow">Summary Ratings</div>
-  <p class="note">Check one box per category.</p>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Category</th>
-        <th>Needs Improvement</th>
-        <th>Satisfactory</th>
-        <th>Above Average</th>
-      </tr>
-    </thead>
-    <tbody id="summary-body">
-      <!-- rows injected below, but written out statically so the file works with scripts off -->
-      <tr><td class="cat"><b>Job Knowledge</b> <i>— How well does employee demonstrate competence?</i></td>
-        <td class="pick"><label><input type="radio" name="s-knowledge"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-knowledge"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-knowledge"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Quality of Work</b> <i>— What is the employee's quality of work?</i></td>
-        <td class="pick"><label><input type="radio" name="s-quality"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-quality"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-quality"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Quantity of Work</b> <i>— Does quantity of work meet our standards?</i></td>
-        <td class="pick"><label><input type="radio" name="s-quantity"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-quantity"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-quantity"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Safety</b> <i>— Does employee work safely and follow safety rules?</i></td>
-        <td class="pick"><label><input type="radio" name="s-safety"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-safety"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-safety"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Initiative</b> <i>— Is employee a self-starter?</i></td>
-        <td class="pick"><label><input type="radio" name="s-initiative"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-initiative"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-initiative"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Dependability</b> <i>— Does employee follow instructions and do what is expected?</i></td>
-        <td class="pick"><label><input type="radio" name="s-dependability"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-dependability"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-dependability"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Conduct</b> <i>— Does employee follow policy and conduct themselves professionally?</i></td>
-        <td class="pick"><label><input type="radio" name="s-conduct"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-conduct"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-conduct"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Attitude</b> <i>— Is employee's behavior toward job and others acceptable?</i></td>
-        <td class="pick"><label><input type="radio" name="s-attitude"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-attitude"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-attitude"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Cooperation</b> <i>— Does employee work effectively as a team member?</i></td>
-        <td class="pick"><label><input type="radio" name="s-cooperation"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-cooperation"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-cooperation"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Absence / Punctuality</b> <i>— Review attendance record</i></td>
-        <td class="pick"><label><input type="radio" name="s-attendance"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-attendance"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-attendance"><span class="mark"></span></label></td></tr>
-
-      <tr><td class="cat"><b>Training</b> <i>— Has employee been fully trained?</i></td>
-        <td class="pick"><label><input type="radio" name="s-training"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-training"><span class="mark"></span></label></td>
-        <td class="pick"><label><input type="radio" name="s-training"><span class="mark"></span></label></td></tr>
-    </tbody>
-  </table>
-
-  <!-- ============ NARRATIVE SUMMARY ============ -->
-  <div class="eyebrow">Narrative Summary</div>
-
-  <div class="q first">Has the employee received any disciplinary warnings?
-    <span class="inline-choice">
-      <label><input type="radio" name="warnings"><span class="mark"></span> Yes</label>
-      <label><input type="radio" name="warnings"><span class="mark"></span> No</label>
-    </span>
-  </div>
-  <div class="field box" contenteditable="true" data-placeholder="If yes, briefly describe dates and outcomes…"></div>
-
-  <div class="q">A. Essential items the employee is doing well:</div>
-  <div class="grid2">
-    <div class="numbered"><span class="num">Item 1</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-    <div class="numbered"><span class="num">Item 2</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-    <div class="numbered"><span class="num">Item 3</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-    <div class="numbered"><span class="num">Item 4</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-  </div>
-
-  <div class="q">B. Essential items in need of improvement:</div>
-  <div class="grid2">
-    <div class="numbered"><span class="num">Item 1</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-    <div class="numbered"><span class="num">Item 2</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-    <div class="numbered"><span class="num">Item 3</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-    <div class="numbered"><span class="num">Item 4</span><div class="field box" contenteditable="true" data-placeholder="…"></div></div>
-  </div>
-
-  <div class="q">Employee Action Plan — What the <u>employee</u> can do to help themselves:</div>
-  <div class="field box-lg" contenteditable="true" data-placeholder="Specific steps, commitments, or goals for the employee to act on…"></div>
-
-  <div class="q">Employer Action Plan — What <u>we</u> can do to support the employee:</div>
-  <div class="field box-lg" contenteditable="true" data-placeholder="Resources, training, schedule changes, mentoring, or other support from leadership…"></div>
-
-  <!-- ============ COMPENSATION ============ -->
-  <div class="eyebrow">Compensation</div>
-  <div class="comp">
-    <div class="id-item">
-      <span class="lbl">Current Salary / Rate</span>
-      <div class="field line" contenteditable="true" data-placeholder="$0.00"></div>
+    <div class="field" style="margin-top:18px;">
+      <label style="text-transform:none; font-size:15px; font-weight:700; color:var(--navy);">B. Essential items in need of improvement:</label>
+      <div class="item-grid">
+        <div class="field"><label>Item 1</label><textarea></textarea></div>
+        <div class="field"><label>Item 2</label><textarea></textarea></div>
+        <div class="field"><label>Item 3</label><textarea></textarea></div>
+        <div class="field"><label>Item 4</label><textarea></textarea></div>
+      </div>
     </div>
-    <div class="id-item">
-      <span class="lbl">New Salary / Rate</span>
-      <div class="field line" contenteditable="true" data-placeholder="$0.00"></div>
-    </div>
-    <div class="id-item">
-      <span class="lbl">Effective Date</span>
-      <input type="date">
-    </div>
-    <div class="id-item wide">
-      <span class="lbl">Notes</span>
-      <div class="field line" contenteditable="true" data-placeholder="Grade change, bonus, or other detail…"></div>
-    </div>
-  </div>
 
-  <!-- ============ SIGNATURES ============ -->
-  <div class="eyebrow">Acknowledgment &amp; Signatures</div>
-  <p class="ack">I acknowledge that the above items have been presented and discussed with me. My signature does not necessarily indicate agreement — only that I have received and reviewed this evaluation.</p>
+    <div class="field" style="margin-top:18px;">
+      <label style="text-transform:none; font-size:15px; font-weight:700; color:var(--navy);">Employee Action Plan — What the employee can do to help themselves</label>
+      <textarea placeholder="Specific steps, commitments, or goals for the employee to act on..."></textarea>
+    </div>
 
-  <div class="sig-row">
-    <div class="sig-name"><span class="lbl">Employee Signature</span><div class="sig-line"></div></div>
-    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
-  </div>
-  <div class="sig-row">
-    <div class="sig-name"><span class="lbl">Office Manager Signature</span><div class="sig-line"></div></div>
-    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
-  </div>
-  <div class="sig-row">
-    <div class="sig-name"><span class="lbl">Dr. Lubbers' Signature</span><div class="sig-line"></div></div>
-    <div class="sig-date"><span class="lbl">Date</span><input type="date"></div>
-  </div>
+    <div class="field" style="margin-top:14px;">
+      <label style="text-transform:none; font-size:15px; font-weight:700; color:var(--navy);">Employer Action Plan — What we can do to support the employee</label>
+      <textarea placeholder="Resources, training, schedule changes, mentoring, or other support from leadership..."></textarea>
+    </div>
+  </section>
 
-  <!-- ============ PONDER ============ -->
+  <section class="card">
+    <h2 class="section-title">Compensation</h2>
+    <div class="comp-grid" style="margin-top:14px;">
+      <div class="field"><label>Current Salary / Rate</label><input type="text" placeholder="$0.00"></div>
+      <div class="field"><label>New Salary / Rate</label><input type="text" placeholder="$0.00"></div>
+      <div class="field"><label>Effective Date</label><input type="date"></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea placeholder="Grade change, bonus, or other detail..."></textarea></div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Acknowledgment &amp; Signatures</h2>
+    <p class="ack-text">I acknowledge that the above items have been presented and discussed with me. My signature does not necessarily indicate agreement — only that I have received and reviewed this evaluation.</p>
+    <div class="signature-row">
+      <div class="field"><label>Employee Signature</label><input type="text"></div>
+      <div class="field"><label>Date</label><input type="date"></div>
+    </div>
+    <div class="signature-row">
+      <div class="field"><label>Office Manager Signature</label><input type="text"></div>
+      <div class="field"><label>Date</label><input type="date"></div>
+    </div>
+    <div class="signature-row">
+      <div class="field"><label>Dr. Lubbers' Signature</label><input type="text"></div>
+      <div class="field"><label>Date</label><input type="date"></div>
+    </div>
+  </section>
+
   <div class="ponder">
-    <span class="eyebrow">Something to Ponder</span>
-    <h4>Do You Stir the Pot or Spread the Honey?</h4>
-    <p>"Pleasant words are a honeycomb, sweet to the soul and healing to the bones."</p>
+    <h3>Something to Ponder</h3>
+    <p style="font-weight:700; margin-bottom:10px;">Do You Stir the Pot or Spread the Honey?</p>
+    <blockquote>&ldquo;Pleasant words are a honeycomb, sweet to the soul and healing to the bones.&rdquo;</blockquote>
     <cite>Proverbs 16:24</cite>
   </div>
 
-  <div class="actions no-print">
-    <button class="btn-primary" onclick="window.print()">Save as PDF / Print</button>
-    <button class="btn-quiet" onclick="clearForm()">Clear form</button>
+  <div class="controls">
+    <button class="btn btn-primary" onclick="window.print()">Save as PDF / Print</button>
+    <button class="btn btn-secondary" onclick="document.querySelectorAll('input,textarea').forEach(el=>{if(el.type==='radio'){el.checked=false;}else{el.value='';}});">Clear Form</button>
   </div>
 
-  <div class="footer-line">
-    <span>Hudsonville Family Dentistry — Performance Review</span>
-    <span>Confidential — Personnel File</span>
-  </div>
+</main>
 
-</div>
-
-<script>
-  // Paste as plain text so pasted formatting can't break the layout or the print output.
-  document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
-    el.setAttribute('spellcheck', 'true');
-    el.addEventListener('paste', function (e) {
-      e.preventDefault();
-      var text = (e.clipboardData || window.clipboardData).getData('text/plain');
-      document.execCommand('insertText', false, text);
-    });
-  });
-
-  function clearForm() {
-    if (!confirm('Clear everything on this form? This cannot be undone.')) return;
-    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.textContent = ''; });
-    document.querySelectorAll('input[type="radio"]').forEach(function (el) { el.checked = false; });
-    document.querySelectorAll('input[type="date"]').forEach(function (el) { el.value = ''; });
-    window.scrollTo(0, 0);
-  }
-
-  // Warn before closing with unsaved typing.
-  var touched = false;
-  document.addEventListener('input', function () { touched = true; });
-  document.addEventListener('change', function () { touched = true; });
-  window.addEventListener('beforeunload', function (e) {
-    if (!touched) return;
-    e.preventDefault();
-    e.returnValue = '';
-  });
-</script>
+<footer class="pagefoot">Hudsonville Family Dentistry — Performance Review · Confidential — Personnel File</footer>
 
 </body>
 </html>
+HFD_Manager_Performance_Review-1-1.html
+Displaying HFD_Manager_Performance_Review-1-1.html.
